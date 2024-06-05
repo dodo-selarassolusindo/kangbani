@@ -24,6 +24,7 @@ $topMenu->addMenuItem(6, "mi_kelompok", $Language->menuPhrase("6", "MenuText"), 
 $topMenu->addMenuItem(7, "mi_klasifikasi", $Language->menuPhrase("7", "MenuText"), "klasifikasilist", 23, "", true, false, false, "", "", true, false);
 $topMenu->addMenuItem(12, "mi_pengiriman", $Language->menuPhrase("12", "MenuText"), "pengirimanlist", 23, "", true, false, false, "", "", true, false);
 $topMenu->addMenuItem(14, "mi_person", $Language->menuPhrase("14", "MenuText"), "personlist", 23, "", true, false, false, "", "", true, false);
+$topMenu->addMenuItem(74, "mci_Setting", $Language->menuPhrase("74", "MenuText"), "", -1, "", true, false, true, "", "", true, false);
 $topMenu->addMenuItem(21, "mi_tos", $Language->menuPhrase("21", "MenuText"), "toslist", 74, "", true, false, false, "", "", true, false);
 $topMenu->addMenuItem(20, "mi_top", $Language->menuPhrase("20", "MenuText"), "toplist", 74, "", true, false, false, "", "", true, false);
 $topMenu->addMenuItem(24, "mci_Transaksi", $Language->menuPhrase("24", "MenuText"), "", -1, "", true, false, true, "", "", true, false);
@@ -52,7 +53,7 @@ $sideMenu->addMenuItem(6, "mi_kelompok", $Language->menuPhrase("6", "MenuText"),
 $sideMenu->addMenuItem(7, "mi_klasifikasi", $Language->menuPhrase("7", "MenuText"), "klasifikasilist", 23, "", true, false, false, "", "", true, true);
 $sideMenu->addMenuItem(12, "mi_pengiriman", $Language->menuPhrase("12", "MenuText"), "pengirimanlist", 23, "", true, false, false, "", "", true, true);
 $sideMenu->addMenuItem(14, "mi_person", $Language->menuPhrase("14", "MenuText"), "personlist", 23, "", true, false, false, "", "", true, true);
-$sideMenu->addMenuItem(74, "mci_Setting", $Language->menuPhrase("74", "MenuText"), "", -1, "", true, false, true, "", "", false, true);
+$sideMenu->addMenuItem(74, "mci_Setting", $Language->menuPhrase("74", "MenuText"), "", -1, "", true, false, true, "", "", true, true);
 $sideMenu->addMenuItem(21, "mi_tos", $Language->menuPhrase("21", "MenuText"), "toslist", 74, "", true, false, false, "", "", true, true);
 $sideMenu->addMenuItem(20, "mi_top", $Language->menuPhrase("20", "MenuText"), "toplist", 74, "", true, false, false, "", "", true, true);
 $sideMenu->addMenuItem(24, "mci_Transaksi", $Language->menuPhrase("24", "MenuText"), "", -1, "", true, false, true, "", "", true, true);
