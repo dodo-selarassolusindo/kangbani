@@ -977,9 +977,9 @@ class PeriodeEdit extends Periode
 
             // isaktif
             if (ConvertToBool($this->isaktif->CurrentValue)) {
-                $this->isaktif->ViewValue = $this->isaktif->tagCaption(1) != "" ? $this->isaktif->tagCaption(1) : "Yes";
+                $this->isaktif->ViewValue = $this->isaktif->tagCaption(1) != "" ? $this->isaktif->tagCaption(1) : "Aktif";
             } else {
-                $this->isaktif->ViewValue = $this->isaktif->tagCaption(2) != "" ? $this->isaktif->tagCaption(2) : "No";
+                $this->isaktif->ViewValue = $this->isaktif->tagCaption(2) != "" ? $this->isaktif->tagCaption(2) : "Non Aktif";
             }
 
             // user_id

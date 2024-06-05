@@ -295,9 +295,9 @@
       <field id="isaktif">
         <phrase id="fldcaption" value="Status" />
         <phrase id="fldtagvalue1" value="1" />
-        <phrase id="fldtagcaption1" value="Yes" />
+        <phrase id="fldtagcaption1" value="Aktif" />
         <phrase id="fldtagvalue2" value="0" />
-        <phrase id="fldtagcaption2" value="No" />
+        <phrase id="fldtagcaption2" value="Non Aktif" />
       </field>
       <field id="user_id">
         <phrase id="fldcaption" value="User ID" />
