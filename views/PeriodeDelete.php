@@ -50,9 +50,6 @@ $Page->showMessage();
 <table class="<?= $Page->TableClass ?>">
     <thead>
     <tr class="ew-table-header">
-<?php if ($Page->id->Visible) { // id ?>
-        <th class="<?= $Page->id->headerCellClass() ?>"><span id="elh_periode_id" class="periode_id"><?= $Page->id->caption() ?></span></th>
-<?php } ?>
 <?php if ($Page->start->Visible) { // start ?>
         <th class="<?= $Page->start->headerCellClass() ?>"><span id="elh_periode_start" class="periode_start"><?= $Page->start->caption() ?></span></th>
 <?php } ?>
@@ -61,9 +58,6 @@ $Page->showMessage();
 <?php } ?>
 <?php if ($Page->isaktif->Visible) { // isaktif ?>
         <th class="<?= $Page->isaktif->headerCellClass() ?>"><span id="elh_periode_isaktif" class="periode_isaktif"><?= $Page->isaktif->caption() ?></span></th>
-<?php } ?>
-<?php if ($Page->user_id->Visible) { // user_id ?>
-        <th class="<?= $Page->user_id->headerCellClass() ?>"><span id="elh_periode_user_id" class="periode_user_id"><?= $Page->user_id->caption() ?></span></th>
 <?php } ?>
     </tr>
     </thead>
@@ -86,14 +80,6 @@ while ($Page->fetch()) {
     $Page->renderRow();
 ?>
     <tr <?= $Page->rowAttributes() ?>>
-<?php if ($Page->id->Visible) { // id ?>
-        <td<?= $Page->id->cellAttributes() ?>>
-<span id="">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($Page->start->Visible) { // start ?>
         <td<?= $Page->start->cellAttributes() ?>>
 <span id="">
@@ -114,16 +100,7 @@ while ($Page->fetch()) {
         <td<?= $Page->isaktif->cellAttributes() ?>>
 <span id="">
 <span<?= $Page->isaktif->viewAttributes() ?>>
-<i class="fa-regular fa-square<?php if (ConvertToBool($Page->isaktif->CurrentValue)) { ?>-check<?php } ?> ew-icon ew-boolean"></i>
-</span>
-</span>
-</td>
-<?php } ?>
-<?php if ($Page->user_id->Visible) { // user_id ?>
-        <td<?= $Page->user_id->cellAttributes() ?>>
-<span id="">
-<span<?= $Page->user_id->viewAttributes() ?>>
-<?= $Page->user_id->getViewValue() ?></span>
+<?= $Page->isaktif->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

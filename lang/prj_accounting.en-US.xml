@@ -293,7 +293,7 @@
         <phrase id="fldcaption" value="End" />
       </field>
       <field id="isaktif">
-        <phrase id="fldcaption" value="Aktif" />
+        <phrase id="fldcaption" value="Status" />
         <phrase id="fldtagvalue1" value="1" />
         <phrase id="fldtagcaption1" value="Yes" />
         <phrase id="fldtagvalue2" value="0" />

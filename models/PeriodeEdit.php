@@ -121,11 +121,11 @@ class PeriodeEdit extends Periode
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->start->setVisibility();
         $this->end->setVisibility();
         $this->isaktif->setVisibility();
-        $this->user_id->setVisibility();
+        $this->user_id->Visible = false;
     }
 
     // Constructor
@@ -753,12 +753,6 @@ class PeriodeEdit extends Periode
         global $CurrentForm;
         $validate = !Config("SERVER_VALIDATE");
 
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            $this->id->setFormValue($val);
-        }
-
         // Check field name 'start' first before field var 'x_start'
         $val = $CurrentForm->hasValue("start") ? $CurrentForm->getValue("start") : $CurrentForm->getValue("x_start");
         if (!$this->start->IsDetailKey) {
@@ -791,14 +785,10 @@ class PeriodeEdit extends Periode
             }
         }
 
-        // Check field name 'user_id' first before field var 'x_user_id'
-        $val = $CurrentForm->hasValue("user_id") ? $CurrentForm->getValue("user_id") : $CurrentForm->getValue("x_user_id");
-        if (!$this->user_id->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->user_id->Visible = false; // Disable update for API request
-            } else {
-                $this->user_id->setFormValue($val, true, $validate);
-            }
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        if (!$this->id->IsDetailKey) {
+            $this->id->setFormValue($val);
         }
     }
 
@@ -812,7 +802,6 @@ class PeriodeEdit extends Periode
         $this->end->CurrentValue = $this->end->FormValue;
         $this->end->CurrentValue = UnFormatDateTime($this->end->CurrentValue, $this->end->formatPattern());
         $this->isaktif->CurrentValue = $this->isaktif->FormValue;
-        $this->user_id->CurrentValue = $this->user_id->FormValue;
     }
 
     /**
@@ -997,9 +986,6 @@ class PeriodeEdit extends Periode
             $this->user_id->ViewValue = $this->user_id->CurrentValue;
             $this->user_id->ViewValue = FormatNumber($this->user_id->ViewValue, $this->user_id->formatPattern());
 
-            // id
-            $this->id->HrefValue = "";
-
             // start
             $this->start->HrefValue = "";
 
@@ -1008,14 +994,7 @@ class PeriodeEdit extends Periode
 
             // isaktif
             $this->isaktif->HrefValue = "";
-
-            // user_id
-            $this->user_id->HrefValue = "";
         } elseif ($this->RowType == RowType::EDIT) {
-            // id
-            $this->id->setupEditAttributes();
-            $this->id->EditValue = $this->id->CurrentValue;
-
             // start
             $this->start->setupEditAttributes();
             $this->start->EditValue = HtmlEncode(FormatDateTime($this->start->CurrentValue, $this->start->formatPattern()));
@@ -1030,18 +1009,7 @@ class PeriodeEdit extends Periode
             $this->isaktif->EditValue = $this->isaktif->options(false);
             $this->isaktif->PlaceHolder = RemoveHtml($this->isaktif->caption());
 
-            // user_id
-            $this->user_id->setupEditAttributes();
-            $this->user_id->EditValue = $this->user_id->CurrentValue;
-            $this->user_id->PlaceHolder = RemoveHtml($this->user_id->caption());
-            if (strval($this->user_id->EditValue) != "" && is_numeric($this->user_id->EditValue)) {
-                $this->user_id->EditValue = FormatNumber($this->user_id->EditValue, null);
-            }
-
             // Edit refer script
-
-            // id
-            $this->id->HrefValue = "";
 
             // start
             $this->start->HrefValue = "";
@@ -1051,9 +1019,6 @@ class PeriodeEdit extends Periode
 
             // isaktif
             $this->isaktif->HrefValue = "";
-
-            // user_id
-            $this->user_id->HrefValue = "";
         }
         if ($this->RowType == RowType::ADD || $this->RowType == RowType::EDIT || $this->RowType == RowType::SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1075,11 +1040,6 @@ class PeriodeEdit extends Periode
             return true;
         }
         $validateForm = true;
-            if ($this->id->Visible && $this->id->Required) {
-                if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
-                    $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
-                }
-            }
             if ($this->start->Visible && $this->start->Required) {
                 if (!$this->start->IsDetailKey && EmptyValue($this->start->FormValue)) {
                     $this->start->addErrorMessage(str_replace("%s", $this->start->caption(), $this->start->RequiredErrorMessage));
@@ -1100,14 +1060,6 @@ class PeriodeEdit extends Periode
                 if ($this->isaktif->FormValue == "") {
                     $this->isaktif->addErrorMessage(str_replace("%s", $this->isaktif->caption(), $this->isaktif->RequiredErrorMessage));
                 }
-            }
-            if ($this->user_id->Visible && $this->user_id->Required) {
-                if (!$this->user_id->IsDetailKey && EmptyValue($this->user_id->FormValue)) {
-                    $this->user_id->addErrorMessage(str_replace("%s", $this->user_id->caption(), $this->user_id->RequiredErrorMessage));
-                }
-            }
-            if (!CheckInteger($this->user_id->FormValue)) {
-                $this->user_id->addErrorMessage($this->user_id->getErrorMessage(false));
             }
 
         // Return validate result
@@ -1205,14 +1157,7 @@ class PeriodeEdit extends Periode
         $this->end->setDbValueDef($rsnew, UnFormatDateTime($this->end->CurrentValue, $this->end->formatPattern()), $this->end->ReadOnly);
 
         // isaktif
-        $tmpBool = $this->isaktif->CurrentValue;
-        if ($tmpBool != "1" && $tmpBool != "0") {
-            $tmpBool = !empty($tmpBool) ? "1" : "0";
-        }
-        $this->isaktif->setDbValueDef($rsnew, $tmpBool, $this->isaktif->ReadOnly);
-
-        // user_id
-        $this->user_id->setDbValueDef($rsnew, $this->user_id->CurrentValue, $this->user_id->ReadOnly);
+        $this->isaktif->setDbValueDef($rsnew, strval($this->isaktif->CurrentValue) == "1" ? "1" : "0", $this->isaktif->ReadOnly);
         return $rsnew;
     }
 
@@ -1230,9 +1175,6 @@ class PeriodeEdit extends Periode
         }
         if (isset($row['isaktif'])) { // isaktif
             $this->isaktif->CurrentValue = $row['isaktif'];
-        }
-        if (isset($row['user_id'])) { // user_id
-            $this->user_id->CurrentValue = $row['user_id'];
         }
     }
 

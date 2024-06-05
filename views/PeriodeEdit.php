@@ -31,11 +31,9 @@ loadjs.ready(["wrapper", "head"], function () {
 
         // Add fields
         .setFields([
-            ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null], fields.id.isInvalid],
             ["start", [fields.start.visible && fields.start.required ? ew.Validators.required(fields.start.caption) : null, ew.Validators.datetime(fields.start.clientFormatPattern)], fields.start.isInvalid],
             ["end", [fields.end.visible && fields.end.required ? ew.Validators.required(fields.end.caption) : null, ew.Validators.datetime(fields.end.clientFormatPattern)], fields.end.isInvalid],
-            ["isaktif", [fields.isaktif.visible && fields.isaktif.required ? ew.Validators.required(fields.isaktif.caption) : null], fields.isaktif.isInvalid],
-            ["user_id", [fields.user_id.visible && fields.user_id.required ? ew.Validators.required(fields.user_id.caption) : null, ew.Validators.integer], fields.user_id.isInvalid]
+            ["isaktif", [fields.isaktif.visible && fields.isaktif.required ? ew.Validators.required(fields.isaktif.caption) : null], fields.isaktif.isInvalid]
         ])
 
         // Form_CustomValidate
@@ -76,18 +74,6 @@ loadjs.ready("head", function () {
 <?php } ?>
 <input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
 <div class="ew-edit-div"><!-- page* -->
-<?php if ($Page->id->Visible) { // id ?>
-    <div id="r_id"<?= $Page->id->rowAttributes() ?>>
-        <label id="elh_periode_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->id->caption() ?><?= $Page->id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->id->cellAttributes() ?>>
-<span id="el_periode_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->id->getDisplayValue($Page->id->EditValue))) ?>"></span>
-<input type="hidden" data-table="periode" data-field="x_id" data-hidden="1" name="x_id" id="x_id" value="<?= HtmlEncode($Page->id->CurrentValue) ?>">
-</span>
-</div></div>
-    </div>
-<?php } ?>
 <?php if ($Page->start->Visible) { // start ?>
     <div id="r_start"<?= $Page->start->rowAttributes() ?>>
         <label id="elh_periode_start" for="x_start" class="<?= $Page->LeftColumnClass ?>"><?= $Page->start->caption() ?><?= $Page->start->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -175,28 +161,34 @@ loadjs.ready(["fperiodeedit", "datetimepicker"], function () {
         <label id="elh_periode_isaktif" class="<?= $Page->LeftColumnClass ?>"><?= $Page->isaktif->caption() ?><?= $Page->isaktif->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->isaktif->cellAttributes() ?>>
 <span id="el_periode_isaktif">
-<div class="form-check d-inline-block">
-    <input type="checkbox" class="form-check-input<?= $Page->isaktif->isInvalidClass() ?>" data-table="periode" data-field="x_isaktif" data-boolean name="x_isaktif" id="x_isaktif" value="1"<?= ConvertToBool($Page->isaktif->CurrentValue) ? " checked" : "" ?><?= $Page->isaktif->editAttributes() ?> aria-describedby="x_isaktif_help">
-    <div class="invalid-feedback"><?= $Page->isaktif->getErrorMessage() ?></div>
-</div>
-<?= $Page->isaktif->getCustomMessage() ?>
-</span>
-</div></div>
+<template id="tp_x_isaktif">
+    <div class="form-check">
+        <input type="radio" class="form-check-input" data-table="periode" data-field="x_isaktif" name="x_isaktif" id="x_isaktif"<?= $Page->isaktif->editAttributes() ?>>
+        <label class="form-check-label"></label>
     </div>
-<?php } ?>
-<?php if ($Page->user_id->Visible) { // user_id ?>
-    <div id="r_user_id"<?= $Page->user_id->rowAttributes() ?>>
-        <label id="elh_periode_user_id" for="x_user_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->user_id->caption() ?><?= $Page->user_id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->user_id->cellAttributes() ?>>
-<span id="el_periode_user_id">
-<input type="<?= $Page->user_id->getInputTextType() ?>" name="x_user_id" id="x_user_id" data-table="periode" data-field="x_user_id" value="<?= $Page->user_id->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->user_id->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->user_id->formatPattern()) ?>"<?= $Page->user_id->editAttributes() ?> aria-describedby="x_user_id_help">
-<?= $Page->user_id->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->user_id->getErrorMessage() ?></div>
+</template>
+<div id="dsl_x_isaktif" class="ew-item-list"></div>
+<selection-list hidden
+    id="x_isaktif"
+    name="x_isaktif"
+    value="<?= HtmlEncode($Page->isaktif->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x_isaktif"
+    data-target="dsl_x_isaktif"
+    data-repeatcolumn="5"
+    class="form-control<?= $Page->isaktif->isInvalidClass() ?>"
+    data-table="periode"
+    data-field="x_isaktif"
+    data-value-separator="<?= $Page->isaktif->displayValueSeparatorAttribute() ?>"
+    <?= $Page->isaktif->editAttributes() ?>></selection-list>
+<?= $Page->isaktif->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->isaktif->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
 <?php } ?>
 </div><!-- /page* -->
+    <input type="hidden" data-table="periode" data-field="x_id" data-hidden="1" name="x_id" id="x_id" value="<?= HtmlEncode($Page->id->CurrentValue) ?>">
 <?= $Page->IsModal ? '<template class="ew-modal-buttons">' : '<div class="row ew-buttons">' ?><!-- buttons .row -->
     <div class="<?= $Page->OffsetColumnClass ?>"><!-- buttons offset -->
 <button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit" form="fperiodeedit"><?= $Language->phrase("SaveBtn") ?></button>

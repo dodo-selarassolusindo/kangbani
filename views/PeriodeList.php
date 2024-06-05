@@ -91,9 +91,6 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->id->Visible) { // id ?>
-        <th data-name="id" class="<?= $Page->id->headerCellClass() ?>"><div id="elh_periode_id" class="periode_id"><?= $Page->renderFieldHeader($Page->id) ?></div></th>
-<?php } ?>
 <?php if ($Page->start->Visible) { // start ?>
         <th data-name="start" class="<?= $Page->start->headerCellClass() ?>"><div id="elh_periode_start" class="periode_start"><?= $Page->renderFieldHeader($Page->start) ?></div></th>
 <?php } ?>
@@ -102,9 +99,6 @@ $Page->ListOptions->render("header", "left");
 <?php } ?>
 <?php if ($Page->isaktif->Visible) { // isaktif ?>
         <th data-name="isaktif" class="<?= $Page->isaktif->headerCellClass() ?>"><div id="elh_periode_isaktif" class="periode_isaktif"><?= $Page->renderFieldHeader($Page->isaktif) ?></div></th>
-<?php } ?>
-<?php if ($Page->user_id->Visible) { // user_id ?>
-        <th data-name="user_id" class="<?= $Page->user_id->headerCellClass() ?>"><div id="elh_periode_user_id" class="periode_user_id"><?= $Page->renderFieldHeader($Page->user_id) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -133,14 +127,6 @@ while ($Page->RecordCount < $Page->StopRecord || $Page->RowIndex === '$rowindex$
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->id->Visible) { // id ?>
-        <td data-name="id"<?= $Page->id->cellAttributes() ?>>
-<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_periode_id" class="el_periode_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
     <?php if ($Page->start->Visible) { // start ?>
         <td data-name="start"<?= $Page->start->cellAttributes() ?>>
 <span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_periode_start" class="el_periode_start">
@@ -161,16 +147,7 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
         <td data-name="isaktif"<?= $Page->isaktif->cellAttributes() ?>>
 <span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_periode_isaktif" class="el_periode_isaktif">
 <span<?= $Page->isaktif->viewAttributes() ?>>
-<i class="fa-regular fa-square<?php if (ConvertToBool($Page->isaktif->CurrentValue)) { ?>-check<?php } ?> ew-icon ew-boolean"></i>
-</span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->user_id->Visible) { // user_id ?>
-        <td data-name="user_id"<?= $Page->user_id->cellAttributes() ?>>
-<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_periode_user_id" class="el_periode_user_id">
-<span<?= $Page->user_id->viewAttributes() ?>>
-<?= $Page->user_id->getViewValue() ?></span>
+<?= $Page->isaktif->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

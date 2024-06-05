@@ -188,7 +188,7 @@ class Periode extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'CHECKBOX' // Edit Tag
+            'RADIO' // Edit Tag
         );
         $this->isaktif->InputTextType = "text";
         $this->isaktif->Raw = true;
@@ -1260,11 +1260,9 @@ class Periode extends DbTable
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->id);
                     $doc->exportCaption($this->start);
                     $doc->exportCaption($this->end);
                     $doc->exportCaption($this->isaktif);
-                    $doc->exportCaption($this->user_id);
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->start);
@@ -1297,11 +1295,9 @@ class Periode extends DbTable
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->id);
                         $doc->exportField($this->start);
                         $doc->exportField($this->end);
                         $doc->exportField($this->isaktif);
-                        $doc->exportField($this->user_id);
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->start);

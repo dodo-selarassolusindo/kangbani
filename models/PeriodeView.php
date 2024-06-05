@@ -904,10 +904,6 @@ class PeriodeView extends Periode
             $this->user_id->ViewValue = $this->user_id->CurrentValue;
             $this->user_id->ViewValue = FormatNumber($this->user_id->ViewValue, $this->user_id->formatPattern());
 
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
             // start
             $this->start->HrefValue = "";
             $this->start->TooltipValue = "";
@@ -919,10 +915,6 @@ class PeriodeView extends Periode
             // isaktif
             $this->isaktif->HrefValue = "";
             $this->isaktif->TooltipValue = "";
-
-            // user_id
-            $this->user_id->HrefValue = "";
-            $this->user_id->TooltipValue = "";
         }
 
         // Call Row Rendered event

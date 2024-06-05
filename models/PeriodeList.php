@@ -145,11 +145,11 @@ class PeriodeList extends Periode
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->start->setVisibility();
         $this->end->setVisibility();
         $this->isaktif->setVisibility();
-        $this->user_id->setVisibility();
+        $this->user_id->Visible = false;
     }
 
     // Constructor
@@ -972,11 +972,9 @@ class PeriodeList extends Periode
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id); // id
             $this->updateSort($this->start); // start
             $this->updateSort($this->end); // end
             $this->updateSort($this->isaktif); // isaktif
-            $this->updateSort($this->user_id); // user_id
             $this->setStartRecordNumber(1); // Reset start position
         }
 
@@ -1238,11 +1236,9 @@ class PeriodeList extends Periode
             $item = &$option->addGroupOption();
             $item->Body = "";
             $item->Visible = $this->UseColumnVisibility;
-            $this->createColumnOption($option, "id");
             $this->createColumnOption($option, "start");
             $this->createColumnOption($option, "end");
             $this->createColumnOption($option, "isaktif");
-            $this->createColumnOption($option, "user_id");
         }
 
         // Set up custom actions
@@ -1761,10 +1757,6 @@ class PeriodeList extends Periode
             $this->user_id->ViewValue = $this->user_id->CurrentValue;
             $this->user_id->ViewValue = FormatNumber($this->user_id->ViewValue, $this->user_id->formatPattern());
 
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
             // start
             $this->start->HrefValue = "";
             $this->start->TooltipValue = "";
@@ -1776,10 +1768,6 @@ class PeriodeList extends Periode
             // isaktif
             $this->isaktif->HrefValue = "";
             $this->isaktif->TooltipValue = "";
-
-            // user_id
-            $this->user_id->HrefValue = "";
-            $this->user_id->TooltipValue = "";
         }
 
         // Call Row Rendered event
