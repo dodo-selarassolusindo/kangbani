@@ -556,6 +556,7 @@ class ProdukView extends Produk
         $this->setupLookupOptions($this->akunpersediaan);
         $this->setupLookupOptions($this->akunreturjual);
         $this->setupLookupOptions($this->supplier_id);
+        $this->setupLookupOptions($this->waktukirim);
         $this->setupLookupOptions($this->aktif);
 
         // Check modal
@@ -1223,8 +1224,27 @@ class ProdukView extends Produk
             }
 
             // waktukirim
-            $this->waktukirim->ViewValue = $this->waktukirim->CurrentValue;
-            $this->waktukirim->ViewValue = FormatNumber($this->waktukirim->ViewValue, $this->waktukirim->formatPattern());
+            $curVal = strval($this->waktukirim->CurrentValue);
+            if ($curVal != "") {
+                $this->waktukirim->ViewValue = $this->waktukirim->lookupCacheOption($curVal);
+                if ($this->waktukirim->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->waktukirim->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->waktukirim->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->waktukirim->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->waktukirim->Lookup->renderViewRow($rswrk[0]);
+                        $this->waktukirim->ViewValue = $this->waktukirim->displayValue($arwrk);
+                    } else {
+                        $this->waktukirim->ViewValue = FormatNumber($this->waktukirim->CurrentValue, $this->waktukirim->formatPattern());
+                    }
+                }
+            } else {
+                $this->waktukirim->ViewValue = null;
+            }
 
             // aktif
             if (strval($this->aktif->CurrentValue) != "") {
@@ -1366,6 +1386,8 @@ class ProdukView extends Produk
                     break;
                 case "x_supplier_id":
                     $lookupFilter = $fld->getSelectFilter(); // PHP
+                    break;
+                case "x_waktukirim":
                     break;
                 case "x_aktif":
                     break;

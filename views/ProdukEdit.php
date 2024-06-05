@@ -49,7 +49,7 @@ loadjs.ready(["wrapper", "head"], function () {
             ["_t", [fields._t.visible && fields._t.required ? ew.Validators.required(fields._t.caption) : null, ew.Validators.float], fields._t.isInvalid],
             ["berat", [fields.berat.visible && fields.berat.required ? ew.Validators.required(fields.berat.caption) : null, ew.Validators.float], fields.berat.isInvalid],
             ["supplier_id", [fields.supplier_id.visible && fields.supplier_id.required ? ew.Validators.required(fields.supplier_id.caption) : null], fields.supplier_id.isInvalid],
-            ["waktukirim", [fields.waktukirim.visible && fields.waktukirim.required ? ew.Validators.required(fields.waktukirim.caption) : null, ew.Validators.integer], fields.waktukirim.isInvalid],
+            ["waktukirim", [fields.waktukirim.visible && fields.waktukirim.required ? ew.Validators.required(fields.waktukirim.caption) : null], fields.waktukirim.isInvalid],
             ["aktif", [fields.aktif.visible && fields.aktif.required ? ew.Validators.required(fields.aktif.caption) : null], fields.aktif.isInvalid]
         ])
 
@@ -75,6 +75,7 @@ loadjs.ready(["wrapper", "head"], function () {
             "akunpersediaan": <?= $Page->akunpersediaan->toClientList($Page) ?>,
             "akunreturjual": <?= $Page->akunreturjual->toClientList($Page) ?>,
             "supplier_id": <?= $Page->supplier_id->toClientList($Page) ?>,
+            "waktukirim": <?= $Page->waktukirim->toClientList($Page) ?>,
             "aktif": <?= $Page->aktif->toClientList($Page) ?>,
         })
         .build();
@@ -627,9 +628,43 @@ loadjs.ready("fprodukedit", function() {
         <label id="elh_produk_waktukirim" for="x_waktukirim" class="<?= $Page->LeftColumnClass ?>"><?= $Page->waktukirim->caption() ?><?= $Page->waktukirim->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->waktukirim->cellAttributes() ?>>
 <span id="el_produk_waktukirim">
-<input type="<?= $Page->waktukirim->getInputTextType() ?>" name="x_waktukirim" id="x_waktukirim" data-table="produk" data-field="x_waktukirim" value="<?= $Page->waktukirim->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->waktukirim->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->waktukirim->formatPattern()) ?>"<?= $Page->waktukirim->editAttributes() ?> aria-describedby="x_waktukirim_help">
-<?= $Page->waktukirim->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->waktukirim->getErrorMessage() ?></div>
+    <select
+        id="x_waktukirim"
+        name="x_waktukirim"
+        class="form-select ew-select<?= $Page->waktukirim->isInvalidClass() ?>"
+        <?php if (!$Page->waktukirim->IsNativeSelect) { ?>
+        data-select2-id="fprodukedit_x_waktukirim"
+        <?php } ?>
+        data-table="produk"
+        data-field="x_waktukirim"
+        data-value-separator="<?= $Page->waktukirim->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->waktukirim->getPlaceHolder()) ?>"
+        <?= $Page->waktukirim->editAttributes() ?>>
+        <?= $Page->waktukirim->selectOptionListHtml("x_waktukirim") ?>
+    </select>
+    <?= $Page->waktukirim->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->waktukirim->getErrorMessage() ?></div>
+<?= $Page->waktukirim->Lookup->getParamTag($Page, "p_x_waktukirim") ?>
+<?php if (!$Page->waktukirim->IsNativeSelect) { ?>
+<script>
+loadjs.ready("fprodukedit", function() {
+    var options = { name: "x_waktukirim", selectId: "fprodukedit_x_waktukirim" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    if (!el)
+        return;
+    options.closeOnSelect = !options.multiple;
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fprodukedit.lists.waktukirim?.lookupOptions.length) {
+        options.data = { id: "x_waktukirim", form: "fprodukedit" };
+    } else {
+        options.ajax = { id: "x_waktukirim", form: "fprodukedit", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.produk.fields.waktukirim.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+<?php } ?>
 </span>
 </div></div>
     </div>

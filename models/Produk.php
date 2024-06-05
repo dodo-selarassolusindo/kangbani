@@ -623,12 +623,16 @@ class Produk extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'SELECT' // Edit Tag
         );
         $this->waktukirim->InputTextType = "text";
         $this->waktukirim->Raw = true;
+        $this->waktukirim->setSelectMultiple(false); // Select one
+        $this->waktukirim->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->waktukirim->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->waktukirim->Lookup = new Lookup($this->waktukirim, 'pengiriman', false, 'id', ["nama","","",""], '', '', [], [], [], [], [], [], false, '', '', "`nama`");
         $this->waktukirim->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->waktukirim->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
+        $this->waktukirim->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
         $this->Fields['waktukirim'] = &$this->waktukirim;
 
         // aktif
@@ -1926,8 +1930,27 @@ class Produk extends DbTable
         }
 
         // waktukirim
-        $this->waktukirim->ViewValue = $this->waktukirim->CurrentValue;
-        $this->waktukirim->ViewValue = FormatNumber($this->waktukirim->ViewValue, $this->waktukirim->formatPattern());
+        $curVal = strval($this->waktukirim->CurrentValue);
+        if ($curVal != "") {
+            $this->waktukirim->ViewValue = $this->waktukirim->lookupCacheOption($curVal);
+            if ($this->waktukirim->ViewValue === null) { // Lookup from database
+                $filterWrk = SearchFilter($this->waktukirim->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->waktukirim->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                $sqlWrk = $this->waktukirim->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->waktukirim->Lookup->renderViewRow($rswrk[0]);
+                    $this->waktukirim->ViewValue = $this->waktukirim->displayValue($arwrk);
+                } else {
+                    $this->waktukirim->ViewValue = FormatNumber($this->waktukirim->CurrentValue, $this->waktukirim->formatPattern());
+                }
+            }
+        } else {
+            $this->waktukirim->ViewValue = null;
+        }
 
         // aktif
         if (strval($this->aktif->CurrentValue) != "") {
@@ -2157,11 +2180,7 @@ class Produk extends DbTable
 
         // waktukirim
         $this->waktukirim->setupEditAttributes();
-        $this->waktukirim->EditValue = $this->waktukirim->CurrentValue;
         $this->waktukirim->PlaceHolder = RemoveHtml($this->waktukirim->caption());
-        if (strval($this->waktukirim->EditValue) != "" && is_numeric($this->waktukirim->EditValue)) {
-            $this->waktukirim->EditValue = FormatNumber($this->waktukirim->EditValue, null);
-        }
 
         // aktif
         $this->aktif->EditValue = $this->aktif->options(false);

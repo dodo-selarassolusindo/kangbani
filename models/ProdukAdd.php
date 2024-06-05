@@ -531,6 +531,7 @@ class ProdukAdd extends Produk
         $this->setupLookupOptions($this->akunpersediaan);
         $this->setupLookupOptions($this->akunreturjual);
         $this->setupLookupOptions($this->supplier_id);
+        $this->setupLookupOptions($this->waktukirim);
         $this->setupLookupOptions($this->aktif);
 
         // Load default values for add
@@ -877,7 +878,7 @@ class ProdukAdd extends Produk
             if (IsApi() && $val === null) {
                 $this->waktukirim->Visible = false; // Disable update for API request
             } else {
-                $this->waktukirim->setFormValue($val, true, $validate);
+                $this->waktukirim->setFormValue($val);
             }
         }
 
@@ -1358,8 +1359,27 @@ class ProdukAdd extends Produk
             }
 
             // waktukirim
-            $this->waktukirim->ViewValue = $this->waktukirim->CurrentValue;
-            $this->waktukirim->ViewValue = FormatNumber($this->waktukirim->ViewValue, $this->waktukirim->formatPattern());
+            $curVal = strval($this->waktukirim->CurrentValue);
+            if ($curVal != "") {
+                $this->waktukirim->ViewValue = $this->waktukirim->lookupCacheOption($curVal);
+                if ($this->waktukirim->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->waktukirim->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->waktukirim->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->waktukirim->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->waktukirim->Lookup->renderViewRow($rswrk[0]);
+                        $this->waktukirim->ViewValue = $this->waktukirim->displayValue($arwrk);
+                    } else {
+                        $this->waktukirim->ViewValue = FormatNumber($this->waktukirim->CurrentValue, $this->waktukirim->formatPattern());
+                    }
+                }
+            } else {
+                $this->waktukirim->ViewValue = null;
+            }
 
             // aktif
             if (strval($this->aktif->CurrentValue) != "") {
@@ -1756,11 +1776,30 @@ class ProdukAdd extends Produk
 
             // waktukirim
             $this->waktukirim->setupEditAttributes();
-            $this->waktukirim->EditValue = $this->waktukirim->CurrentValue;
-            $this->waktukirim->PlaceHolder = RemoveHtml($this->waktukirim->caption());
-            if (strval($this->waktukirim->EditValue) != "" && is_numeric($this->waktukirim->EditValue)) {
-                $this->waktukirim->EditValue = FormatNumber($this->waktukirim->EditValue, null);
+            $curVal = trim(strval($this->waktukirim->CurrentValue));
+            if ($curVal != "") {
+                $this->waktukirim->ViewValue = $this->waktukirim->lookupCacheOption($curVal);
+            } else {
+                $this->waktukirim->ViewValue = $this->waktukirim->Lookup !== null && is_array($this->waktukirim->lookupOptions()) && count($this->waktukirim->lookupOptions()) > 0 ? $curVal : null;
             }
+            if ($this->waktukirim->ViewValue !== null) { // Load from cache
+                $this->waktukirim->EditValue = array_values($this->waktukirim->lookupOptions());
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = SearchFilter($this->waktukirim->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $this->waktukirim->CurrentValue, $this->waktukirim->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                }
+                $sqlWrk = $this->waktukirim->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->waktukirim->EditValue = $arwrk;
+            }
+            $this->waktukirim->PlaceHolder = RemoveHtml($this->waktukirim->caption());
 
             // aktif
             $this->aktif->EditValue = $this->aktif->options(false);
@@ -1963,9 +2002,6 @@ class ProdukAdd extends Produk
                 if (!$this->waktukirim->IsDetailKey && EmptyValue($this->waktukirim->FormValue)) {
                     $this->waktukirim->addErrorMessage(str_replace("%s", $this->waktukirim->caption(), $this->waktukirim->RequiredErrorMessage));
                 }
-            }
-            if (!CheckInteger($this->waktukirim->FormValue)) {
-                $this->waktukirim->addErrorMessage($this->waktukirim->getErrorMessage(false));
             }
             if ($this->aktif->Visible && $this->aktif->Required) {
                 if ($this->aktif->FormValue == "") {
@@ -2215,6 +2251,8 @@ class ProdukAdd extends Produk
                     break;
                 case "x_supplier_id":
                     $lookupFilter = $fld->getSelectFilter(); // PHP
+                    break;
+                case "x_waktukirim":
                     break;
                 case "x_aktif":
                     break;
