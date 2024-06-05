@@ -127,7 +127,7 @@ loadjs.ready("fjurnaledit", function() {
     } else {
         options.ajax = { id: "x_tipejurnal_id", form: "fjurnaledit", limit: ew.LOOKUP_PAGE_SIZE };
     }
-    options.minimumInputLength = ew.selectMinimumInputLength;
+    options.minimumResultsForSearch = Infinity;
     options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.jurnal.fields.tipejurnal_id.selectOptions);
     ew.createSelect(options);
 });
@@ -173,7 +173,7 @@ loadjs.ready("fjurnaledit", function() {
     } else {
         options.ajax = { id: "x_period_id", form: "fjurnaledit", limit: ew.LOOKUP_PAGE_SIZE };
     }
-    options.minimumInputLength = ew.selectMinimumInputLength;
+    options.minimumResultsForSearch = Infinity;
     options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.jurnal.fields.period_id.selectOptions);
     ew.createSelect(options);
 });
