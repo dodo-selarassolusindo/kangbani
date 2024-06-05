@@ -155,9 +155,6 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->id->Visible) { // id ?>
-        <th data-name="id" class="<?= $Page->id->headerCellClass() ?>"><div id="elh_saldoawal_id" class="saldoawal_id"><?= $Page->renderFieldHeader($Page->id) ?></div></th>
-<?php } ?>
 <?php if ($Page->periode_id->Visible) { // periode_id ?>
         <th data-name="periode_id" class="<?= $Page->periode_id->headerCellClass() ?>"><div id="elh_saldoawal_periode_id" class="saldoawal_periode_id"><?= $Page->renderFieldHeader($Page->periode_id) ?></div></th>
 <?php } ?>
@@ -169,9 +166,6 @@ $Page->ListOptions->render("header", "left");
 <?php } ?>
 <?php if ($Page->kredit->Visible) { // kredit ?>
         <th data-name="kredit" class="<?= $Page->kredit->headerCellClass() ?>"><div id="elh_saldoawal_kredit" class="saldoawal_kredit"><?= $Page->renderFieldHeader($Page->kredit) ?></div></th>
-<?php } ?>
-<?php if ($Page->user_id->Visible) { // user_id ?>
-        <th data-name="user_id" class="<?= $Page->user_id->headerCellClass() ?>"><div id="elh_saldoawal_user_id" class="saldoawal_user_id"><?= $Page->renderFieldHeader($Page->user_id) ?></div></th>
 <?php } ?>
 <?php if ($Page->saldo->Visible) { // saldo ?>
         <th data-name="saldo" class="<?= $Page->saldo->headerCellClass() ?>"><div id="elh_saldoawal_saldo" class="saldoawal_saldo"><?= $Page->renderFieldHeader($Page->saldo) ?></div></th>
@@ -203,14 +197,6 @@ while ($Page->RecordCount < $Page->StopRecord || $Page->RowIndex === '$rowindex$
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->id->Visible) { // id ?>
-        <td data-name="id"<?= $Page->id->cellAttributes() ?>>
-<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_saldoawal_id" class="el_saldoawal_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
     <?php if ($Page->periode_id->Visible) { // periode_id ?>
         <td data-name="periode_id"<?= $Page->periode_id->cellAttributes() ?>>
 <span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_saldoawal_periode_id" class="el_saldoawal_periode_id">
@@ -240,14 +226,6 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_saldoawal_kredit" class="el_saldoawal_kredit">
 <span<?= $Page->kredit->viewAttributes() ?>>
 <?= $Page->kredit->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->user_id->Visible) { // user_id ?>
-        <td data-name="user_id"<?= $Page->user_id->cellAttributes() ?>>
-<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_saldoawal_user_id" class="el_saldoawal_user_id">
-<span<?= $Page->user_id->viewAttributes() ?>>
-<?= $Page->user_id->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

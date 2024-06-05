@@ -441,22 +441,22 @@
         <phrase id="fldcaption" value="id" />
       </field>
       <field id="periode_id">
-        <phrase id="fldcaption" value="periode id" />
+        <phrase id="fldcaption" value="Periode" />
       </field>
       <field id="akun_id">
-        <phrase id="fldcaption" value="akun id" />
+        <phrase id="fldcaption" value="Akun" />
       </field>
       <field id="debet">
-        <phrase id="fldcaption" value="debet" />
+        <phrase id="fldcaption" value="Debet" />
       </field>
       <field id="kredit">
-        <phrase id="fldcaption" value="kredit" />
+        <phrase id="fldcaption" value="Kredit" />
       </field>
       <field id="user_id">
         <phrase id="fldcaption" value="user id" />
       </field>
       <field id="saldo">
-        <phrase id="fldcaption" value="saldo" />
+        <phrase id="fldcaption" value="Saldo" />
       </field>
     </table>
     <table id="satuan">

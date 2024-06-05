@@ -126,7 +126,7 @@ class SaldoawalAdd extends Saldoawal
         $this->akun_id->setVisibility();
         $this->debet->setVisibility();
         $this->kredit->setVisibility();
-        $this->user_id->setVisibility();
+        $this->user_id->Visible = false;
         $this->saldo->setVisibility();
     }
 
@@ -708,16 +708,6 @@ class SaldoawalAdd extends Saldoawal
             }
         }
 
-        // Check field name 'user_id' first before field var 'x_user_id'
-        $val = $CurrentForm->hasValue("user_id") ? $CurrentForm->getValue("user_id") : $CurrentForm->getValue("x_user_id");
-        if (!$this->user_id->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->user_id->Visible = false; // Disable update for API request
-            } else {
-                $this->user_id->setFormValue($val, true, $validate);
-            }
-        }
-
         // Check field name 'saldo' first before field var 'x_saldo'
         $val = $CurrentForm->hasValue("saldo") ? $CurrentForm->getValue("saldo") : $CurrentForm->getValue("x_saldo");
         if (!$this->saldo->IsDetailKey) {
@@ -740,7 +730,6 @@ class SaldoawalAdd extends Saldoawal
         $this->akun_id->CurrentValue = $this->akun_id->FormValue;
         $this->debet->CurrentValue = $this->debet->FormValue;
         $this->kredit->CurrentValue = $this->kredit->FormValue;
-        $this->user_id->CurrentValue = $this->user_id->FormValue;
         $this->saldo->CurrentValue = $this->saldo->FormValue;
     }
 
@@ -938,9 +927,6 @@ class SaldoawalAdd extends Saldoawal
             // kredit
             $this->kredit->HrefValue = "";
 
-            // user_id
-            $this->user_id->HrefValue = "";
-
             // saldo
             $this->saldo->HrefValue = "";
         } elseif ($this->RowType == RowType::ADD) {
@@ -1017,14 +1003,6 @@ class SaldoawalAdd extends Saldoawal
             $this->kredit->EditValue = HtmlEncode($this->kredit->CurrentValue);
             $this->kredit->PlaceHolder = RemoveHtml($this->kredit->caption());
 
-            // user_id
-            $this->user_id->setupEditAttributes();
-            $this->user_id->EditValue = $this->user_id->CurrentValue;
-            $this->user_id->PlaceHolder = RemoveHtml($this->user_id->caption());
-            if (strval($this->user_id->EditValue) != "" && is_numeric($this->user_id->EditValue)) {
-                $this->user_id->EditValue = FormatNumber($this->user_id->EditValue, null);
-            }
-
             // saldo
             $this->saldo->setupEditAttributes();
             $this->saldo->EditValue = $this->saldo->CurrentValue;
@@ -1046,9 +1024,6 @@ class SaldoawalAdd extends Saldoawal
 
             // kredit
             $this->kredit->HrefValue = "";
-
-            // user_id
-            $this->user_id->HrefValue = "";
 
             // saldo
             $this->saldo->HrefValue = "";
@@ -1095,14 +1070,6 @@ class SaldoawalAdd extends Saldoawal
                 if (!$this->kredit->IsDetailKey && EmptyValue($this->kredit->FormValue)) {
                     $this->kredit->addErrorMessage(str_replace("%s", $this->kredit->caption(), $this->kredit->RequiredErrorMessage));
                 }
-            }
-            if ($this->user_id->Visible && $this->user_id->Required) {
-                if (!$this->user_id->IsDetailKey && EmptyValue($this->user_id->FormValue)) {
-                    $this->user_id->addErrorMessage(str_replace("%s", $this->user_id->caption(), $this->user_id->RequiredErrorMessage));
-                }
-            }
-            if (!CheckInteger($this->user_id->FormValue)) {
-                $this->user_id->addErrorMessage($this->user_id->getErrorMessage(false));
             }
             if ($this->saldo->Visible && $this->saldo->Required) {
                 if (!$this->saldo->IsDetailKey && EmptyValue($this->saldo->FormValue)) {
@@ -1195,9 +1162,6 @@ class SaldoawalAdd extends Saldoawal
         // kredit
         $this->kredit->setDbValueDef($rsnew, $this->kredit->CurrentValue, false);
 
-        // user_id
-        $this->user_id->setDbValueDef($rsnew, $this->user_id->CurrentValue, false);
-
         // saldo
         $this->saldo->setDbValueDef($rsnew, $this->saldo->CurrentValue, strval($this->saldo->CurrentValue) == "");
         return $rsnew;
@@ -1220,9 +1184,6 @@ class SaldoawalAdd extends Saldoawal
         }
         if (isset($row['kredit'])) { // kredit
             $this->kredit->setFormValue($row['kredit']);
-        }
-        if (isset($row['user_id'])) { // user_id
-            $this->user_id->setFormValue($row['user_id']);
         }
         if (isset($row['saldo'])) { // saldo
             $this->saldo->setFormValue($row['saldo']);

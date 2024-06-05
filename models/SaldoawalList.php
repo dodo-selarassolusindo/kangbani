@@ -145,12 +145,12 @@ class SaldoawalList extends Saldoawal
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->periode_id->setVisibility();
         $this->akun_id->setVisibility();
         $this->debet->setVisibility();
         $this->kredit->setVisibility();
-        $this->user_id->setVisibility();
+        $this->user_id->Visible = false;
         $this->saldo->setVisibility();
     }
 
@@ -1236,12 +1236,10 @@ class SaldoawalList extends Saldoawal
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id); // id
             $this->updateSort($this->periode_id); // periode_id
             $this->updateSort($this->akun_id); // akun_id
             $this->updateSort($this->debet); // debet
             $this->updateSort($this->kredit); // kredit
-            $this->updateSort($this->user_id); // user_id
             $this->updateSort($this->saldo); // saldo
             $this->setStartRecordNumber(1); // Reset start position
         }
@@ -1336,6 +1334,14 @@ class SaldoawalList extends Saldoawal
         $item->ShowInDropDown = false;
         $item->ShowInButtonGroup = false;
 
+        // "sequence"
+        $item = &$this->ListOptions->add("sequence");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = true;
+        $item->OnLeft = true; // Always on left
+        $item->ShowInDropDown = false;
+        $item->ShowInButtonGroup = false;
+
         // Drop down button for ListOptions
         $this->ListOptions->UseDropDownButton = false;
         $this->ListOptions->DropDownButtonPhrase = $Language->phrase("ButtonListOptions");
@@ -1373,6 +1379,10 @@ class SaldoawalList extends Saldoawal
 
         // Call ListOptions_Rendering event
         $this->listOptionsRendering();
+
+        // "sequence"
+        $opt = $this->ListOptions["sequence"];
+        $opt->Body = FormatSequenceNumber($this->RecordCount);
         $pageUrl = $this->pageUrl(false);
         if ($this->CurrentMode == "view") {
             // "view"
@@ -1511,12 +1521,10 @@ class SaldoawalList extends Saldoawal
             $item = &$option->addGroupOption();
             $item->Body = "";
             $item->Visible = $this->UseColumnVisibility;
-            $this->createColumnOption($option, "id");
             $this->createColumnOption($option, "periode_id");
             $this->createColumnOption($option, "akun_id");
             $this->createColumnOption($option, "debet");
             $this->createColumnOption($option, "kredit");
-            $this->createColumnOption($option, "user_id");
             $this->createColumnOption($option, "saldo");
         }
 
@@ -2099,10 +2107,6 @@ class SaldoawalList extends Saldoawal
             $this->saldo->ViewValue = FormatNumber($this->saldo->ViewValue, $this->saldo->formatPattern());
             $this->saldo->CellCssStyle .= "text-align: right;";
 
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
             // periode_id
             $this->periode_id->HrefValue = "";
             $this->periode_id->TooltipValue = "";
@@ -2118,10 +2122,6 @@ class SaldoawalList extends Saldoawal
             // kredit
             $this->kredit->HrefValue = "";
             $this->kredit->TooltipValue = "";
-
-            // user_id
-            $this->user_id->HrefValue = "";
-            $this->user_id->TooltipValue = "";
 
             // saldo
             $this->saldo->HrefValue = "";

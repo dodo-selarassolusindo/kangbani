@@ -50,9 +50,6 @@ $Page->showMessage();
 <table class="<?= $Page->TableClass ?>">
     <thead>
     <tr class="ew-table-header">
-<?php if ($Page->id->Visible) { // id ?>
-        <th class="<?= $Page->id->headerCellClass() ?>"><span id="elh_saldoawal_id" class="saldoawal_id"><?= $Page->id->caption() ?></span></th>
-<?php } ?>
 <?php if ($Page->periode_id->Visible) { // periode_id ?>
         <th class="<?= $Page->periode_id->headerCellClass() ?>"><span id="elh_saldoawal_periode_id" class="saldoawal_periode_id"><?= $Page->periode_id->caption() ?></span></th>
 <?php } ?>
@@ -64,9 +61,6 @@ $Page->showMessage();
 <?php } ?>
 <?php if ($Page->kredit->Visible) { // kredit ?>
         <th class="<?= $Page->kredit->headerCellClass() ?>"><span id="elh_saldoawal_kredit" class="saldoawal_kredit"><?= $Page->kredit->caption() ?></span></th>
-<?php } ?>
-<?php if ($Page->user_id->Visible) { // user_id ?>
-        <th class="<?= $Page->user_id->headerCellClass() ?>"><span id="elh_saldoawal_user_id" class="saldoawal_user_id"><?= $Page->user_id->caption() ?></span></th>
 <?php } ?>
 <?php if ($Page->saldo->Visible) { // saldo ?>
         <th class="<?= $Page->saldo->headerCellClass() ?>"><span id="elh_saldoawal_saldo" class="saldoawal_saldo"><?= $Page->saldo->caption() ?></span></th>
@@ -92,14 +86,6 @@ while ($Page->fetch()) {
     $Page->renderRow();
 ?>
     <tr <?= $Page->rowAttributes() ?>>
-<?php if ($Page->id->Visible) { // id ?>
-        <td<?= $Page->id->cellAttributes() ?>>
-<span id="">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($Page->periode_id->Visible) { // periode_id ?>
         <td<?= $Page->periode_id->cellAttributes() ?>>
 <span id="">
@@ -129,14 +115,6 @@ while ($Page->fetch()) {
 <span id="">
 <span<?= $Page->kredit->viewAttributes() ?>>
 <?= $Page->kredit->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($Page->user_id->Visible) { // user_id ?>
-        <td<?= $Page->user_id->cellAttributes() ?>>
-<span id="">
-<span<?= $Page->user_id->viewAttributes() ?>>
-<?= $Page->user_id->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

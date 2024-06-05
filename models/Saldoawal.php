@@ -1394,12 +1394,10 @@ class Saldoawal extends DbTable
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->id);
                     $doc->exportCaption($this->periode_id);
                     $doc->exportCaption($this->akun_id);
                     $doc->exportCaption($this->debet);
                     $doc->exportCaption($this->kredit);
-                    $doc->exportCaption($this->user_id);
                     $doc->exportCaption($this->saldo);
                 } else {
                     $doc->exportCaption($this->id);
@@ -1435,12 +1433,10 @@ class Saldoawal extends DbTable
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->id);
                         $doc->exportField($this->periode_id);
                         $doc->exportField($this->akun_id);
                         $doc->exportField($this->debet);
                         $doc->exportField($this->kredit);
-                        $doc->exportField($this->user_id);
                         $doc->exportField($this->saldo);
                     } else {
                         $doc->exportField($this->id);

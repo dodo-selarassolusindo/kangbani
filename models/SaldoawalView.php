@@ -960,10 +960,6 @@ class SaldoawalView extends Saldoawal
             $this->saldo->ViewValue = FormatNumber($this->saldo->ViewValue, $this->saldo->formatPattern());
             $this->saldo->CellCssStyle .= "text-align: right;";
 
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
             // periode_id
             $this->periode_id->HrefValue = "";
             $this->periode_id->TooltipValue = "";
@@ -979,10 +975,6 @@ class SaldoawalView extends Saldoawal
             // kredit
             $this->kredit->HrefValue = "";
             $this->kredit->TooltipValue = "";
-
-            // user_id
-            $this->user_id->HrefValue = "";
-            $this->user_id->TooltipValue = "";
 
             // saldo
             $this->saldo->HrefValue = "";

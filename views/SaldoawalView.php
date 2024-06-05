@@ -56,17 +56,6 @@ loadjs.ready("head", function () {
 <input type="hidden" name="t" value="saldoawal">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <table class="<?= $Page->TableClass ?>">
-<?php if ($Page->id->Visible) { // id ?>
-    <tr id="r_id"<?= $Page->id->rowAttributes() ?>>
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_saldoawal_id"><?= $Page->id->caption() ?></span></td>
-        <td data-name="id"<?= $Page->id->cellAttributes() ?>>
-<span id="el_saldoawal_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
 <?php if ($Page->periode_id->Visible) { // periode_id ?>
     <tr id="r_periode_id"<?= $Page->periode_id->rowAttributes() ?>>
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_saldoawal_periode_id"><?= $Page->periode_id->caption() ?></span></td>
@@ -107,17 +96,6 @@ loadjs.ready("head", function () {
 <span id="el_saldoawal_kredit">
 <span<?= $Page->kredit->viewAttributes() ?>>
 <?= $Page->kredit->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
-<?php if ($Page->user_id->Visible) { // user_id ?>
-    <tr id="r_user_id"<?= $Page->user_id->rowAttributes() ?>>
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_saldoawal_user_id"><?= $Page->user_id->caption() ?></span></td>
-        <td data-name="user_id"<?= $Page->user_id->cellAttributes() ?>>
-<span id="el_saldoawal_user_id">
-<span<?= $Page->user_id->viewAttributes() ?>>
-<?= $Page->user_id->getViewValue() ?></span>
 </span>
 </td>
     </tr>

@@ -121,12 +121,12 @@ class SaldoawalDelete extends Saldoawal
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->periode_id->setVisibility();
         $this->akun_id->setVisibility();
         $this->debet->setVisibility();
         $this->kredit->setVisibility();
-        $this->user_id->setVisibility();
+        $this->user_id->Visible = false;
         $this->saldo->setVisibility();
     }
 
@@ -702,10 +702,6 @@ class SaldoawalDelete extends Saldoawal
             $this->saldo->ViewValue = FormatNumber($this->saldo->ViewValue, $this->saldo->formatPattern());
             $this->saldo->CellCssStyle .= "text-align: right;";
 
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
             // periode_id
             $this->periode_id->HrefValue = "";
             $this->periode_id->TooltipValue = "";
@@ -721,10 +717,6 @@ class SaldoawalDelete extends Saldoawal
             // kredit
             $this->kredit->HrefValue = "";
             $this->kredit->TooltipValue = "";
-
-            // user_id
-            $this->user_id->HrefValue = "";
-            $this->user_id->TooltipValue = "";
 
             // saldo
             $this->saldo->HrefValue = "";
