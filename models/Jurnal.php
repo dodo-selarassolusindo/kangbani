@@ -1468,12 +1468,9 @@ class Jurnal extends DbTable
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->id);
                     $doc->exportCaption($this->tipejurnal_id);
                     $doc->exportCaption($this->period_id);
-                    $doc->exportCaption($this->createon);
                     $doc->exportCaption($this->keterangan);
-                    $doc->exportCaption($this->person_id);
                     $doc->exportCaption($this->nomer);
                 } else {
                     $doc->exportCaption($this->id);
@@ -1509,12 +1506,9 @@ class Jurnal extends DbTable
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->id);
                         $doc->exportField($this->tipejurnal_id);
                         $doc->exportField($this->period_id);
-                        $doc->exportField($this->createon);
                         $doc->exportField($this->keterangan);
-                        $doc->exportField($this->person_id);
                         $doc->exportField($this->nomer);
                     } else {
                         $doc->exportField($this->id);

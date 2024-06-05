@@ -121,12 +121,12 @@ class JurnalDelete extends Jurnal
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->tipejurnal_id->setVisibility();
         $this->period_id->setVisibility();
-        $this->createon->setVisibility();
+        $this->createon->Visible = false;
         $this->keterangan->setVisibility();
-        $this->person_id->setVisibility();
+        $this->person_id->Visible = false;
         $this->nomer->setVisibility();
     }
 
@@ -698,10 +698,6 @@ class JurnalDelete extends Jurnal
             // nomer
             $this->nomer->ViewValue = $this->nomer->CurrentValue;
 
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
             // tipejurnal_id
             $this->tipejurnal_id->HrefValue = "";
             $this->tipejurnal_id->TooltipValue = "";
@@ -710,17 +706,9 @@ class JurnalDelete extends Jurnal
             $this->period_id->HrefValue = "";
             $this->period_id->TooltipValue = "";
 
-            // createon
-            $this->createon->HrefValue = "";
-            $this->createon->TooltipValue = "";
-
             // keterangan
             $this->keterangan->HrefValue = "";
             $this->keterangan->TooltipValue = "";
-
-            // person_id
-            $this->person_id->HrefValue = "";
-            $this->person_id->TooltipValue = "";
 
             // nomer
             $this->nomer->HrefValue = "";

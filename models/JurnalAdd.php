@@ -124,9 +124,9 @@ class JurnalAdd extends Jurnal
         $this->id->Visible = false;
         $this->tipejurnal_id->setVisibility();
         $this->period_id->setVisibility();
-        $this->createon->setVisibility();
+        $this->createon->Visible = false;
         $this->keterangan->setVisibility();
-        $this->person_id->setVisibility();
+        $this->person_id->Visible = false;
         $this->nomer->setVisibility();
     }
 
@@ -699,17 +699,6 @@ class JurnalAdd extends Jurnal
             }
         }
 
-        // Check field name 'createon' first before field var 'x_createon'
-        $val = $CurrentForm->hasValue("createon") ? $CurrentForm->getValue("createon") : $CurrentForm->getValue("x_createon");
-        if (!$this->createon->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->createon->Visible = false; // Disable update for API request
-            } else {
-                $this->createon->setFormValue($val);
-            }
-            $this->createon->CurrentValue = UnFormatDateTime($this->createon->CurrentValue, $this->createon->formatPattern());
-        }
-
         // Check field name 'keterangan' first before field var 'x_keterangan'
         $val = $CurrentForm->hasValue("keterangan") ? $CurrentForm->getValue("keterangan") : $CurrentForm->getValue("x_keterangan");
         if (!$this->keterangan->IsDetailKey) {
@@ -717,16 +706,6 @@ class JurnalAdd extends Jurnal
                 $this->keterangan->Visible = false; // Disable update for API request
             } else {
                 $this->keterangan->setFormValue($val);
-            }
-        }
-
-        // Check field name 'person_id' first before field var 'x_person_id'
-        $val = $CurrentForm->hasValue("person_id") ? $CurrentForm->getValue("person_id") : $CurrentForm->getValue("x_person_id");
-        if (!$this->person_id->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->person_id->Visible = false; // Disable update for API request
-            } else {
-                $this->person_id->setFormValue($val, true, $validate);
             }
         }
 
@@ -750,10 +729,7 @@ class JurnalAdd extends Jurnal
         global $CurrentForm;
         $this->tipejurnal_id->CurrentValue = $this->tipejurnal_id->FormValue;
         $this->period_id->CurrentValue = $this->period_id->FormValue;
-        $this->createon->CurrentValue = $this->createon->FormValue;
-        $this->createon->CurrentValue = UnFormatDateTime($this->createon->CurrentValue, $this->createon->formatPattern());
         $this->keterangan->CurrentValue = $this->keterangan->FormValue;
-        $this->person_id->CurrentValue = $this->person_id->FormValue;
         $this->nomer->CurrentValue = $this->nomer->FormValue;
     }
 
@@ -941,14 +917,8 @@ class JurnalAdd extends Jurnal
             // period_id
             $this->period_id->HrefValue = "";
 
-            // createon
-            $this->createon->HrefValue = "";
-
             // keterangan
             $this->keterangan->HrefValue = "";
-
-            // person_id
-            $this->person_id->HrefValue = "";
 
             // nomer
             $this->nomer->HrefValue = "";
@@ -1010,8 +980,6 @@ class JurnalAdd extends Jurnal
             }
             $this->period_id->PlaceHolder = RemoveHtml($this->period_id->caption());
 
-            // createon
-
             // keterangan
             $this->keterangan->setupEditAttributes();
             if (!$this->keterangan->Raw) {
@@ -1019,14 +987,6 @@ class JurnalAdd extends Jurnal
             }
             $this->keterangan->EditValue = HtmlEncode($this->keterangan->CurrentValue);
             $this->keterangan->PlaceHolder = RemoveHtml($this->keterangan->caption());
-
-            // person_id
-            $this->person_id->setupEditAttributes();
-            $this->person_id->EditValue = $this->person_id->CurrentValue;
-            $this->person_id->PlaceHolder = RemoveHtml($this->person_id->caption());
-            if (strval($this->person_id->EditValue) != "" && is_numeric($this->person_id->EditValue)) {
-                $this->person_id->EditValue = FormatNumber($this->person_id->EditValue, null);
-            }
 
             // nomer
             $this->nomer->setupEditAttributes();
@@ -1044,14 +1004,8 @@ class JurnalAdd extends Jurnal
             // period_id
             $this->period_id->HrefValue = "";
 
-            // createon
-            $this->createon->HrefValue = "";
-
             // keterangan
             $this->keterangan->HrefValue = "";
-
-            // person_id
-            $this->person_id->HrefValue = "";
 
             // nomer
             $this->nomer->HrefValue = "";
@@ -1086,23 +1040,10 @@ class JurnalAdd extends Jurnal
                     $this->period_id->addErrorMessage(str_replace("%s", $this->period_id->caption(), $this->period_id->RequiredErrorMessage));
                 }
             }
-            if ($this->createon->Visible && $this->createon->Required) {
-                if (!$this->createon->IsDetailKey && EmptyValue($this->createon->FormValue)) {
-                    $this->createon->addErrorMessage(str_replace("%s", $this->createon->caption(), $this->createon->RequiredErrorMessage));
-                }
-            }
             if ($this->keterangan->Visible && $this->keterangan->Required) {
                 if (!$this->keterangan->IsDetailKey && EmptyValue($this->keterangan->FormValue)) {
                     $this->keterangan->addErrorMessage(str_replace("%s", $this->keterangan->caption(), $this->keterangan->RequiredErrorMessage));
                 }
-            }
-            if ($this->person_id->Visible && $this->person_id->Required) {
-                if (!$this->person_id->IsDetailKey && EmptyValue($this->person_id->FormValue)) {
-                    $this->person_id->addErrorMessage(str_replace("%s", $this->person_id->caption(), $this->person_id->RequiredErrorMessage));
-                }
-            }
-            if (!CheckInteger($this->person_id->FormValue)) {
-                $this->person_id->addErrorMessage($this->person_id->getErrorMessage(false));
             }
             if ($this->nomer->Visible && $this->nomer->Required) {
                 if (!$this->nomer->IsDetailKey && EmptyValue($this->nomer->FormValue)) {
@@ -1229,15 +1170,8 @@ class JurnalAdd extends Jurnal
         // period_id
         $this->period_id->setDbValueDef($rsnew, $this->period_id->CurrentValue, false);
 
-        // createon
-        $this->createon->CurrentValue = $this->createon->getAutoUpdateValue(); // PHP
-        $this->createon->setDbValueDef($rsnew, UnFormatDateTime($this->createon->CurrentValue, $this->createon->formatPattern()));
-
         // keterangan
         $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, false);
-
-        // person_id
-        $this->person_id->setDbValueDef($rsnew, $this->person_id->CurrentValue, false);
 
         // nomer
         $this->nomer->setDbValueDef($rsnew, $this->nomer->CurrentValue, false);
@@ -1256,14 +1190,8 @@ class JurnalAdd extends Jurnal
         if (isset($row['period_id'])) { // period_id
             $this->period_id->setFormValue($row['period_id']);
         }
-        if (isset($row['createon'])) { // createon
-            $this->createon->setFormValue($row['createon']);
-        }
         if (isset($row['keterangan'])) { // keterangan
             $this->keterangan->setFormValue($row['keterangan']);
-        }
-        if (isset($row['person_id'])) { // person_id
-            $this->person_id->setFormValue($row['person_id']);
         }
         if (isset($row['nomer'])) { // nomer
             $this->nomer->setFormValue($row['nomer']);

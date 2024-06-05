@@ -1044,10 +1044,6 @@ class JurnalView extends Jurnal
             // nomer
             $this->nomer->ViewValue = $this->nomer->CurrentValue;
 
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
             // tipejurnal_id
             $this->tipejurnal_id->HrefValue = "";
             $this->tipejurnal_id->TooltipValue = "";
@@ -1056,17 +1052,9 @@ class JurnalView extends Jurnal
             $this->period_id->HrefValue = "";
             $this->period_id->TooltipValue = "";
 
-            // createon
-            $this->createon->HrefValue = "";
-            $this->createon->TooltipValue = "";
-
             // keterangan
             $this->keterangan->HrefValue = "";
             $this->keterangan->TooltipValue = "";
-
-            // person_id
-            $this->person_id->HrefValue = "";
-            $this->person_id->TooltipValue = "";
 
             // nomer
             $this->nomer->HrefValue = "";

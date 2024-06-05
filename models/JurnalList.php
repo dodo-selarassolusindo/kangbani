@@ -145,12 +145,12 @@ class JurnalList extends Jurnal
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->tipejurnal_id->setVisibility();
         $this->period_id->setVisibility();
-        $this->createon->setVisibility();
+        $this->createon->Visible = false;
         $this->keterangan->setVisibility();
-        $this->person_id->setVisibility();
+        $this->person_id->Visible = false;
         $this->nomer->setVisibility();
     }
 
@@ -1240,12 +1240,9 @@ class JurnalList extends Jurnal
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id); // id
             $this->updateSort($this->tipejurnal_id); // tipejurnal_id
             $this->updateSort($this->period_id); // period_id
-            $this->updateSort($this->createon); // createon
             $this->updateSort($this->keterangan); // keterangan
-            $this->updateSort($this->person_id); // person_id
             $this->updateSort($this->nomer); // nomer
             $this->setStartRecordNumber(1); // Reset start position
         }
@@ -1639,12 +1636,9 @@ class JurnalList extends Jurnal
             $item = &$option->addGroupOption();
             $item->Body = "";
             $item->Visible = $this->UseColumnVisibility;
-            $this->createColumnOption($option, "id");
             $this->createColumnOption($option, "tipejurnal_id");
             $this->createColumnOption($option, "period_id");
-            $this->createColumnOption($option, "createon");
             $this->createColumnOption($option, "keterangan");
-            $this->createColumnOption($option, "person_id");
             $this->createColumnOption($option, "nomer");
         }
 
@@ -2223,10 +2217,6 @@ class JurnalList extends Jurnal
             // nomer
             $this->nomer->ViewValue = $this->nomer->CurrentValue;
 
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
             // tipejurnal_id
             $this->tipejurnal_id->HrefValue = "";
             $this->tipejurnal_id->TooltipValue = "";
@@ -2235,17 +2225,9 @@ class JurnalList extends Jurnal
             $this->period_id->HrefValue = "";
             $this->period_id->TooltipValue = "";
 
-            // createon
-            $this->createon->HrefValue = "";
-            $this->createon->TooltipValue = "";
-
             // keterangan
             $this->keterangan->HrefValue = "";
             $this->keterangan->TooltipValue = "";
-
-            // person_id
-            $this->person_id->HrefValue = "";
-            $this->person_id->TooltipValue = "";
 
             // nomer
             $this->nomer->HrefValue = "";
