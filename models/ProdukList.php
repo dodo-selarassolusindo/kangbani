@@ -713,6 +713,7 @@ class ProdukList extends Produk
         $this->setupLookupOptions($this->akunjual);
         $this->setupLookupOptions($this->akunpersediaan);
         $this->setupLookupOptions($this->akunreturjual);
+        $this->setupLookupOptions($this->supplier_id);
         $this->setupLookupOptions($this->aktif);
 
         // Update form name to avoid conflict
@@ -2525,8 +2526,28 @@ class ProdukList extends Produk
             $this->berat->ViewValue = FormatNumber($this->berat->ViewValue, $this->berat->formatPattern());
 
             // supplier_id
-            $this->supplier_id->ViewValue = $this->supplier_id->CurrentValue;
-            $this->supplier_id->ViewValue = FormatNumber($this->supplier_id->ViewValue, $this->supplier_id->formatPattern());
+            $curVal = strval($this->supplier_id->CurrentValue);
+            if ($curVal != "") {
+                $this->supplier_id->ViewValue = $this->supplier_id->lookupCacheOption($curVal);
+                if ($this->supplier_id->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->supplier_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->supplier_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $lookupFilter = $this->supplier_id->getSelectFilter($this); // PHP
+                    $sqlWrk = $this->supplier_id->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->supplier_id->Lookup->renderViewRow($rswrk[0]);
+                        $this->supplier_id->ViewValue = $this->supplier_id->displayValue($arwrk);
+                    } else {
+                        $this->supplier_id->ViewValue = FormatNumber($this->supplier_id->CurrentValue, $this->supplier_id->formatPattern());
+                    }
+                }
+            } else {
+                $this->supplier_id->ViewValue = null;
+            }
 
             // waktukirim
             $this->waktukirim->ViewValue = $this->waktukirim->CurrentValue;
@@ -2720,6 +2741,9 @@ class ProdukList extends Produk
                 case "x_akunpersediaan":
                     break;
                 case "x_akunreturjual":
+                    break;
+                case "x_supplier_id":
+                    $lookupFilter = $fld->getSelectFilter(); // PHP
                     break;
                 case "x_aktif":
                     break;

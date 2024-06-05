@@ -886,10 +886,6 @@ class TosView extends Tos
             // keterangan
             $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
 
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
             // kode
             $this->kode->HrefValue = "";
             $this->kode->TooltipValue = "";

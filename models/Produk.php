@@ -594,12 +594,17 @@ class Produk extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'SELECT' // Edit Tag
         );
+        $this->supplier_id->addMethod("getSelectFilter", fn() => "`type_id` = 1");
         $this->supplier_id->InputTextType = "text";
         $this->supplier_id->Raw = true;
+        $this->supplier_id->setSelectMultiple(false); // Select one
+        $this->supplier_id->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->supplier_id->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->supplier_id->Lookup = new Lookup($this->supplier_id, 'person', false, 'id', ["nama","","",""], '', '', [], [], [], [], [], [], false, '', '', "`nama`");
         $this->supplier_id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->supplier_id->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
+        $this->supplier_id->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
         $this->Fields['supplier_id'] = &$this->supplier_id;
 
         // waktukirim
@@ -1896,8 +1901,28 @@ class Produk extends DbTable
         $this->berat->ViewValue = FormatNumber($this->berat->ViewValue, $this->berat->formatPattern());
 
         // supplier_id
-        $this->supplier_id->ViewValue = $this->supplier_id->CurrentValue;
-        $this->supplier_id->ViewValue = FormatNumber($this->supplier_id->ViewValue, $this->supplier_id->formatPattern());
+        $curVal = strval($this->supplier_id->CurrentValue);
+        if ($curVal != "") {
+            $this->supplier_id->ViewValue = $this->supplier_id->lookupCacheOption($curVal);
+            if ($this->supplier_id->ViewValue === null) { // Lookup from database
+                $filterWrk = SearchFilter($this->supplier_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->supplier_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                $lookupFilter = $this->supplier_id->getSelectFilter($this); // PHP
+                $sqlWrk = $this->supplier_id->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->supplier_id->Lookup->renderViewRow($rswrk[0]);
+                    $this->supplier_id->ViewValue = $this->supplier_id->displayValue($arwrk);
+                } else {
+                    $this->supplier_id->ViewValue = FormatNumber($this->supplier_id->CurrentValue, $this->supplier_id->formatPattern());
+                }
+            }
+        } else {
+            $this->supplier_id->ViewValue = null;
+        }
 
         // waktukirim
         $this->waktukirim->ViewValue = $this->waktukirim->CurrentValue;
@@ -2127,11 +2152,7 @@ class Produk extends DbTable
 
         // supplier_id
         $this->supplier_id->setupEditAttributes();
-        $this->supplier_id->EditValue = $this->supplier_id->CurrentValue;
         $this->supplier_id->PlaceHolder = RemoveHtml($this->supplier_id->caption());
-        if (strval($this->supplier_id->EditValue) != "" && is_numeric($this->supplier_id->EditValue)) {
-            $this->supplier_id->EditValue = FormatNumber($this->supplier_id->EditValue, null);
-        }
 
         // waktukirim
         $this->waktukirim->setupEditAttributes();

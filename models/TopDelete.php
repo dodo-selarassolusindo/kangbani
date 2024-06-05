@@ -121,7 +121,7 @@ class TopDelete extends Top
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->kode->setVisibility();
         $this->nama->setVisibility();
         $this->keterangan->setVisibility();
@@ -627,10 +627,6 @@ class TopDelete extends Top
 
             // keterangan
             $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
-
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // kode
             $this->kode->HrefValue = "";

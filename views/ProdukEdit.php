@@ -48,7 +48,7 @@ loadjs.ready(["wrapper", "head"], function () {
             ["l", [fields.l.visible && fields.l.required ? ew.Validators.required(fields.l.caption) : null, ew.Validators.float], fields.l.isInvalid],
             ["_t", [fields._t.visible && fields._t.required ? ew.Validators.required(fields._t.caption) : null, ew.Validators.float], fields._t.isInvalid],
             ["berat", [fields.berat.visible && fields.berat.required ? ew.Validators.required(fields.berat.caption) : null, ew.Validators.float], fields.berat.isInvalid],
-            ["supplier_id", [fields.supplier_id.visible && fields.supplier_id.required ? ew.Validators.required(fields.supplier_id.caption) : null, ew.Validators.integer], fields.supplier_id.isInvalid],
+            ["supplier_id", [fields.supplier_id.visible && fields.supplier_id.required ? ew.Validators.required(fields.supplier_id.caption) : null], fields.supplier_id.isInvalid],
             ["waktukirim", [fields.waktukirim.visible && fields.waktukirim.required ? ew.Validators.required(fields.waktukirim.caption) : null, ew.Validators.integer], fields.waktukirim.isInvalid],
             ["aktif", [fields.aktif.visible && fields.aktif.required ? ew.Validators.required(fields.aktif.caption) : null], fields.aktif.isInvalid]
         ])
@@ -74,6 +74,7 @@ loadjs.ready(["wrapper", "head"], function () {
             "akunjual": <?= $Page->akunjual->toClientList($Page) ?>,
             "akunpersediaan": <?= $Page->akunpersediaan->toClientList($Page) ?>,
             "akunreturjual": <?= $Page->akunreturjual->toClientList($Page) ?>,
+            "supplier_id": <?= $Page->supplier_id->toClientList($Page) ?>,
             "aktif": <?= $Page->aktif->toClientList($Page) ?>,
         })
         .build();
@@ -580,9 +581,43 @@ loadjs.ready("fprodukedit", function() {
         <label id="elh_produk_supplier_id" for="x_supplier_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->supplier_id->caption() ?><?= $Page->supplier_id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->supplier_id->cellAttributes() ?>>
 <span id="el_produk_supplier_id">
-<input type="<?= $Page->supplier_id->getInputTextType() ?>" name="x_supplier_id" id="x_supplier_id" data-table="produk" data-field="x_supplier_id" value="<?= $Page->supplier_id->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->supplier_id->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->supplier_id->formatPattern()) ?>"<?= $Page->supplier_id->editAttributes() ?> aria-describedby="x_supplier_id_help">
-<?= $Page->supplier_id->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->supplier_id->getErrorMessage() ?></div>
+    <select
+        id="x_supplier_id"
+        name="x_supplier_id"
+        class="form-select ew-select<?= $Page->supplier_id->isInvalidClass() ?>"
+        <?php if (!$Page->supplier_id->IsNativeSelect) { ?>
+        data-select2-id="fprodukedit_x_supplier_id"
+        <?php } ?>
+        data-table="produk"
+        data-field="x_supplier_id"
+        data-value-separator="<?= $Page->supplier_id->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->supplier_id->getPlaceHolder()) ?>"
+        <?= $Page->supplier_id->editAttributes() ?>>
+        <?= $Page->supplier_id->selectOptionListHtml("x_supplier_id") ?>
+    </select>
+    <?= $Page->supplier_id->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->supplier_id->getErrorMessage() ?></div>
+<?= $Page->supplier_id->Lookup->getParamTag($Page, "p_x_supplier_id") ?>
+<?php if (!$Page->supplier_id->IsNativeSelect) { ?>
+<script>
+loadjs.ready("fprodukedit", function() {
+    var options = { name: "x_supplier_id", selectId: "fprodukedit_x_supplier_id" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    if (!el)
+        return;
+    options.closeOnSelect = !options.multiple;
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fprodukedit.lists.supplier_id?.lookupOptions.length) {
+        options.data = { id: "x_supplier_id", form: "fprodukedit" };
+    } else {
+        options.ajax = { id: "x_supplier_id", form: "fprodukedit", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.produk.fields.supplier_id.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+<?php } ?>
 </span>
 </div></div>
     </div>

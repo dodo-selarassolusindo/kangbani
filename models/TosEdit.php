@@ -121,7 +121,7 @@ class TosEdit extends Tos
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->kode->setVisibility();
         $this->name->setVisibility();
         $this->keterangan->setVisibility();
@@ -749,12 +749,6 @@ class TosEdit extends Tos
         global $CurrentForm;
         $validate = !Config("SERVER_VALIDATE");
 
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            $this->id->setFormValue($val);
-        }
-
         // Check field name 'kode' first before field var 'x_kode'
         $val = $CurrentForm->hasValue("kode") ? $CurrentForm->getValue("kode") : $CurrentForm->getValue("x_kode");
         if (!$this->kode->IsDetailKey) {
@@ -783,6 +777,12 @@ class TosEdit extends Tos
             } else {
                 $this->keterangan->setFormValue($val);
             }
+        }
+
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        if (!$this->id->IsDetailKey) {
+            $this->id->setFormValue($val);
         }
     }
 
@@ -963,9 +963,6 @@ class TosEdit extends Tos
             // keterangan
             $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
 
-            // id
-            $this->id->HrefValue = "";
-
             // kode
             $this->kode->HrefValue = "";
 
@@ -975,10 +972,6 @@ class TosEdit extends Tos
             // keterangan
             $this->keterangan->HrefValue = "";
         } elseif ($this->RowType == RowType::EDIT) {
-            // id
-            $this->id->setupEditAttributes();
-            $this->id->EditValue = $this->id->CurrentValue;
-
             // kode
             $this->kode->setupEditAttributes();
             if (!$this->kode->Raw) {
@@ -1004,9 +997,6 @@ class TosEdit extends Tos
             $this->keterangan->PlaceHolder = RemoveHtml($this->keterangan->caption());
 
             // Edit refer script
-
-            // id
-            $this->id->HrefValue = "";
 
             // kode
             $this->kode->HrefValue = "";
@@ -1037,11 +1027,6 @@ class TosEdit extends Tos
             return true;
         }
         $validateForm = true;
-            if ($this->id->Visible && $this->id->Required) {
-                if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
-                    $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
-                }
-            }
             if ($this->kode->Visible && $this->kode->Required) {
                 if (!$this->kode->IsDetailKey && EmptyValue($this->kode->FormValue)) {
                     $this->kode->addErrorMessage(str_replace("%s", $this->kode->caption(), $this->kode->RequiredErrorMessage));
