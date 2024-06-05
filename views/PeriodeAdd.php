@@ -82,7 +82,7 @@ $Page->showMessage();
 <?php if (!$Page->start->ReadOnly && !$Page->start->Disabled && !isset($Page->start->EditAttrs["readonly"]) && !isset($Page->start->EditAttrs["disabled"])) { ?>
 <script>
 loadjs.ready(["fperiodeadd", "datetimepicker"], function () {
-    let format = "<?= DateFormat(0) ?>",
+    let format = "<?= DateFormat(7) ?>",
         options = {
             localization: {
                 locale: ew.LANGUAGE_ID + "-u-nu-" + ew.getNumberingSystem(),
@@ -123,7 +123,7 @@ loadjs.ready(["fperiodeadd", "datetimepicker"], function () {
 <?php if (!$Page->end->ReadOnly && !$Page->end->Disabled && !isset($Page->end->EditAttrs["readonly"]) && !isset($Page->end->EditAttrs["disabled"])) { ?>
 <script>
 loadjs.ready(["fperiodeadd", "datetimepicker"], function () {
-    let format = "<?= DateFormat(0) ?>",
+    let format = "<?= DateFormat(7) ?>",
         options = {
             localization: {
                 locale: ew.LANGUAGE_ID + "-u-nu-" + ew.getNumberingSystem(),

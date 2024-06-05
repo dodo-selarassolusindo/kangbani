@@ -149,7 +149,7 @@ class Saldoawal extends DbTable
         $this->periode_id->setSelectMultiple(false); // Select one
         $this->periode_id->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->periode_id->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        $this->periode_id->Lookup = new Lookup($this->periode_id, 'periode', false, 'id', ["start","end","",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(" . CastDateFieldForLike("`start`", 0, "DB") . ", ''),'" . ValueSeparator(1, $this->periode_id) . "',COALESCE(" . CastDateFieldForLike("`end`", 0, "DB") . ",''))");
+        $this->periode_id->Lookup = new Lookup($this->periode_id, 'periode', false, 'id', ["start","end","",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(" . CastDateFieldForLike("`start`", 7, "DB") . ", ''),'" . ValueSeparator(1, $this->periode_id) . "',COALESCE(" . CastDateFieldForLike("`end`", 7, "DB") . ",''))");
         $this->periode_id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->periode_id->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
         $this->Fields['periode_id'] = &$this->periode_id;

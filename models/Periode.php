@@ -130,10 +130,10 @@ class Periode extends DbTable
             'x_start', // Variable name
             'start', // Name
             '`start`', // Expression
-            CastDateFieldForLike("`start`", 0, "DB"), // Basic search expression
+            CastDateFieldForLike("`start`", 7, "DB"), // Basic search expression
             135, // Type
             19, // Size
-            0, // Date/Time format
+            7, // Date/Time format
             false, // Is upload field
             '`start`', // Virtual expression
             false, // Is virtual
@@ -144,7 +144,7 @@ class Periode extends DbTable
         );
         $this->start->InputTextType = "text";
         $this->start->Raw = true;
-        $this->start->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->start->DefaultErrorMessage = str_replace("%s", DateFormat(7), $Language->phrase("IncorrectDate"));
         $this->start->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
         $this->Fields['start'] = &$this->start;
 
@@ -154,10 +154,10 @@ class Periode extends DbTable
             'x_end', // Variable name
             'end', // Name
             '`end`', // Expression
-            CastDateFieldForLike("`end`", 0, "DB"), // Basic search expression
+            CastDateFieldForLike("`end`", 7, "DB"), // Basic search expression
             135, // Type
             19, // Size
-            0, // Date/Time format
+            7, // Date/Time format
             false, // Is upload field
             '`end`', // Virtual expression
             false, // Is virtual
@@ -168,7 +168,7 @@ class Periode extends DbTable
         );
         $this->end->InputTextType = "text";
         $this->end->Raw = true;
-        $this->end->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->end->DefaultErrorMessage = str_replace("%s", DateFormat(7), $Language->phrase("IncorrectDate"));
         $this->end->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
         $this->Fields['end'] = &$this->end;
 
