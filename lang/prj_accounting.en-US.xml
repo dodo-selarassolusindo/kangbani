@@ -5,17 +5,20 @@
     <menu id="25">
       <phrase id="menutext" value="Beranda" />
     </menu>
-    <menu id="23">
-      <phrase id="menutext" value="Master" />
-    </menu>
     <menu id="50">
       <phrase id="menutext" value="Akuntansi" />
+    </menu>
+    <menu id="11">
+      <phrase id="menutext" value="Pajak" />
     </menu>
     <menu id="13">
       <phrase id="menutext" value="Periode" />
     </menu>
     <menu id="10">
       <phrase id="menutext" value="Mata Uang" />
+    </menu>
+    <menu id="9">
+      <phrase id="menutext" value="Kurs" />
     </menu>
     <menu id="2">
       <phrase id="menutext" value="Grup" />
@@ -32,8 +35,20 @@
     <menu id="19">
       <phrase id="menutext" value="Tipe Jurnal" />
     </menu>
+    <menu id="4">
+      <phrase id="menutext" value="Jurnal" />
+    </menu>
+    <menu id="5">
+      <phrase id="menutext" value="Detail" />
+    </menu>
     <menu id="83">
       <phrase id="menutext" value="Barang" />
+    </menu>
+    <menu id="21">
+      <phrase id="menutext" value="Term of Sale" />
+    </menu>
+    <menu id="20">
+      <phrase id="menutext" value="Term of Payment" />
     </menu>
     <menu id="6">
       <phrase id="menutext" value="Kelompok" />
@@ -47,6 +62,12 @@
     <menu id="3">
       <phrase id="menutext" value="Gudang" />
     </menu>
+    <menu id="12">
+      <phrase id="menutext" value="Pengiriman" />
+    </menu>
+    <menu id="7">
+      <phrase id="menutext" value="Klasifikasi" />
+    </menu>
     <menu id="15">
       <phrase id="menutext" value="Produk" />
     </menu>
@@ -58,36 +79,6 @@
     </menu>
     <menu id="14">
       <phrase id="menutext" value="Person" />
-    </menu>
-    <menu id="7">
-      <phrase id="menutext" value="Klasifikasi" />
-    </menu>
-    <menu id="12">
-      <phrase id="menutext" value="Pengiriman" />
-    </menu>
-    <menu id="74">
-      <phrase id="menutext" value="Setting" />
-    </menu>
-    <menu id="21">
-      <phrase id="menutext" value="Term of Sale" />
-    </menu>
-    <menu id="20">
-      <phrase id="menutext" value="Term of Payment" />
-    </menu>
-    <menu id="9">
-      <phrase id="menutext" value="Kurs" />
-    </menu>
-    <menu id="11">
-      <phrase id="menutext" value="Pajak" />
-    </menu>
-    <menu id="24">
-      <phrase id="menutext" value="Transaksi" />
-    </menu>
-    <menu id="4">
-      <phrase id="menutext" value="Jurnal" />
-    </menu>
-    <menu id="5">
-      <phrase id="menutext" value="Detail" />
     </menu>
     <table id="akun">
       <phrase id="tblcaption" value="Akun" />
