@@ -32,8 +32,8 @@ loadjs.ready(["wrapper", "head"], function () {
         // Add fields
         .setFields([
             ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null], fields.id.isInvalid],
-            ["tipejurnal_id", [fields.tipejurnal_id.visible && fields.tipejurnal_id.required ? ew.Validators.required(fields.tipejurnal_id.caption) : null, ew.Validators.integer], fields.tipejurnal_id.isInvalid],
-            ["period_id", [fields.period_id.visible && fields.period_id.required ? ew.Validators.required(fields.period_id.caption) : null, ew.Validators.integer], fields.period_id.isInvalid],
+            ["tipejurnal_id", [fields.tipejurnal_id.visible && fields.tipejurnal_id.required ? ew.Validators.required(fields.tipejurnal_id.caption) : null], fields.tipejurnal_id.isInvalid],
+            ["period_id", [fields.period_id.visible && fields.period_id.required ? ew.Validators.required(fields.period_id.caption) : null], fields.period_id.isInvalid],
             ["createon", [fields.createon.visible && fields.createon.required ? ew.Validators.required(fields.createon.caption) : null], fields.createon.isInvalid],
             ["keterangan", [fields.keterangan.visible && fields.keterangan.required ? ew.Validators.required(fields.keterangan.caption) : null], fields.keterangan.isInvalid],
             ["person_id", [fields.person_id.visible && fields.person_id.required ? ew.Validators.required(fields.person_id.caption) : null, ew.Validators.integer], fields.person_id.isInvalid],
@@ -53,6 +53,8 @@ loadjs.ready(["wrapper", "head"], function () {
 
         // Dynamic selection lists
         .setLists({
+            "tipejurnal_id": <?= $Page->tipejurnal_id->toClientList($Page) ?>,
+            "period_id": <?= $Page->period_id->toClientList($Page) ?>,
         })
         .build();
     window[form.id] = form;
@@ -94,9 +96,43 @@ loadjs.ready("head", function () {
         <label id="elh_jurnal_tipejurnal_id" for="x_tipejurnal_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->tipejurnal_id->caption() ?><?= $Page->tipejurnal_id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->tipejurnal_id->cellAttributes() ?>>
 <span id="el_jurnal_tipejurnal_id">
-<input type="<?= $Page->tipejurnal_id->getInputTextType() ?>" name="x_tipejurnal_id" id="x_tipejurnal_id" data-table="jurnal" data-field="x_tipejurnal_id" value="<?= $Page->tipejurnal_id->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->tipejurnal_id->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->tipejurnal_id->formatPattern()) ?>"<?= $Page->tipejurnal_id->editAttributes() ?> aria-describedby="x_tipejurnal_id_help">
-<?= $Page->tipejurnal_id->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->tipejurnal_id->getErrorMessage() ?></div>
+    <select
+        id="x_tipejurnal_id"
+        name="x_tipejurnal_id"
+        class="form-select ew-select<?= $Page->tipejurnal_id->isInvalidClass() ?>"
+        <?php if (!$Page->tipejurnal_id->IsNativeSelect) { ?>
+        data-select2-id="fjurnaledit_x_tipejurnal_id"
+        <?php } ?>
+        data-table="jurnal"
+        data-field="x_tipejurnal_id"
+        data-value-separator="<?= $Page->tipejurnal_id->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->tipejurnal_id->getPlaceHolder()) ?>"
+        <?= $Page->tipejurnal_id->editAttributes() ?>>
+        <?= $Page->tipejurnal_id->selectOptionListHtml("x_tipejurnal_id") ?>
+    </select>
+    <?= $Page->tipejurnal_id->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->tipejurnal_id->getErrorMessage() ?></div>
+<?= $Page->tipejurnal_id->Lookup->getParamTag($Page, "p_x_tipejurnal_id") ?>
+<?php if (!$Page->tipejurnal_id->IsNativeSelect) { ?>
+<script>
+loadjs.ready("fjurnaledit", function() {
+    var options = { name: "x_tipejurnal_id", selectId: "fjurnaledit_x_tipejurnal_id" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    if (!el)
+        return;
+    options.closeOnSelect = !options.multiple;
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fjurnaledit.lists.tipejurnal_id?.lookupOptions.length) {
+        options.data = { id: "x_tipejurnal_id", form: "fjurnaledit" };
+    } else {
+        options.ajax = { id: "x_tipejurnal_id", form: "fjurnaledit", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumInputLength = ew.selectMinimumInputLength;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.jurnal.fields.tipejurnal_id.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+<?php } ?>
 </span>
 </div></div>
     </div>
@@ -106,9 +142,43 @@ loadjs.ready("head", function () {
         <label id="elh_jurnal_period_id" for="x_period_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->period_id->caption() ?><?= $Page->period_id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->period_id->cellAttributes() ?>>
 <span id="el_jurnal_period_id">
-<input type="<?= $Page->period_id->getInputTextType() ?>" name="x_period_id" id="x_period_id" data-table="jurnal" data-field="x_period_id" value="<?= $Page->period_id->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->period_id->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->period_id->formatPattern()) ?>"<?= $Page->period_id->editAttributes() ?> aria-describedby="x_period_id_help">
-<?= $Page->period_id->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->period_id->getErrorMessage() ?></div>
+    <select
+        id="x_period_id"
+        name="x_period_id"
+        class="form-select ew-select<?= $Page->period_id->isInvalidClass() ?>"
+        <?php if (!$Page->period_id->IsNativeSelect) { ?>
+        data-select2-id="fjurnaledit_x_period_id"
+        <?php } ?>
+        data-table="jurnal"
+        data-field="x_period_id"
+        data-value-separator="<?= $Page->period_id->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->period_id->getPlaceHolder()) ?>"
+        <?= $Page->period_id->editAttributes() ?>>
+        <?= $Page->period_id->selectOptionListHtml("x_period_id") ?>
+    </select>
+    <?= $Page->period_id->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->period_id->getErrorMessage() ?></div>
+<?= $Page->period_id->Lookup->getParamTag($Page, "p_x_period_id") ?>
+<?php if (!$Page->period_id->IsNativeSelect) { ?>
+<script>
+loadjs.ready("fjurnaledit", function() {
+    var options = { name: "x_period_id", selectId: "fjurnaledit_x_period_id" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    if (!el)
+        return;
+    options.closeOnSelect = !options.multiple;
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fjurnaledit.lists.period_id?.lookupOptions.length) {
+        options.data = { id: "x_period_id", form: "fjurnaledit" };
+    } else {
+        options.ajax = { id: "x_period_id", form: "fjurnaledit", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumInputLength = ew.selectMinimumInputLength;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.jurnal.fields.period_id.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+<?php } ?>
 </span>
 </div></div>
     </div>

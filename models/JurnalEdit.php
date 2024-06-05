@@ -512,6 +512,10 @@ class JurnalEdit extends Jurnal
             $this->InlineDelete = true;
         }
 
+        // Set up lookup cache
+        $this->setupLookupOptions($this->tipejurnal_id);
+        $this->setupLookupOptions($this->period_id);
+
         // Check modal
         if ($this->IsModal) {
             $SkipHeaderFooter = true;
@@ -777,7 +781,7 @@ class JurnalEdit extends Jurnal
             if (IsApi() && $val === null) {
                 $this->tipejurnal_id->Visible = false; // Disable update for API request
             } else {
-                $this->tipejurnal_id->setFormValue($val, true, $validate);
+                $this->tipejurnal_id->setFormValue($val);
             }
         }
 
@@ -787,7 +791,7 @@ class JurnalEdit extends Jurnal
             if (IsApi() && $val === null) {
                 $this->period_id->Visible = false; // Disable update for API request
             } else {
-                $this->period_id->setFormValue($val, true, $validate);
+                $this->period_id->setFormValue($val);
             }
         }
 
@@ -1021,12 +1025,50 @@ class JurnalEdit extends Jurnal
             $this->id->ViewValue = $this->id->CurrentValue;
 
             // tipejurnal_id
-            $this->tipejurnal_id->ViewValue = $this->tipejurnal_id->CurrentValue;
-            $this->tipejurnal_id->ViewValue = FormatNumber($this->tipejurnal_id->ViewValue, $this->tipejurnal_id->formatPattern());
+            $curVal = strval($this->tipejurnal_id->CurrentValue);
+            if ($curVal != "") {
+                $this->tipejurnal_id->ViewValue = $this->tipejurnal_id->lookupCacheOption($curVal);
+                if ($this->tipejurnal_id->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->tipejurnal_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->tipejurnal_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->tipejurnal_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->tipejurnal_id->Lookup->renderViewRow($rswrk[0]);
+                        $this->tipejurnal_id->ViewValue = $this->tipejurnal_id->displayValue($arwrk);
+                    } else {
+                        $this->tipejurnal_id->ViewValue = FormatNumber($this->tipejurnal_id->CurrentValue, $this->tipejurnal_id->formatPattern());
+                    }
+                }
+            } else {
+                $this->tipejurnal_id->ViewValue = null;
+            }
 
             // period_id
-            $this->period_id->ViewValue = $this->period_id->CurrentValue;
-            $this->period_id->ViewValue = FormatNumber($this->period_id->ViewValue, $this->period_id->formatPattern());
+            $curVal = strval($this->period_id->CurrentValue);
+            if ($curVal != "") {
+                $this->period_id->ViewValue = $this->period_id->lookupCacheOption($curVal);
+                if ($this->period_id->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->period_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->period_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->period_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->period_id->Lookup->renderViewRow($rswrk[0]);
+                        $this->period_id->ViewValue = $this->period_id->displayValue($arwrk);
+                    } else {
+                        $this->period_id->ViewValue = FormatNumber($this->period_id->CurrentValue, $this->period_id->formatPattern());
+                    }
+                }
+            } else {
+                $this->period_id->ViewValue = null;
+            }
 
             // createon
             $this->createon->ViewValue = $this->createon->CurrentValue;
@@ -1069,19 +1111,60 @@ class JurnalEdit extends Jurnal
 
             // tipejurnal_id
             $this->tipejurnal_id->setupEditAttributes();
-            $this->tipejurnal_id->EditValue = $this->tipejurnal_id->CurrentValue;
-            $this->tipejurnal_id->PlaceHolder = RemoveHtml($this->tipejurnal_id->caption());
-            if (strval($this->tipejurnal_id->EditValue) != "" && is_numeric($this->tipejurnal_id->EditValue)) {
-                $this->tipejurnal_id->EditValue = FormatNumber($this->tipejurnal_id->EditValue, null);
+            $curVal = trim(strval($this->tipejurnal_id->CurrentValue));
+            if ($curVal != "") {
+                $this->tipejurnal_id->ViewValue = $this->tipejurnal_id->lookupCacheOption($curVal);
+            } else {
+                $this->tipejurnal_id->ViewValue = $this->tipejurnal_id->Lookup !== null && is_array($this->tipejurnal_id->lookupOptions()) && count($this->tipejurnal_id->lookupOptions()) > 0 ? $curVal : null;
             }
+            if ($this->tipejurnal_id->ViewValue !== null) { // Load from cache
+                $this->tipejurnal_id->EditValue = array_values($this->tipejurnal_id->lookupOptions());
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = SearchFilter($this->tipejurnal_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $this->tipejurnal_id->CurrentValue, $this->tipejurnal_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                }
+                $sqlWrk = $this->tipejurnal_id->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->tipejurnal_id->EditValue = $arwrk;
+            }
+            $this->tipejurnal_id->PlaceHolder = RemoveHtml($this->tipejurnal_id->caption());
 
             // period_id
             $this->period_id->setupEditAttributes();
-            $this->period_id->EditValue = $this->period_id->CurrentValue;
-            $this->period_id->PlaceHolder = RemoveHtml($this->period_id->caption());
-            if (strval($this->period_id->EditValue) != "" && is_numeric($this->period_id->EditValue)) {
-                $this->period_id->EditValue = FormatNumber($this->period_id->EditValue, null);
+            $curVal = trim(strval($this->period_id->CurrentValue));
+            if ($curVal != "") {
+                $this->period_id->ViewValue = $this->period_id->lookupCacheOption($curVal);
+            } else {
+                $this->period_id->ViewValue = $this->period_id->Lookup !== null && is_array($this->period_id->lookupOptions()) && count($this->period_id->lookupOptions()) > 0 ? $curVal : null;
             }
+            if ($this->period_id->ViewValue !== null) { // Load from cache
+                $this->period_id->EditValue = array_values($this->period_id->lookupOptions());
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = SearchFilter($this->period_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $this->period_id->CurrentValue, $this->period_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                }
+                $sqlWrk = $this->period_id->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                foreach ($arwrk as &$row) {
+                    $row = $this->period_id->Lookup->renderViewRow($row);
+                }
+                $this->period_id->EditValue = $arwrk;
+            }
+            $this->period_id->PlaceHolder = RemoveHtml($this->period_id->caption());
 
             // createon
 
@@ -1162,16 +1245,10 @@ class JurnalEdit extends Jurnal
                     $this->tipejurnal_id->addErrorMessage(str_replace("%s", $this->tipejurnal_id->caption(), $this->tipejurnal_id->RequiredErrorMessage));
                 }
             }
-            if (!CheckInteger($this->tipejurnal_id->FormValue)) {
-                $this->tipejurnal_id->addErrorMessage($this->tipejurnal_id->getErrorMessage(false));
-            }
             if ($this->period_id->Visible && $this->period_id->Required) {
                 if (!$this->period_id->IsDetailKey && EmptyValue($this->period_id->FormValue)) {
                     $this->period_id->addErrorMessage(str_replace("%s", $this->period_id->caption(), $this->period_id->RequiredErrorMessage));
                 }
-            }
-            if (!CheckInteger($this->period_id->FormValue)) {
-                $this->period_id->addErrorMessage($this->period_id->getErrorMessage(false));
             }
             if ($this->createon->Visible && $this->createon->Required) {
                 if (!$this->createon->IsDetailKey && EmptyValue($this->createon->FormValue)) {
@@ -1423,6 +1500,10 @@ class JurnalEdit extends Jurnal
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_tipejurnal_id":
+                    break;
+                case "x_period_id":
+                    break;
                 default:
                     $lookupFilter = "";
                     break;

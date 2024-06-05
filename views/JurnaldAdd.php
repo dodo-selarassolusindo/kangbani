@@ -129,7 +129,7 @@ loadjs.ready("fjurnaldadd", function() {
     } else {
         options.ajax = { id: "x_akun_id", form: "fjurnaldadd", limit: ew.LOOKUP_PAGE_SIZE };
     }
-    options.minimumResultsForSearch = Infinity;
+    options.minimumInputLength = ew.selectMinimumInputLength;
     options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.jurnald.fields.akun_id.selectOptions);
     ew.createSelect(options);
 });

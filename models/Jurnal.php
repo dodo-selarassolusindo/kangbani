@@ -143,12 +143,16 @@ class Jurnal extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'SELECT' // Edit Tag
         );
         $this->tipejurnal_id->InputTextType = "text";
         $this->tipejurnal_id->Raw = true;
+        $this->tipejurnal_id->setSelectMultiple(false); // Select one
+        $this->tipejurnal_id->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->tipejurnal_id->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->tipejurnal_id->Lookup = new Lookup($this->tipejurnal_id, 'tipejurnal', false, 'id', ["kode","nama","",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(`kode`, ''),'" . ValueSeparator(1, $this->tipejurnal_id) . "',COALESCE(`nama`,''))");
         $this->tipejurnal_id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->tipejurnal_id->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
+        $this->tipejurnal_id->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
         $this->Fields['tipejurnal_id'] = &$this->tipejurnal_id;
 
         // period_id
@@ -167,12 +171,16 @@ class Jurnal extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'SELECT' // Edit Tag
         );
         $this->period_id->InputTextType = "text";
         $this->period_id->Raw = true;
+        $this->period_id->setSelectMultiple(false); // Select one
+        $this->period_id->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->period_id->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->period_id->Lookup = new Lookup($this->period_id, 'periode', false, 'id', ["start","end","",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(" . CastDateFieldForLike("`start`", 7, "DB") . ", ''),'" . ValueSeparator(1, $this->period_id) . "',COALESCE(" . CastDateFieldForLike("`end`", 7, "DB") . ",''))");
         $this->period_id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->period_id->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
+        $this->period_id->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
         $this->Fields['period_id'] = &$this->period_id;
 
         // createon
@@ -1292,12 +1300,50 @@ class Jurnal extends DbTable
         $this->id->ViewValue = $this->id->CurrentValue;
 
         // tipejurnal_id
-        $this->tipejurnal_id->ViewValue = $this->tipejurnal_id->CurrentValue;
-        $this->tipejurnal_id->ViewValue = FormatNumber($this->tipejurnal_id->ViewValue, $this->tipejurnal_id->formatPattern());
+        $curVal = strval($this->tipejurnal_id->CurrentValue);
+        if ($curVal != "") {
+            $this->tipejurnal_id->ViewValue = $this->tipejurnal_id->lookupCacheOption($curVal);
+            if ($this->tipejurnal_id->ViewValue === null) { // Lookup from database
+                $filterWrk = SearchFilter($this->tipejurnal_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->tipejurnal_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                $sqlWrk = $this->tipejurnal_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->tipejurnal_id->Lookup->renderViewRow($rswrk[0]);
+                    $this->tipejurnal_id->ViewValue = $this->tipejurnal_id->displayValue($arwrk);
+                } else {
+                    $this->tipejurnal_id->ViewValue = FormatNumber($this->tipejurnal_id->CurrentValue, $this->tipejurnal_id->formatPattern());
+                }
+            }
+        } else {
+            $this->tipejurnal_id->ViewValue = null;
+        }
 
         // period_id
-        $this->period_id->ViewValue = $this->period_id->CurrentValue;
-        $this->period_id->ViewValue = FormatNumber($this->period_id->ViewValue, $this->period_id->formatPattern());
+        $curVal = strval($this->period_id->CurrentValue);
+        if ($curVal != "") {
+            $this->period_id->ViewValue = $this->period_id->lookupCacheOption($curVal);
+            if ($this->period_id->ViewValue === null) { // Lookup from database
+                $filterWrk = SearchFilter($this->period_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->period_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                $sqlWrk = $this->period_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->period_id->Lookup->renderViewRow($rswrk[0]);
+                    $this->period_id->ViewValue = $this->period_id->displayValue($arwrk);
+                } else {
+                    $this->period_id->ViewValue = FormatNumber($this->period_id->CurrentValue, $this->period_id->formatPattern());
+                }
+            }
+        } else {
+            $this->period_id->ViewValue = null;
+        }
 
         // createon
         $this->createon->ViewValue = $this->createon->CurrentValue;
@@ -1362,19 +1408,11 @@ class Jurnal extends DbTable
 
         // tipejurnal_id
         $this->tipejurnal_id->setupEditAttributes();
-        $this->tipejurnal_id->EditValue = $this->tipejurnal_id->CurrentValue;
         $this->tipejurnal_id->PlaceHolder = RemoveHtml($this->tipejurnal_id->caption());
-        if (strval($this->tipejurnal_id->EditValue) != "" && is_numeric($this->tipejurnal_id->EditValue)) {
-            $this->tipejurnal_id->EditValue = FormatNumber($this->tipejurnal_id->EditValue, null);
-        }
 
         // period_id
         $this->period_id->setupEditAttributes();
-        $this->period_id->EditValue = $this->period_id->CurrentValue;
         $this->period_id->PlaceHolder = RemoveHtml($this->period_id->caption());
-        if (strval($this->period_id->EditValue) != "" && is_numeric($this->period_id->EditValue)) {
-            $this->period_id->EditValue = FormatNumber($this->period_id->EditValue, null);
-        }
 
         // createon
 

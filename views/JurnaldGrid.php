@@ -239,7 +239,7 @@ loadjs.ready("fjurnaldgrid", function() {
     } else {
         options.ajax = { id: "x<?= $Grid->RowIndex ?>_akun_id", form: "fjurnaldgrid", limit: ew.LOOKUP_PAGE_SIZE };
     }
-    options.minimumResultsForSearch = Infinity;
+    options.minimumInputLength = ew.selectMinimumInputLength;
     options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.jurnald.fields.akun_id.selectOptions);
     ew.createSelect(options);
 });
@@ -280,7 +280,7 @@ loadjs.ready("fjurnaldgrid", function() {
     } else {
         options.ajax = { id: "x<?= $Grid->RowIndex ?>_akun_id", form: "fjurnaldgrid", limit: ew.LOOKUP_PAGE_SIZE };
     }
-    options.minimumResultsForSearch = Infinity;
+    options.minimumInputLength = ew.selectMinimumInputLength;
     options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.jurnald.fields.akun_id.selectOptions);
     ew.createSelect(options);
 });

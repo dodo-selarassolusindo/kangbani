@@ -81,7 +81,7 @@
       <phrase id="menutext" value="Jurnal" />
     </menu>
     <menu id="5">
-      <phrase id="menutext" value="Jurnal Detail" />
+      <phrase id="menutext" value="Detail" />
     </menu>
     <table id="akun">
       <phrase id="tblcaption" value="Akun" />
@@ -153,7 +153,7 @@
       </field>
     </table>
     <table id="jurnald">
-      <phrase id="tblcaption" value="Jurnal Detail" />
+      <phrase id="tblcaption" value="Detail" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>

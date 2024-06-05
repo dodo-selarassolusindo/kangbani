@@ -60,7 +60,7 @@ $USER_LEVEL_TABLES = [["akun","akun","Akun",true,"{6E044EB4-6227-43E6-89F6-E9F0A
     ["grup","grup","Grup",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","gruplist"],
     ["gudang","gudang","Gudang",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","gudanglist"],
     ["jurnal","jurnal","Jurnal",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","jurnallist"],
-    ["jurnald","jurnald","Jurnal Detail",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","jurnaldlist"],
+    ["jurnald","jurnald","Detail",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","jurnaldlist"],
     ["kelompok","kelompok","Kelompok",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","kelompoklist"],
     ["klasifikasi","klasifikasi","Klasifikasi",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","klasifikasilist"],
     ["konversi","konversi","Konversi",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","konversilist"],
