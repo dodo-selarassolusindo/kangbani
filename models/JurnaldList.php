@@ -145,8 +145,8 @@ class JurnaldList extends Jurnald
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
-        $this->jurnal_id->setVisibility();
+        $this->id->Visible = false;
+        $this->jurnal_id->Visible = false;
         $this->akun_id->setVisibility();
         $this->debet->setVisibility();
         $this->kredit->setVisibility();
@@ -995,8 +995,6 @@ class JurnaldList extends Jurnald
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id); // id
-            $this->updateSort($this->jurnal_id); // jurnal_id
             $this->updateSort($this->akun_id); // akun_id
             $this->updateSort($this->debet); // debet
             $this->updateSort($this->kredit); // kredit
@@ -1269,8 +1267,6 @@ class JurnaldList extends Jurnald
             $item = &$option->addGroupOption();
             $item->Body = "";
             $item->Visible = $this->UseColumnVisibility;
-            $this->createColumnOption($option, "id");
-            $this->createColumnOption($option, "jurnal_id");
             $this->createColumnOption($option, "akun_id");
             $this->createColumnOption($option, "debet");
             $this->createColumnOption($option, "kredit");
@@ -1809,14 +1805,6 @@ class JurnaldList extends Jurnald
             $this->kredit->ViewValue = $this->kredit->CurrentValue;
             $this->kredit->ViewValue = FormatNumber($this->kredit->ViewValue, $this->kredit->formatPattern());
             $this->kredit->CellCssStyle .= "text-align: right;";
-
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
-            // jurnal_id
-            $this->jurnal_id->HrefValue = "";
-            $this->jurnal_id->TooltipValue = "";
 
             // akun_id
             $this->akun_id->HrefValue = "";

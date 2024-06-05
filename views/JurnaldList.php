@@ -104,12 +104,6 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->id->Visible) { // id ?>
-        <th data-name="id" class="<?= $Page->id->headerCellClass() ?>"><div id="elh_jurnald_id" class="jurnald_id"><?= $Page->renderFieldHeader($Page->id) ?></div></th>
-<?php } ?>
-<?php if ($Page->jurnal_id->Visible) { // jurnal_id ?>
-        <th data-name="jurnal_id" class="<?= $Page->jurnal_id->headerCellClass() ?>"><div id="elh_jurnald_jurnal_id" class="jurnald_jurnal_id"><?= $Page->renderFieldHeader($Page->jurnal_id) ?></div></th>
-<?php } ?>
 <?php if ($Page->akun_id->Visible) { // akun_id ?>
         <th data-name="akun_id" class="<?= $Page->akun_id->headerCellClass() ?>"><div id="elh_jurnald_akun_id" class="jurnald_akun_id"><?= $Page->renderFieldHeader($Page->akun_id) ?></div></th>
 <?php } ?>
@@ -146,22 +140,6 @@ while ($Page->RecordCount < $Page->StopRecord || $Page->RowIndex === '$rowindex$
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->id->Visible) { // id ?>
-        <td data-name="id"<?= $Page->id->cellAttributes() ?>>
-<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_jurnald_id" class="el_jurnald_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->jurnal_id->Visible) { // jurnal_id ?>
-        <td data-name="jurnal_id"<?= $Page->jurnal_id->cellAttributes() ?>>
-<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_jurnald_jurnal_id" class="el_jurnald_jurnal_id">
-<span<?= $Page->jurnal_id->viewAttributes() ?>>
-<?= $Page->jurnal_id->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
     <?php if ($Page->akun_id->Visible) { // akun_id ?>
         <td data-name="akun_id"<?= $Page->akun_id->cellAttributes() ?>>
 <span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_jurnald_akun_id" class="el_jurnald_akun_id">

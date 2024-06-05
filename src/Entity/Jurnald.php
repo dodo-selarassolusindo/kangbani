@@ -45,6 +45,12 @@ class Jurnald extends AbstractEntity
     #[Column(type: "float", nullable: true)]
     private ?float $kredit;
 
+    public function __construct()
+    {
+        $this->debet = 0;
+        $this->kredit = 0;
+    }
+
     public function getId(): int
     {
         return $this->id;

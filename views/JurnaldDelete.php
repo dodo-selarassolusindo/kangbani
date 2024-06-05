@@ -50,12 +50,6 @@ $Page->showMessage();
 <table class="<?= $Page->TableClass ?>">
     <thead>
     <tr class="ew-table-header">
-<?php if ($Page->id->Visible) { // id ?>
-        <th class="<?= $Page->id->headerCellClass() ?>"><span id="elh_jurnald_id" class="jurnald_id"><?= $Page->id->caption() ?></span></th>
-<?php } ?>
-<?php if ($Page->jurnal_id->Visible) { // jurnal_id ?>
-        <th class="<?= $Page->jurnal_id->headerCellClass() ?>"><span id="elh_jurnald_jurnal_id" class="jurnald_jurnal_id"><?= $Page->jurnal_id->caption() ?></span></th>
-<?php } ?>
 <?php if ($Page->akun_id->Visible) { // akun_id ?>
         <th class="<?= $Page->akun_id->headerCellClass() ?>"><span id="elh_jurnald_akun_id" class="jurnald_akun_id"><?= $Page->akun_id->caption() ?></span></th>
 <?php } ?>
@@ -86,22 +80,6 @@ while ($Page->fetch()) {
     $Page->renderRow();
 ?>
     <tr <?= $Page->rowAttributes() ?>>
-<?php if ($Page->id->Visible) { // id ?>
-        <td<?= $Page->id->cellAttributes() ?>>
-<span id="">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($Page->jurnal_id->Visible) { // jurnal_id ?>
-        <td<?= $Page->jurnal_id->cellAttributes() ?>>
-<span id="">
-<span<?= $Page->jurnal_id->viewAttributes() ?>>
-<?= $Page->jurnal_id->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($Page->akun_id->Visible) { // akun_id ?>
         <td<?= $Page->akun_id->cellAttributes() ?>>
 <span id="">

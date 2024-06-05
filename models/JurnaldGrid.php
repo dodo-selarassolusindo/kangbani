@@ -135,8 +135,8 @@ class JurnaldGrid extends Jurnald
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
-        $this->jurnal_id->setVisibility();
+        $this->id->Visible = false;
+        $this->jurnal_id->Visible = false;
         $this->akun_id->setVisibility();
         $this->debet->setVisibility();
         $this->kredit->setVisibility();
@@ -1075,14 +1075,6 @@ class JurnaldGrid extends Jurnald
     {
         global $CurrentForm;
         if (
-            $CurrentForm->hasValue("x_jurnal_id") &&
-            $CurrentForm->hasValue("o_jurnal_id") &&
-            $this->jurnal_id->CurrentValue != $this->jurnal_id->DefaultValue &&
-            !($this->jurnal_id->IsForeignKey && $this->getCurrentMasterTable() != "" && $this->jurnal_id->CurrentValue == $this->jurnal_id->getSessionValue())
-        ) {
-            return false;
-        }
-        if (
             $CurrentForm->hasValue("x_akun_id") &&
             $CurrentForm->hasValue("o_akun_id") &&
             $this->akun_id->CurrentValue != $this->akun_id->DefaultValue &&
@@ -1649,6 +1641,10 @@ class JurnaldGrid extends Jurnald
     // Load default values
     protected function loadDefaultValues()
     {
+        $this->debet->DefaultValue = $this->debet->getDefault(); // PHP
+        $this->debet->OldValue = $this->debet->DefaultValue;
+        $this->kredit->DefaultValue = $this->kredit->getDefault(); // PHP
+        $this->kredit->OldValue = $this->kredit->DefaultValue;
     }
 
     // Load form values
@@ -1658,25 +1654,6 @@ class JurnaldGrid extends Jurnald
         global $CurrentForm;
         $CurrentForm->FormName = $this->FormName;
         $validate = !Config("SERVER_VALIDATE");
-
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey && !$this->isGridAdd() && !$this->isAdd()) {
-            $this->id->setFormValue($val);
-        }
-
-        // Check field name 'jurnal_id' first before field var 'x_jurnal_id'
-        $val = $CurrentForm->hasValue("jurnal_id") ? $CurrentForm->getValue("jurnal_id") : $CurrentForm->getValue("x_jurnal_id");
-        if (!$this->jurnal_id->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->jurnal_id->Visible = false; // Disable update for API request
-            } else {
-                $this->jurnal_id->setFormValue($val, true, $validate);
-            }
-        }
-        if ($CurrentForm->hasValue("o_jurnal_id")) {
-            $this->jurnal_id->setOldValue($CurrentForm->getValue("o_jurnal_id"));
-        }
 
         // Check field name 'akun_id' first before field var 'x_akun_id'
         $val = $CurrentForm->hasValue("akun_id") ? $CurrentForm->getValue("akun_id") : $CurrentForm->getValue("x_akun_id");
@@ -1716,6 +1693,12 @@ class JurnaldGrid extends Jurnald
         if ($CurrentForm->hasValue("o_kredit")) {
             $this->kredit->setOldValue($CurrentForm->getValue("o_kredit"));
         }
+
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        if (!$this->id->IsDetailKey && !$this->isGridAdd() && !$this->isAdd()) {
+            $this->id->setFormValue($val);
+        }
     }
 
     // Restore form values
@@ -1725,7 +1708,6 @@ class JurnaldGrid extends Jurnald
         if (!$this->isGridAdd() && !$this->isAdd()) {
             $this->id->CurrentValue = $this->id->FormValue;
         }
-        $this->jurnal_id->CurrentValue = $this->jurnal_id->FormValue;
         $this->akun_id->CurrentValue = $this->akun_id->FormValue;
         $this->debet->CurrentValue = $this->debet->FormValue;
         $this->kredit->CurrentValue = $this->kredit->FormValue;
@@ -1930,14 +1912,6 @@ class JurnaldGrid extends Jurnald
             $this->kredit->ViewValue = FormatNumber($this->kredit->ViewValue, $this->kredit->formatPattern());
             $this->kredit->CellCssStyle .= "text-align: right;";
 
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
-            // jurnal_id
-            $this->jurnal_id->HrefValue = "";
-            $this->jurnal_id->TooltipValue = "";
-
             // akun_id
             $this->akun_id->HrefValue = "";
             $this->akun_id->TooltipValue = "";
@@ -1950,23 +1924,6 @@ class JurnaldGrid extends Jurnald
             $this->kredit->HrefValue = "";
             $this->kredit->TooltipValue = "";
         } elseif ($this->RowType == RowType::ADD) {
-            // id
-
-            // jurnal_id
-            $this->jurnal_id->setupEditAttributes();
-            if ($this->jurnal_id->getSessionValue() != "") {
-                $this->jurnal_id->CurrentValue = GetForeignKeyValue($this->jurnal_id->getSessionValue());
-                $this->jurnal_id->OldValue = $this->jurnal_id->CurrentValue;
-                $this->jurnal_id->ViewValue = $this->jurnal_id->CurrentValue;
-                $this->jurnal_id->ViewValue = FormatNumber($this->jurnal_id->ViewValue, $this->jurnal_id->formatPattern());
-            } else {
-                $this->jurnal_id->EditValue = $this->jurnal_id->CurrentValue;
-                $this->jurnal_id->PlaceHolder = RemoveHtml($this->jurnal_id->caption());
-                if (strval($this->jurnal_id->EditValue) != "" && is_numeric($this->jurnal_id->EditValue)) {
-                    $this->jurnal_id->EditValue = FormatNumber($this->jurnal_id->EditValue, null);
-                }
-            }
-
             // akun_id
             $this->akun_id->setupEditAttributes();
             $curVal = trim(strval($this->akun_id->CurrentValue));
@@ -2012,12 +1969,6 @@ class JurnaldGrid extends Jurnald
 
             // Add refer script
 
-            // id
-            $this->id->HrefValue = "";
-
-            // jurnal_id
-            $this->jurnal_id->HrefValue = "";
-
             // akun_id
             $this->akun_id->HrefValue = "";
 
@@ -2027,25 +1978,6 @@ class JurnaldGrid extends Jurnald
             // kredit
             $this->kredit->HrefValue = "";
         } elseif ($this->RowType == RowType::EDIT) {
-            // id
-            $this->id->setupEditAttributes();
-            $this->id->EditValue = $this->id->CurrentValue;
-
-            // jurnal_id
-            $this->jurnal_id->setupEditAttributes();
-            if ($this->jurnal_id->getSessionValue() != "") {
-                $this->jurnal_id->CurrentValue = GetForeignKeyValue($this->jurnal_id->getSessionValue());
-                $this->jurnal_id->OldValue = $this->jurnal_id->CurrentValue;
-                $this->jurnal_id->ViewValue = $this->jurnal_id->CurrentValue;
-                $this->jurnal_id->ViewValue = FormatNumber($this->jurnal_id->ViewValue, $this->jurnal_id->formatPattern());
-            } else {
-                $this->jurnal_id->EditValue = $this->jurnal_id->CurrentValue;
-                $this->jurnal_id->PlaceHolder = RemoveHtml($this->jurnal_id->caption());
-                if (strval($this->jurnal_id->EditValue) != "" && is_numeric($this->jurnal_id->EditValue)) {
-                    $this->jurnal_id->EditValue = FormatNumber($this->jurnal_id->EditValue, null);
-                }
-            }
-
             // akun_id
             $this->akun_id->setupEditAttributes();
             $curVal = trim(strval($this->akun_id->CurrentValue));
@@ -2091,12 +2023,6 @@ class JurnaldGrid extends Jurnald
 
             // Edit refer script
 
-            // id
-            $this->id->HrefValue = "";
-
-            // jurnal_id
-            $this->jurnal_id->HrefValue = "";
-
             // akun_id
             $this->akun_id->HrefValue = "";
 
@@ -2126,19 +2052,6 @@ class JurnaldGrid extends Jurnald
             return true;
         }
         $validateForm = true;
-            if ($this->id->Visible && $this->id->Required) {
-                if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
-                    $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
-                }
-            }
-            if ($this->jurnal_id->Visible && $this->jurnal_id->Required) {
-                if (!$this->jurnal_id->IsDetailKey && EmptyValue($this->jurnal_id->FormValue)) {
-                    $this->jurnal_id->addErrorMessage(str_replace("%s", $this->jurnal_id->caption(), $this->jurnal_id->RequiredErrorMessage));
-                }
-            }
-            if (!CheckInteger($this->jurnal_id->FormValue)) {
-                $this->jurnal_id->addErrorMessage($this->jurnal_id->getErrorMessage(false));
-            }
             if ($this->akun_id->Visible && $this->akun_id->Required) {
                 if (!$this->akun_id->IsDetailKey && EmptyValue($this->akun_id->FormValue)) {
                     $this->akun_id->addErrorMessage(str_replace("%s", $this->akun_id->caption(), $this->akun_id->RequiredErrorMessage));
@@ -2324,12 +2237,6 @@ class JurnaldGrid extends Jurnald
         global $Security;
         $rsnew = [];
 
-        // jurnal_id
-        if ($this->jurnal_id->getSessionValue() != "") {
-            $this->jurnal_id->ReadOnly = true;
-        }
-        $this->jurnal_id->setDbValueDef($rsnew, $this->jurnal_id->CurrentValue, $this->jurnal_id->ReadOnly);
-
         // akun_id
         $this->akun_id->setDbValueDef($rsnew, $this->akun_id->CurrentValue, $this->akun_id->ReadOnly);
 
@@ -2347,9 +2254,6 @@ class JurnaldGrid extends Jurnald
      */
     protected function restoreEditFormFromRow($row)
     {
-        if (isset($row['jurnal_id'])) { // jurnal_id
-            $this->jurnal_id->CurrentValue = $row['jurnal_id'];
-        }
         if (isset($row['akun_id'])) { // akun_id
             $this->akun_id->CurrentValue = $row['akun_id'];
         }
@@ -2381,7 +2285,7 @@ class JurnaldGrid extends Jurnald
         // Check referential integrity for master table 'jurnald'
         $validMasterRecord = true;
         $detailKeys = [];
-        $detailKeys["jurnal_id"] = $this->jurnal_id->CurrentValue;
+        $detailKeys["jurnal_id"] = $this->jurnal_id->getSessionValue();
         $masterTable = Container("jurnal");
         $masterFilter = $this->getMasterFilter($masterTable, $detailKeys);
         if (!EmptyValue($masterFilter)) {
@@ -2436,9 +2340,6 @@ class JurnaldGrid extends Jurnald
         global $Security;
         $rsnew = [];
 
-        // jurnal_id
-        $this->jurnal_id->setDbValueDef($rsnew, $this->jurnal_id->CurrentValue, false);
-
         // akun_id
         $this->akun_id->setDbValueDef($rsnew, $this->akun_id->CurrentValue, false);
 
@@ -2447,6 +2348,11 @@ class JurnaldGrid extends Jurnald
 
         // kredit
         $this->kredit->setDbValueDef($rsnew, $this->kredit->CurrentValue, false);
+
+        // jurnal_id
+        if ($this->jurnal_id->getSessionValue() != "") {
+            $rsnew['jurnal_id'] = $this->jurnal_id->getSessionValue();
+        }
         return $rsnew;
     }
 
@@ -2456,9 +2362,6 @@ class JurnaldGrid extends Jurnald
      */
     protected function restoreAddFormFromRow($row)
     {
-        if (isset($row['jurnal_id'])) { // jurnal_id
-            $this->jurnal_id->setFormValue($row['jurnal_id']);
-        }
         if (isset($row['akun_id'])) { // akun_id
             $this->akun_id->setFormValue($row['akun_id']);
         }
@@ -2467,6 +2370,9 @@ class JurnaldGrid extends Jurnald
         }
         if (isset($row['kredit'])) { // kredit
             $this->kredit->setFormValue($row['kredit']);
+        }
+        if (isset($row['jurnal_id'])) { // jurnal_id
+            $this->jurnal_id->setFormValue($row['jurnal_id']);
         }
     }
 

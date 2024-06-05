@@ -56,28 +56,6 @@ loadjs.ready("head", function () {
 <input type="hidden" name="t" value="jurnald">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <table class="<?= $Page->TableClass ?>">
-<?php if ($Page->id->Visible) { // id ?>
-    <tr id="r_id"<?= $Page->id->rowAttributes() ?>>
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_jurnald_id"><?= $Page->id->caption() ?></span></td>
-        <td data-name="id"<?= $Page->id->cellAttributes() ?>>
-<span id="el_jurnald_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
-<?php if ($Page->jurnal_id->Visible) { // jurnal_id ?>
-    <tr id="r_jurnal_id"<?= $Page->jurnal_id->rowAttributes() ?>>
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_jurnald_jurnal_id"><?= $Page->jurnal_id->caption() ?></span></td>
-        <td data-name="jurnal_id"<?= $Page->jurnal_id->cellAttributes() ?>>
-<span id="el_jurnald_jurnal_id">
-<span<?= $Page->jurnal_id->viewAttributes() ?>>
-<?= $Page->jurnal_id->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
 <?php if ($Page->akun_id->Visible) { // akun_id ?>
     <tr id="r_akun_id"<?= $Page->akun_id->rowAttributes() ?>>
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_jurnald_akun_id"><?= $Page->akun_id->caption() ?></span></td>

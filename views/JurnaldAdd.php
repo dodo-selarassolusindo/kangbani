@@ -22,7 +22,6 @@ loadjs.ready(["wrapper", "head"], function () {
 
         // Add fields
         .setFields([
-            ["jurnal_id", [fields.jurnal_id.visible && fields.jurnal_id.required ? ew.Validators.required(fields.jurnal_id.caption) : null, ew.Validators.integer], fields.jurnal_id.isInvalid],
             ["akun_id", [fields.akun_id.visible && fields.akun_id.required ? ew.Validators.required(fields.akun_id.caption) : null], fields.akun_id.isInvalid],
             ["debet", [fields.debet.visible && fields.debet.required ? ew.Validators.required(fields.debet.caption) : null, ew.Validators.float], fields.debet.isInvalid],
             ["kredit", [fields.kredit.visible && fields.kredit.required ? ew.Validators.required(fields.kredit.caption) : null, ew.Validators.float], fields.kredit.isInvalid]
@@ -75,24 +74,6 @@ $Page->showMessage();
 <input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->jurnal_id->getSessionValue()) ?>">
 <?php } ?>
 <div class="ew-add-div"><!-- page* -->
-<?php if ($Page->jurnal_id->Visible) { // jurnal_id ?>
-    <div id="r_jurnal_id"<?= $Page->jurnal_id->rowAttributes() ?>>
-        <label id="elh_jurnald_jurnal_id" for="x_jurnal_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->jurnal_id->caption() ?><?= $Page->jurnal_id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->jurnal_id->cellAttributes() ?>>
-<?php if ($Page->jurnal_id->getSessionValue() != "") { ?>
-<span<?= $Page->jurnal_id->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->jurnal_id->getDisplayValue($Page->jurnal_id->ViewValue))) ?>"></span>
-<input type="hidden" id="x_jurnal_id" name="x_jurnal_id" value="<?= HtmlEncode($Page->jurnal_id->CurrentValue) ?>" data-hidden="1">
-<?php } else { ?>
-<span id="el_jurnald_jurnal_id">
-<input type="<?= $Page->jurnal_id->getInputTextType() ?>" name="x_jurnal_id" id="x_jurnal_id" data-table="jurnald" data-field="x_jurnal_id" value="<?= $Page->jurnal_id->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->jurnal_id->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->jurnal_id->formatPattern()) ?>"<?= $Page->jurnal_id->editAttributes() ?> aria-describedby="x_jurnal_id_help">
-<?= $Page->jurnal_id->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->jurnal_id->getErrorMessage() ?></div>
-</span>
-<?php } ?>
-</div></div>
-    </div>
-<?php } ?>
 <?php if ($Page->akun_id->Visible) { // akun_id ?>
     <div id="r_akun_id"<?= $Page->akun_id->rowAttributes() ?>>
         <label id="elh_jurnald_akun_id" for="x_akun_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->akun_id->caption() ?><?= $Page->akun_id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -164,6 +145,9 @@ loadjs.ready("fjurnaldadd", function() {
     </div>
 <?php } ?>
 </div><!-- /page* -->
+    <?php if (strval($Page->jurnal_id->getSessionValue()) != "") { ?>
+    <input type="hidden" name="x_jurnal_id" id="x_jurnal_id" value="<?= HtmlEncode(strval($Page->jurnal_id->getSessionValue())) ?>">
+    <?php } ?>
 <?= $Page->IsModal ? '<template class="ew-modal-buttons">' : '<div class="row ew-buttons">' ?><!-- buttons .row -->
     <div class="<?= $Page->OffsetColumnClass ?>"><!-- buttons offset -->
 <button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit" form="fjurnaldadd"><?= $Language->phrase("AddBtn") ?></button>

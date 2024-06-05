@@ -925,14 +925,6 @@ class JurnaldView extends Jurnald
             $this->kredit->ViewValue = FormatNumber($this->kredit->ViewValue, $this->kredit->formatPattern());
             $this->kredit->CellCssStyle .= "text-align: right;";
 
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
-            // jurnal_id
-            $this->jurnal_id->HrefValue = "";
-            $this->jurnal_id->TooltipValue = "";
-
             // akun_id
             $this->akun_id->HrefValue = "";
             $this->akun_id->TooltipValue = "";

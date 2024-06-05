@@ -195,6 +195,7 @@ class Jurnald extends DbTable
             'FORMATTED TEXT', // View Tag
             'TEXT' // Edit Tag
         );
+        $this->debet->addMethod("getDefault", fn() => 0);
         $this->debet->InputTextType = "text";
         $this->debet->Raw = true;
         $this->debet->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
@@ -219,6 +220,7 @@ class Jurnald extends DbTable
             'FORMATTED TEXT', // View Tag
             'TEXT' // Edit Tag
         );
+        $this->kredit->addMethod("getDefault", fn() => 0);
         $this->kredit->InputTextType = "text";
         $this->kredit->Raw = true;
         $this->kredit->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
@@ -1379,8 +1381,6 @@ class Jurnald extends DbTable
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->id);
-                    $doc->exportCaption($this->jurnal_id);
                     $doc->exportCaption($this->akun_id);
                     $doc->exportCaption($this->debet);
                     $doc->exportCaption($this->kredit);
@@ -1416,8 +1416,6 @@ class Jurnald extends DbTable
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->id);
-                        $doc->exportField($this->jurnal_id);
                         $doc->exportField($this->akun_id);
                         $doc->exportField($this->debet);
                         $doc->exportField($this->kredit);
