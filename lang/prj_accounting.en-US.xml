@@ -32,20 +32,8 @@
     <menu id="19">
       <phrase id="menutext" value="Tipe Jurnal" />
     </menu>
-    <menu id="15">
-      <phrase id="menutext" value="Produk" />
-    </menu>
-    <menu id="17">
-      <phrase id="menutext" value="Satuan" />
-    </menu>
-    <menu id="3">
-      <phrase id="menutext" value="Gudang" />
-    </menu>
     <menu id="22">
       <phrase id="menutext" value="Type" />
-    </menu>
-    <menu id="6">
-      <phrase id="menutext" value="Kelompok" />
     </menu>
     <menu id="7">
       <phrase id="menutext" value="Klasifikasi" />
@@ -55,6 +43,21 @@
     </menu>
     <menu id="14">
       <phrase id="menutext" value="Person" />
+    </menu>
+    <menu id="83">
+      <phrase id="menutext" value="Barang" />
+    </menu>
+    <menu id="6">
+      <phrase id="menutext" value="Kelompok" />
+    </menu>
+    <menu id="17">
+      <phrase id="menutext" value="Satuan" />
+    </menu>
+    <menu id="3">
+      <phrase id="menutext" value="Gudang" />
+    </menu>
+    <menu id="15">
+      <phrase id="menutext" value="Produk" />
     </menu>
     <menu id="74">
       <phrase id="menutext" value="Setting" />
