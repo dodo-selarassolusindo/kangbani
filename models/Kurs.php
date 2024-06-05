@@ -1155,6 +1155,7 @@ class Kurs extends DbTable
         // nilai
         $this->nilai->ViewValue = $this->nilai->CurrentValue;
         $this->nilai->ViewValue = FormatNumber($this->nilai->ViewValue, $this->nilai->formatPattern());
+        $this->nilai->CellCssStyle .= "text-align: right;";
 
         // id
         $this->id->HrefValue = "";

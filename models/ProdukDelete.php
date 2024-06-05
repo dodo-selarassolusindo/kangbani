@@ -922,6 +922,7 @@ class ProdukDelete extends Produk
             // hargapokok
             $this->hargapokok->ViewValue = $this->hargapokok->CurrentValue;
             $this->hargapokok->ViewValue = FormatNumber($this->hargapokok->ViewValue, $this->hargapokok->formatPattern());
+            $this->hargapokok->CellCssStyle .= "text-align: right;";
 
             // p
             $this->p->ViewValue = $this->p->CurrentValue;

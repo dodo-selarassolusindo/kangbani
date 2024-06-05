@@ -1774,6 +1774,7 @@ class KursList extends Kurs
             // nilai
             $this->nilai->ViewValue = $this->nilai->CurrentValue;
             $this->nilai->ViewValue = FormatNumber($this->nilai->ViewValue, $this->nilai->formatPattern());
+            $this->nilai->CellCssStyle .= "text-align: right;";
 
             // matauang_id
             $this->matauang_id->HrefValue = "";
