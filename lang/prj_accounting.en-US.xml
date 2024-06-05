@@ -1,11 +1,15 @@
 <ew-language date="2024/6/5" id="en-US" author="e.World Technology Limited">
   <project>
+    <phrase id="bodytitle" value="Kang Bani" />
     <phrase id="footertext" value="&amp;copy;2024 KangBani Limited. All rights reserved." />
     <menu id="25">
       <phrase id="menutext" value="Beranda" />
     </menu>
     <menu id="23">
       <phrase id="menutext" value="Master" />
+    </menu>
+    <menu id="50">
+      <phrase id="menutext" value="Akuntansi" />
     </menu>
     <menu id="13">
       <phrase id="menutext" value="Periode" />
@@ -22,6 +26,51 @@
     <menu id="16">
       <phrase id="menutext" value="Saldo Awal" />
     </menu>
+    <menu id="8">
+      <phrase id="menutext" value="Konversi" />
+    </menu>
+    <menu id="9">
+      <phrase id="menutext" value="Kurs" />
+    </menu>
+    <menu id="10">
+      <phrase id="menutext" value="Mata Uang" />
+    </menu>
+    <menu id="11">
+      <phrase id="menutext" value="Pajak" />
+    </menu>
+    <menu id="19">
+      <phrase id="menutext" value="Tipe Jurnal" />
+    </menu>
+    <menu id="15">
+      <phrase id="menutext" value="Produk" />
+    </menu>
+    <menu id="17">
+      <phrase id="menutext" value="Satuan" />
+    </menu>
+    <menu id="3">
+      <phrase id="menutext" value="Gudang" />
+    </menu>
+    <menu id="22">
+      <phrase id="menutext" value="Type" />
+    </menu>
+    <menu id="6">
+      <phrase id="menutext" value="Kelompok" />
+    </menu>
+    <menu id="7">
+      <phrase id="menutext" value="Klasifikasi" />
+    </menu>
+    <menu id="12">
+      <phrase id="menutext" value="Pengiriman" />
+    </menu>
+    <menu id="14">
+      <phrase id="menutext" value="Person" />
+    </menu>
+    <menu id="20">
+      <phrase id="menutext" value="TOP" />
+    </menu>
+    <menu id="21">
+      <phrase id="menutext" value="TOS" />
+    </menu>
     <menu id="24">
       <phrase id="menutext" value="Transaksi" />
     </menu>
@@ -30,51 +79,6 @@
     </menu>
     <menu id="5">
       <phrase id="menutext" value="Jurnal Detail" />
-    </menu>
-    <menu id="3">
-      <phrase id="menutext" value="gudang" />
-    </menu>
-    <menu id="6">
-      <phrase id="menutext" value="kelompok" />
-    </menu>
-    <menu id="7">
-      <phrase id="menutext" value="klasifikasi" />
-    </menu>
-    <menu id="8">
-      <phrase id="menutext" value="konversi" />
-    </menu>
-    <menu id="9">
-      <phrase id="menutext" value="kurs" />
-    </menu>
-    <menu id="10">
-      <phrase id="menutext" value="matauang" />
-    </menu>
-    <menu id="11">
-      <phrase id="menutext" value="pajak" />
-    </menu>
-    <menu id="12">
-      <phrase id="menutext" value="pengiriman" />
-    </menu>
-    <menu id="14">
-      <phrase id="menutext" value="person" />
-    </menu>
-    <menu id="15">
-      <phrase id="menutext" value="produk" />
-    </menu>
-    <menu id="17">
-      <phrase id="menutext" value="satuan" />
-    </menu>
-    <menu id="19">
-      <phrase id="menutext" value="tipejurnal" />
-    </menu>
-    <menu id="20">
-      <phrase id="menutext" value="top" />
-    </menu>
-    <menu id="21">
-      <phrase id="menutext" value="tos" />
-    </menu>
-    <menu id="22">
-      <phrase id="menutext" value="type" />
     </menu>
     <table id="akun">
       <phrase id="tblcaption" value="Akun" />
@@ -107,7 +111,7 @@
       </field>
     </table>
     <table id="gudang">
-      <phrase id="tblcaption" value="gudang" />
+      <phrase id="tblcaption" value="Gudang" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
@@ -164,7 +168,7 @@
       </field>
     </table>
     <table id="kelompok">
-      <phrase id="tblcaption" value="kelompok" />
+      <phrase id="tblcaption" value="Kelompok" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
@@ -176,7 +180,7 @@
       </field>
     </table>
     <table id="klasifikasi">
-      <phrase id="tblcaption" value="klasifikasi" />
+      <phrase id="tblcaption" value="Klasifikasi" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
@@ -188,7 +192,7 @@
       </field>
     </table>
     <table id="konversi">
-      <phrase id="tblcaption" value="konversi" />
+      <phrase id="tblcaption" value="Konversi" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
@@ -209,7 +213,7 @@
       </field>
     </table>
     <table id="kurs">
-      <phrase id="tblcaption" value="kurs" />
+      <phrase id="tblcaption" value="Kurs" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
@@ -224,7 +228,7 @@
       </field>
     </table>
     <table id="matauang">
-      <phrase id="tblcaption" value="matauang" />
+      <phrase id="tblcaption" value="Mata Uang" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
@@ -236,7 +240,7 @@
       </field>
     </table>
     <table id="pajak">
-      <phrase id="tblcaption" value="pajak" />
+      <phrase id="tblcaption" value="Pajak" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
@@ -251,7 +255,7 @@
       </field>
     </table>
     <table id="pengiriman">
-      <phrase id="tblcaption" value="pengiriman" />
+      <phrase id="tblcaption" value="Pengiriman" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
@@ -297,7 +301,7 @@
       </field>
     </table>
     <table id="person">
-      <phrase id="tblcaption" value="person" />
+      <phrase id="tblcaption" value="Person" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
@@ -360,7 +364,7 @@
       </field>
     </table>
     <table id="produk">
-      <phrase id="tblcaption" value="produk" />
+      <phrase id="tblcaption" value="Produk" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
@@ -453,7 +457,7 @@
       </field>
     </table>
     <table id="satuan">
-      <phrase id="tblcaption" value="satuan" />
+      <phrase id="tblcaption" value="Satuan" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
@@ -486,7 +490,7 @@
       </field>
     </table>
     <table id="tipejurnal">
-      <phrase id="tblcaption" value="tipejurnal" />
+      <phrase id="tblcaption" value="Tipe Jurnal" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
@@ -498,7 +502,7 @@
       </field>
     </table>
     <table id="top">
-      <phrase id="tblcaption" value="top" />
+      <phrase id="tblcaption" value="TOP" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
@@ -513,7 +517,7 @@
       </field>
     </table>
     <table id="tos">
-      <phrase id="tblcaption" value="tos" />
+      <phrase id="tblcaption" value="TOS" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
@@ -528,7 +532,7 @@
       </field>
     </table>
     <table id="type">
-      <phrase id="tblcaption" value="type" />
+      <phrase id="tblcaption" value="Type" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
