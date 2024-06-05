@@ -56,13 +56,13 @@ loadjs.ready("head", function () {
 <input type="hidden" name="t" value="akun">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <table class="<?= $Page->TableClass ?>">
-<?php if ($Page->id->Visible) { // id ?>
-    <tr id="r_id"<?= $Page->id->rowAttributes() ?>>
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_akun_id"><?= $Page->id->caption() ?></span></td>
-        <td data-name="id"<?= $Page->id->cellAttributes() ?>>
-<span id="el_akun_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
+<?php if ($Page->subgrup_id->Visible) { // subgrup_id ?>
+    <tr id="r_subgrup_id"<?= $Page->subgrup_id->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_akun_subgrup_id"><?= $Page->subgrup_id->caption() ?></span></td>
+        <td data-name="subgrup_id"<?= $Page->subgrup_id->cellAttributes() ?>>
+<span id="el_akun_subgrup_id">
+<span<?= $Page->subgrup_id->viewAttributes() ?>>
+<?= $Page->subgrup_id->getViewValue() ?></span>
 </span>
 </td>
     </tr>
@@ -85,28 +85,6 @@ loadjs.ready("head", function () {
 <span id="el_akun_nama">
 <span<?= $Page->nama->viewAttributes() ?>>
 <?= $Page->nama->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
-<?php if ($Page->subgrup_id->Visible) { // subgrup_id ?>
-    <tr id="r_subgrup_id"<?= $Page->subgrup_id->rowAttributes() ?>>
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_akun_subgrup_id"><?= $Page->subgrup_id->caption() ?></span></td>
-        <td data-name="subgrup_id"<?= $Page->subgrup_id->cellAttributes() ?>>
-<span id="el_akun_subgrup_id">
-<span<?= $Page->subgrup_id->viewAttributes() ?>>
-<?= $Page->subgrup_id->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
-<?php if ($Page->user_id->Visible) { // user_id ?>
-    <tr id="r_user_id"<?= $Page->user_id->rowAttributes() ?>>
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_akun_user_id"><?= $Page->user_id->caption() ?></span></td>
-        <td data-name="user_id"<?= $Page->user_id->cellAttributes() ?>>
-<span id="el_akun_user_id">
-<span<?= $Page->user_id->viewAttributes() ?>>
-<?= $Page->user_id->getViewValue() ?></span>
 </span>
 </td>
     </tr>

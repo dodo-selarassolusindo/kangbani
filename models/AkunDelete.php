@@ -121,11 +121,11 @@ class AkunDelete extends Akun
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->id->Visible = false;
+        $this->subgrup_id->setVisibility();
         $this->kode->setVisibility();
         $this->nama->setVisibility();
-        $this->subgrup_id->setVisibility();
-        $this->user_id->setVisibility();
+        $this->user_id->Visible = false;
         $this->matauang_id->setVisibility();
     }
 
@@ -584,9 +584,9 @@ class AkunDelete extends Akun
         // Call Row Selected event
         $this->rowSelected($row);
         $this->id->setDbValue($row['id']);
+        $this->subgrup_id->setDbValue($row['subgrup_id']);
         $this->kode->setDbValue($row['kode']);
         $this->nama->setDbValue($row['nama']);
-        $this->subgrup_id->setDbValue($row['subgrup_id']);
         $this->user_id->setDbValue($row['user_id']);
         $this->matauang_id->setDbValue($row['matauang_id']);
     }
@@ -596,9 +596,9 @@ class AkunDelete extends Akun
     {
         $row = [];
         $row['id'] = $this->id->DefaultValue;
+        $row['subgrup_id'] = $this->subgrup_id->DefaultValue;
         $row['kode'] = $this->kode->DefaultValue;
         $row['nama'] = $this->nama->DefaultValue;
-        $row['subgrup_id'] = $this->subgrup_id->DefaultValue;
         $row['user_id'] = $this->user_id->DefaultValue;
         $row['matauang_id'] = $this->matauang_id->DefaultValue;
         return $row;
@@ -618,11 +618,11 @@ class AkunDelete extends Akun
 
         // id
 
+        // subgrup_id
+
         // kode
 
         // nama
-
-        // subgrup_id
 
         // user_id
 
@@ -632,12 +632,6 @@ class AkunDelete extends Akun
         if ($this->RowType == RowType::VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
-
-            // kode
-            $this->kode->ViewValue = $this->kode->CurrentValue;
-
-            // nama
-            $this->nama->ViewValue = $this->nama->CurrentValue;
 
             // subgrup_id
             $curVal = strval($this->subgrup_id->CurrentValue);
@@ -661,6 +655,12 @@ class AkunDelete extends Akun
             } else {
                 $this->subgrup_id->ViewValue = null;
             }
+
+            // kode
+            $this->kode->ViewValue = $this->kode->CurrentValue;
+
+            // nama
+            $this->nama->ViewValue = $this->nama->CurrentValue;
 
             // user_id
             $this->user_id->ViewValue = $this->user_id->CurrentValue;
@@ -689,9 +689,9 @@ class AkunDelete extends Akun
                 $this->matauang_id->ViewValue = null;
             }
 
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
+            // subgrup_id
+            $this->subgrup_id->HrefValue = "";
+            $this->subgrup_id->TooltipValue = "";
 
             // kode
             $this->kode->HrefValue = "";
@@ -700,14 +700,6 @@ class AkunDelete extends Akun
             // nama
             $this->nama->HrefValue = "";
             $this->nama->TooltipValue = "";
-
-            // subgrup_id
-            $this->subgrup_id->HrefValue = "";
-            $this->subgrup_id->TooltipValue = "";
-
-            // user_id
-            $this->user_id->HrefValue = "";
-            $this->user_id->TooltipValue = "";
 
             // matauang_id
             $this->matauang_id->HrefValue = "";

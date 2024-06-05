@@ -31,11 +31,9 @@ loadjs.ready(["wrapper", "head"], function () {
 
         // Add fields
         .setFields([
-            ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null], fields.id.isInvalid],
+            ["subgrup_id", [fields.subgrup_id.visible && fields.subgrup_id.required ? ew.Validators.required(fields.subgrup_id.caption) : null], fields.subgrup_id.isInvalid],
             ["kode", [fields.kode.visible && fields.kode.required ? ew.Validators.required(fields.kode.caption) : null], fields.kode.isInvalid],
             ["nama", [fields.nama.visible && fields.nama.required ? ew.Validators.required(fields.nama.caption) : null], fields.nama.isInvalid],
-            ["subgrup_id", [fields.subgrup_id.visible && fields.subgrup_id.required ? ew.Validators.required(fields.subgrup_id.caption) : null], fields.subgrup_id.isInvalid],
-            ["user_id", [fields.user_id.visible && fields.user_id.required ? ew.Validators.required(fields.user_id.caption) : null, ew.Validators.integer], fields.user_id.isInvalid],
             ["matauang_id", [fields.matauang_id.visible && fields.matauang_id.required ? ew.Validators.required(fields.matauang_id.caption) : null], fields.matauang_id.isInvalid]
         ])
 
@@ -78,42 +76,6 @@ loadjs.ready("head", function () {
 <?php } ?>
 <input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
 <div class="ew-edit-div"><!-- page* -->
-<?php if ($Page->id->Visible) { // id ?>
-    <div id="r_id"<?= $Page->id->rowAttributes() ?>>
-        <label id="elh_akun_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->id->caption() ?><?= $Page->id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->id->cellAttributes() ?>>
-<span id="el_akun_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->id->getDisplayValue($Page->id->EditValue))) ?>"></span>
-<input type="hidden" data-table="akun" data-field="x_id" data-hidden="1" name="x_id" id="x_id" value="<?= HtmlEncode($Page->id->CurrentValue) ?>">
-</span>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->kode->Visible) { // kode ?>
-    <div id="r_kode"<?= $Page->kode->rowAttributes() ?>>
-        <label id="elh_akun_kode" for="x_kode" class="<?= $Page->LeftColumnClass ?>"><?= $Page->kode->caption() ?><?= $Page->kode->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->kode->cellAttributes() ?>>
-<span id="el_akun_kode">
-<input type="<?= $Page->kode->getInputTextType() ?>" name="x_kode" id="x_kode" data-table="akun" data-field="x_kode" value="<?= $Page->kode->EditValue ?>" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->kode->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->kode->formatPattern()) ?>"<?= $Page->kode->editAttributes() ?> aria-describedby="x_kode_help">
-<?= $Page->kode->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->kode->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->nama->Visible) { // nama ?>
-    <div id="r_nama"<?= $Page->nama->rowAttributes() ?>>
-        <label id="elh_akun_nama" for="x_nama" class="<?= $Page->LeftColumnClass ?>"><?= $Page->nama->caption() ?><?= $Page->nama->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->nama->cellAttributes() ?>>
-<span id="el_akun_nama">
-<input type="<?= $Page->nama->getInputTextType() ?>" name="x_nama" id="x_nama" data-table="akun" data-field="x_nama" value="<?= $Page->nama->EditValue ?>" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->nama->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->nama->formatPattern()) ?>"<?= $Page->nama->editAttributes() ?> aria-describedby="x_nama_help">
-<?= $Page->nama->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->nama->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
 <?php if ($Page->subgrup_id->Visible) { // subgrup_id ?>
     <div id="r_subgrup_id"<?= $Page->subgrup_id->rowAttributes() ?>>
         <label id="elh_akun_subgrup_id" for="x_subgrup_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->subgrup_id->caption() ?><?= $Page->subgrup_id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -160,14 +122,26 @@ loadjs.ready("fakunedit", function() {
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->user_id->Visible) { // user_id ?>
-    <div id="r_user_id"<?= $Page->user_id->rowAttributes() ?>>
-        <label id="elh_akun_user_id" for="x_user_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->user_id->caption() ?><?= $Page->user_id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->user_id->cellAttributes() ?>>
-<span id="el_akun_user_id">
-<input type="<?= $Page->user_id->getInputTextType() ?>" name="x_user_id" id="x_user_id" data-table="akun" data-field="x_user_id" value="<?= $Page->user_id->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->user_id->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->user_id->formatPattern()) ?>"<?= $Page->user_id->editAttributes() ?> aria-describedby="x_user_id_help">
-<?= $Page->user_id->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->user_id->getErrorMessage() ?></div>
+<?php if ($Page->kode->Visible) { // kode ?>
+    <div id="r_kode"<?= $Page->kode->rowAttributes() ?>>
+        <label id="elh_akun_kode" for="x_kode" class="<?= $Page->LeftColumnClass ?>"><?= $Page->kode->caption() ?><?= $Page->kode->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->kode->cellAttributes() ?>>
+<span id="el_akun_kode">
+<input type="<?= $Page->kode->getInputTextType() ?>" name="x_kode" id="x_kode" data-table="akun" data-field="x_kode" value="<?= $Page->kode->EditValue ?>" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->kode->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->kode->formatPattern()) ?>"<?= $Page->kode->editAttributes() ?> aria-describedby="x_kode_help">
+<?= $Page->kode->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->kode->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->nama->Visible) { // nama ?>
+    <div id="r_nama"<?= $Page->nama->rowAttributes() ?>>
+        <label id="elh_akun_nama" for="x_nama" class="<?= $Page->LeftColumnClass ?>"><?= $Page->nama->caption() ?><?= $Page->nama->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->nama->cellAttributes() ?>>
+<span id="el_akun_nama">
+<input type="<?= $Page->nama->getInputTextType() ?>" name="x_nama" id="x_nama" data-table="akun" data-field="x_nama" value="<?= $Page->nama->EditValue ?>" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->nama->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->nama->formatPattern()) ?>"<?= $Page->nama->editAttributes() ?> aria-describedby="x_nama_help">
+<?= $Page->nama->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->nama->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
@@ -219,6 +193,7 @@ loadjs.ready("fakunedit", function() {
     </div>
 <?php } ?>
 </div><!-- /page* -->
+    <input type="hidden" data-table="akun" data-field="x_id" data-hidden="1" name="x_id" id="x_id" value="<?= HtmlEncode($Page->id->CurrentValue) ?>">
 <?= $Page->IsModal ? '<template class="ew-modal-buttons">' : '<div class="row ew-buttons">' ?><!-- buttons .row -->
     <div class="<?= $Page->OffsetColumnClass ?>"><!-- buttons offset -->
 <button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit" form="fakunedit"><?= $Language->phrase("SaveBtn") ?></button>

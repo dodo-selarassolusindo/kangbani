@@ -145,11 +145,11 @@ class AkunList extends Akun
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->id->Visible = false;
+        $this->subgrup_id->setVisibility();
         $this->kode->setVisibility();
         $this->nama->setVisibility();
-        $this->subgrup_id->setVisibility();
-        $this->user_id->setVisibility();
+        $this->user_id->Visible = false;
         $this->matauang_id->setVisibility();
     }
 
@@ -1020,9 +1020,9 @@ class AkunList extends Akun
         $filterList = "";
         $savedFilterList = "";
         $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
+        $filterList = Concat($filterList, $this->subgrup_id->AdvancedSearch->toJson(), ","); // Field subgrup_id
         $filterList = Concat($filterList, $this->kode->AdvancedSearch->toJson(), ","); // Field kode
         $filterList = Concat($filterList, $this->nama->AdvancedSearch->toJson(), ","); // Field nama
-        $filterList = Concat($filterList, $this->subgrup_id->AdvancedSearch->toJson(), ","); // Field subgrup_id
         $filterList = Concat($filterList, $this->user_id->AdvancedSearch->toJson(), ","); // Field user_id
         $filterList = Concat($filterList, $this->matauang_id->AdvancedSearch->toJson(), ","); // Field matauang_id
         if ($this->BasicSearch->Keyword != "") {
@@ -1072,6 +1072,14 @@ class AkunList extends Akun
         $this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
         $this->id->AdvancedSearch->save();
 
+        // Field subgrup_id
+        $this->subgrup_id->AdvancedSearch->SearchValue = @$filter["x_subgrup_id"];
+        $this->subgrup_id->AdvancedSearch->SearchOperator = @$filter["z_subgrup_id"];
+        $this->subgrup_id->AdvancedSearch->SearchCondition = @$filter["v_subgrup_id"];
+        $this->subgrup_id->AdvancedSearch->SearchValue2 = @$filter["y_subgrup_id"];
+        $this->subgrup_id->AdvancedSearch->SearchOperator2 = @$filter["w_subgrup_id"];
+        $this->subgrup_id->AdvancedSearch->save();
+
         // Field kode
         $this->kode->AdvancedSearch->SearchValue = @$filter["x_kode"];
         $this->kode->AdvancedSearch->SearchOperator = @$filter["z_kode"];
@@ -1087,14 +1095,6 @@ class AkunList extends Akun
         $this->nama->AdvancedSearch->SearchValue2 = @$filter["y_nama"];
         $this->nama->AdvancedSearch->SearchOperator2 = @$filter["w_nama"];
         $this->nama->AdvancedSearch->save();
-
-        // Field subgrup_id
-        $this->subgrup_id->AdvancedSearch->SearchValue = @$filter["x_subgrup_id"];
-        $this->subgrup_id->AdvancedSearch->SearchOperator = @$filter["z_subgrup_id"];
-        $this->subgrup_id->AdvancedSearch->SearchCondition = @$filter["v_subgrup_id"];
-        $this->subgrup_id->AdvancedSearch->SearchValue2 = @$filter["y_subgrup_id"];
-        $this->subgrup_id->AdvancedSearch->SearchOperator2 = @$filter["w_subgrup_id"];
-        $this->subgrup_id->AdvancedSearch->save();
 
         // Field user_id
         $this->user_id->AdvancedSearch->SearchValue = @$filter["x_user_id"];
@@ -1227,11 +1227,9 @@ class AkunList extends Akun
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id); // id
+            $this->updateSort($this->subgrup_id); // subgrup_id
             $this->updateSort($this->kode); // kode
             $this->updateSort($this->nama); // nama
-            $this->updateSort($this->subgrup_id); // subgrup_id
-            $this->updateSort($this->user_id); // user_id
             $this->updateSort($this->matauang_id); // matauang_id
             $this->setStartRecordNumber(1); // Reset start position
         }
@@ -1258,9 +1256,9 @@ class AkunList extends Akun
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
                 $this->id->setSort("");
+                $this->subgrup_id->setSort("");
                 $this->kode->setSort("");
                 $this->nama->setSort("");
-                $this->subgrup_id->setSort("");
                 $this->user_id->setSort("");
                 $this->matauang_id->setSort("");
             }
@@ -1325,6 +1323,14 @@ class AkunList extends Akun
         $item->ShowInDropDown = false;
         $item->ShowInButtonGroup = false;
 
+        // "sequence"
+        $item = &$this->ListOptions->add("sequence");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = true;
+        $item->OnLeft = true; // Always on left
+        $item->ShowInDropDown = false;
+        $item->ShowInButtonGroup = false;
+
         // Drop down button for ListOptions
         $this->ListOptions->UseDropDownButton = false;
         $this->ListOptions->DropDownButtonPhrase = $Language->phrase("ButtonListOptions");
@@ -1362,6 +1368,10 @@ class AkunList extends Akun
 
         // Call ListOptions_Rendering event
         $this->listOptionsRendering();
+
+        // "sequence"
+        $opt = $this->ListOptions["sequence"];
+        $opt->Body = FormatSequenceNumber($this->RecordCount);
         $pageUrl = $this->pageUrl(false);
         if ($this->CurrentMode == "view") {
             // "view"
@@ -1500,11 +1510,9 @@ class AkunList extends Akun
             $item = &$option->addGroupOption();
             $item->Body = "";
             $item->Visible = $this->UseColumnVisibility;
-            $this->createColumnOption($option, "id");
+            $this->createColumnOption($option, "subgrup_id");
             $this->createColumnOption($option, "kode");
             $this->createColumnOption($option, "nama");
-            $this->createColumnOption($option, "subgrup_id");
-            $this->createColumnOption($option, "user_id");
             $this->createColumnOption($option, "matauang_id");
         }
 
@@ -1945,9 +1953,9 @@ class AkunList extends Akun
         // Call Row Selected event
         $this->rowSelected($row);
         $this->id->setDbValue($row['id']);
+        $this->subgrup_id->setDbValue($row['subgrup_id']);
         $this->kode->setDbValue($row['kode']);
         $this->nama->setDbValue($row['nama']);
-        $this->subgrup_id->setDbValue($row['subgrup_id']);
         $this->user_id->setDbValue($row['user_id']);
         $this->matauang_id->setDbValue($row['matauang_id']);
     }
@@ -1957,9 +1965,9 @@ class AkunList extends Akun
     {
         $row = [];
         $row['id'] = $this->id->DefaultValue;
+        $row['subgrup_id'] = $this->subgrup_id->DefaultValue;
         $row['kode'] = $this->kode->DefaultValue;
         $row['nama'] = $this->nama->DefaultValue;
-        $row['subgrup_id'] = $this->subgrup_id->DefaultValue;
         $row['user_id'] = $this->user_id->DefaultValue;
         $row['matauang_id'] = $this->matauang_id->DefaultValue;
         return $row;
@@ -2004,11 +2012,11 @@ class AkunList extends Akun
 
         // id
 
+        // subgrup_id
+
         // kode
 
         // nama
-
-        // subgrup_id
 
         // user_id
 
@@ -2018,12 +2026,6 @@ class AkunList extends Akun
         if ($this->RowType == RowType::VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
-
-            // kode
-            $this->kode->ViewValue = $this->kode->CurrentValue;
-
-            // nama
-            $this->nama->ViewValue = $this->nama->CurrentValue;
 
             // subgrup_id
             $curVal = strval($this->subgrup_id->CurrentValue);
@@ -2047,6 +2049,12 @@ class AkunList extends Akun
             } else {
                 $this->subgrup_id->ViewValue = null;
             }
+
+            // kode
+            $this->kode->ViewValue = $this->kode->CurrentValue;
+
+            // nama
+            $this->nama->ViewValue = $this->nama->CurrentValue;
 
             // user_id
             $this->user_id->ViewValue = $this->user_id->CurrentValue;
@@ -2075,9 +2083,9 @@ class AkunList extends Akun
                 $this->matauang_id->ViewValue = null;
             }
 
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
+            // subgrup_id
+            $this->subgrup_id->HrefValue = "";
+            $this->subgrup_id->TooltipValue = "";
 
             // kode
             $this->kode->HrefValue = "";
@@ -2086,14 +2094,6 @@ class AkunList extends Akun
             // nama
             $this->nama->HrefValue = "";
             $this->nama->TooltipValue = "";
-
-            // subgrup_id
-            $this->subgrup_id->HrefValue = "";
-            $this->subgrup_id->TooltipValue = "";
-
-            // user_id
-            $this->user_id->HrefValue = "";
-            $this->user_id->TooltipValue = "";
 
             // matauang_id
             $this->matauang_id->HrefValue = "";

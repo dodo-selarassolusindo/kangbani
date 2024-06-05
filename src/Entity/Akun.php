@@ -33,14 +33,14 @@ class Akun extends AbstractEntity
     #[GeneratedValue]
     private int $id;
 
+    #[Column(name: "subgrup_id", type: "integer", nullable: true)]
+    private ?int $subgrupId;
+
     #[Column(type: "string", nullable: true)]
     private ?string $kode;
 
     #[Column(type: "string", nullable: true)]
     private ?string $nama;
-
-    #[Column(name: "subgrup_id", type: "integer", nullable: true)]
-    private ?int $subgrupId;
 
     #[Column(name: "user_id", type: "integer", nullable: true)]
     private ?int $userId;
@@ -56,6 +56,17 @@ class Akun extends AbstractEntity
     public function setId(int $value): static
     {
         $this->id = $value;
+        return $this;
+    }
+
+    public function getSubgrupId(): ?int
+    {
+        return $this->subgrupId;
+    }
+
+    public function setSubgrupId(?int $value): static
+    {
+        $this->subgrupId = $value;
         return $this;
     }
 
@@ -78,17 +89,6 @@ class Akun extends AbstractEntity
     public function setNama(?string $value): static
     {
         $this->nama = RemoveXss($value);
-        return $this;
-    }
-
-    public function getSubgrupId(): ?int
-    {
-        return $this->subgrupId;
-    }
-
-    public function setSubgrupId(?int $value): static
-    {
-        $this->subgrupId = $value;
         return $this;
     }
 

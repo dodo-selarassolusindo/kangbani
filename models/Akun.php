@@ -47,9 +47,9 @@ class Akun extends DbTable
 
     // Fields
     public $id;
+    public $subgrup_id;
     public $kode;
     public $nama;
-    public $subgrup_id;
     public $user_id;
     public $matauang_id;
 
@@ -125,6 +125,34 @@ class Akun extends DbTable
         $this->id->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['id'] = &$this->id;
 
+        // subgrup_id
+        $this->subgrup_id = new DbField(
+            $this, // Table
+            'x_subgrup_id', // Variable name
+            'subgrup_id', // Name
+            '`subgrup_id`', // Expression
+            '`subgrup_id`', // Basic search expression
+            3, // Type
+            11, // Size
+            -1, // Date/Time format
+            false, // Is upload field
+            '`subgrup_id`', // Virtual expression
+            false, // Is virtual
+            false, // Force selection
+            false, // Is Virtual search
+            'FORMATTED TEXT', // View Tag
+            'SELECT' // Edit Tag
+        );
+        $this->subgrup_id->InputTextType = "text";
+        $this->subgrup_id->Raw = true;
+        $this->subgrup_id->setSelectMultiple(false); // Select one
+        $this->subgrup_id->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->subgrup_id->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->subgrup_id->Lookup = new Lookup($this->subgrup_id, 'subgrup', false, 'id', ["kode","nama","",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(`kode`, ''),'" . ValueSeparator(1, $this->subgrup_id) . "',COALESCE(`nama`,''))");
+        $this->subgrup_id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->subgrup_id->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
+        $this->Fields['subgrup_id'] = &$this->subgrup_id;
+
         // kode
         $this->kode = new DbField(
             $this, // Table
@@ -168,34 +196,6 @@ class Akun extends DbTable
         $this->nama->InputTextType = "text";
         $this->nama->SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY", "IS NULL", "IS NOT NULL"];
         $this->Fields['nama'] = &$this->nama;
-
-        // subgrup_id
-        $this->subgrup_id = new DbField(
-            $this, // Table
-            'x_subgrup_id', // Variable name
-            'subgrup_id', // Name
-            '`subgrup_id`', // Expression
-            '`subgrup_id`', // Basic search expression
-            3, // Type
-            11, // Size
-            -1, // Date/Time format
-            false, // Is upload field
-            '`subgrup_id`', // Virtual expression
-            false, // Is virtual
-            false, // Force selection
-            false, // Is Virtual search
-            'FORMATTED TEXT', // View Tag
-            'SELECT' // Edit Tag
-        );
-        $this->subgrup_id->InputTextType = "text";
-        $this->subgrup_id->Raw = true;
-        $this->subgrup_id->setSelectMultiple(false); // Select one
-        $this->subgrup_id->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->subgrup_id->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        $this->subgrup_id->Lookup = new Lookup($this->subgrup_id, 'subgrup', false, 'id', ["kode","nama","",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(`kode`, ''),'" . ValueSeparator(1, $this->subgrup_id) . "',COALESCE(`nama`,''))");
-        $this->subgrup_id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->subgrup_id->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
-        $this->Fields['subgrup_id'] = &$this->subgrup_id;
 
         // user_id
         $this->user_id = new DbField(
@@ -768,9 +768,9 @@ class Akun extends DbTable
             return;
         }
         $this->id->DbValue = $row['id'];
+        $this->subgrup_id->DbValue = $row['subgrup_id'];
         $this->kode->DbValue = $row['kode'];
         $this->nama->DbValue = $row['nama'];
-        $this->subgrup_id->DbValue = $row['subgrup_id'];
         $this->user_id->DbValue = $row['user_id'];
         $this->matauang_id->DbValue = $row['matauang_id'];
     }
@@ -1133,9 +1133,9 @@ class Akun extends DbTable
             return;
         }
         $this->id->setDbValue($row['id']);
+        $this->subgrup_id->setDbValue($row['subgrup_id']);
         $this->kode->setDbValue($row['kode']);
         $this->nama->setDbValue($row['nama']);
-        $this->subgrup_id->setDbValue($row['subgrup_id']);
         $this->user_id->setDbValue($row['user_id']);
         $this->matauang_id->setDbValue($row['matauang_id']);
     }
@@ -1170,11 +1170,11 @@ class Akun extends DbTable
 
         // id
 
+        // subgrup_id
+
         // kode
 
         // nama
-
-        // subgrup_id
 
         // user_id
 
@@ -1182,12 +1182,6 @@ class Akun extends DbTable
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
-
-        // kode
-        $this->kode->ViewValue = $this->kode->CurrentValue;
-
-        // nama
-        $this->nama->ViewValue = $this->nama->CurrentValue;
 
         // subgrup_id
         $curVal = strval($this->subgrup_id->CurrentValue);
@@ -1211,6 +1205,12 @@ class Akun extends DbTable
         } else {
             $this->subgrup_id->ViewValue = null;
         }
+
+        // kode
+        $this->kode->ViewValue = $this->kode->CurrentValue;
+
+        // nama
+        $this->nama->ViewValue = $this->nama->CurrentValue;
 
         // user_id
         $this->user_id->ViewValue = $this->user_id->CurrentValue;
@@ -1243,6 +1243,10 @@ class Akun extends DbTable
         $this->id->HrefValue = "";
         $this->id->TooltipValue = "";
 
+        // subgrup_id
+        $this->subgrup_id->HrefValue = "";
+        $this->subgrup_id->TooltipValue = "";
+
         // kode
         $this->kode->HrefValue = "";
         $this->kode->TooltipValue = "";
@@ -1250,10 +1254,6 @@ class Akun extends DbTable
         // nama
         $this->nama->HrefValue = "";
         $this->nama->TooltipValue = "";
-
-        // subgrup_id
-        $this->subgrup_id->HrefValue = "";
-        $this->subgrup_id->TooltipValue = "";
 
         // user_id
         $this->user_id->HrefValue = "";
@@ -1282,6 +1282,10 @@ class Akun extends DbTable
         $this->id->setupEditAttributes();
         $this->id->EditValue = $this->id->CurrentValue;
 
+        // subgrup_id
+        $this->subgrup_id->setupEditAttributes();
+        $this->subgrup_id->PlaceHolder = RemoveHtml($this->subgrup_id->caption());
+
         // kode
         $this->kode->setupEditAttributes();
         if (!$this->kode->Raw) {
@@ -1297,10 +1301,6 @@ class Akun extends DbTable
         }
         $this->nama->EditValue = $this->nama->CurrentValue;
         $this->nama->PlaceHolder = RemoveHtml($this->nama->caption());
-
-        // subgrup_id
-        $this->subgrup_id->setupEditAttributes();
-        $this->subgrup_id->PlaceHolder = RemoveHtml($this->subgrup_id->caption());
 
         // user_id
         $this->user_id->setupEditAttributes();
@@ -1342,17 +1342,15 @@ class Akun extends DbTable
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->id);
+                    $doc->exportCaption($this->subgrup_id);
                     $doc->exportCaption($this->kode);
                     $doc->exportCaption($this->nama);
-                    $doc->exportCaption($this->subgrup_id);
-                    $doc->exportCaption($this->user_id);
                     $doc->exportCaption($this->matauang_id);
                 } else {
                     $doc->exportCaption($this->id);
+                    $doc->exportCaption($this->subgrup_id);
                     $doc->exportCaption($this->kode);
                     $doc->exportCaption($this->nama);
-                    $doc->exportCaption($this->subgrup_id);
                     $doc->exportCaption($this->user_id);
                     $doc->exportCaption($this->matauang_id);
                 }
@@ -1381,17 +1379,15 @@ class Akun extends DbTable
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->id);
+                        $doc->exportField($this->subgrup_id);
                         $doc->exportField($this->kode);
                         $doc->exportField($this->nama);
-                        $doc->exportField($this->subgrup_id);
-                        $doc->exportField($this->user_id);
                         $doc->exportField($this->matauang_id);
                     } else {
                         $doc->exportField($this->id);
+                        $doc->exportField($this->subgrup_id);
                         $doc->exportField($this->kode);
                         $doc->exportField($this->nama);
-                        $doc->exportField($this->subgrup_id);
                         $doc->exportField($this->user_id);
                         $doc->exportField($this->matauang_id);
                     }

@@ -50,20 +50,14 @@ $Page->showMessage();
 <table class="<?= $Page->TableClass ?>">
     <thead>
     <tr class="ew-table-header">
-<?php if ($Page->id->Visible) { // id ?>
-        <th class="<?= $Page->id->headerCellClass() ?>"><span id="elh_akun_id" class="akun_id"><?= $Page->id->caption() ?></span></th>
+<?php if ($Page->subgrup_id->Visible) { // subgrup_id ?>
+        <th class="<?= $Page->subgrup_id->headerCellClass() ?>"><span id="elh_akun_subgrup_id" class="akun_subgrup_id"><?= $Page->subgrup_id->caption() ?></span></th>
 <?php } ?>
 <?php if ($Page->kode->Visible) { // kode ?>
         <th class="<?= $Page->kode->headerCellClass() ?>"><span id="elh_akun_kode" class="akun_kode"><?= $Page->kode->caption() ?></span></th>
 <?php } ?>
 <?php if ($Page->nama->Visible) { // nama ?>
         <th class="<?= $Page->nama->headerCellClass() ?>"><span id="elh_akun_nama" class="akun_nama"><?= $Page->nama->caption() ?></span></th>
-<?php } ?>
-<?php if ($Page->subgrup_id->Visible) { // subgrup_id ?>
-        <th class="<?= $Page->subgrup_id->headerCellClass() ?>"><span id="elh_akun_subgrup_id" class="akun_subgrup_id"><?= $Page->subgrup_id->caption() ?></span></th>
-<?php } ?>
-<?php if ($Page->user_id->Visible) { // user_id ?>
-        <th class="<?= $Page->user_id->headerCellClass() ?>"><span id="elh_akun_user_id" class="akun_user_id"><?= $Page->user_id->caption() ?></span></th>
 <?php } ?>
 <?php if ($Page->matauang_id->Visible) { // matauang_id ?>
         <th class="<?= $Page->matauang_id->headerCellClass() ?>"><span id="elh_akun_matauang_id" class="akun_matauang_id"><?= $Page->matauang_id->caption() ?></span></th>
@@ -89,11 +83,11 @@ while ($Page->fetch()) {
     $Page->renderRow();
 ?>
     <tr <?= $Page->rowAttributes() ?>>
-<?php if ($Page->id->Visible) { // id ?>
-        <td<?= $Page->id->cellAttributes() ?>>
+<?php if ($Page->subgrup_id->Visible) { // subgrup_id ?>
+        <td<?= $Page->subgrup_id->cellAttributes() ?>>
 <span id="">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
+<span<?= $Page->subgrup_id->viewAttributes() ?>>
+<?= $Page->subgrup_id->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
@@ -110,22 +104,6 @@ while ($Page->fetch()) {
 <span id="">
 <span<?= $Page->nama->viewAttributes() ?>>
 <?= $Page->nama->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($Page->subgrup_id->Visible) { // subgrup_id ?>
-        <td<?= $Page->subgrup_id->cellAttributes() ?>>
-<span id="">
-<span<?= $Page->subgrup_id->viewAttributes() ?>>
-<?= $Page->subgrup_id->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($Page->user_id->Visible) { // user_id ?>
-        <td<?= $Page->user_id->cellAttributes() ?>>
-<span id="">
-<span<?= $Page->user_id->viewAttributes() ?>>
-<?= $Page->user_id->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

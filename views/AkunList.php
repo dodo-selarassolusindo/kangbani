@@ -155,20 +155,14 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->id->Visible) { // id ?>
-        <th data-name="id" class="<?= $Page->id->headerCellClass() ?>"><div id="elh_akun_id" class="akun_id"><?= $Page->renderFieldHeader($Page->id) ?></div></th>
+<?php if ($Page->subgrup_id->Visible) { // subgrup_id ?>
+        <th data-name="subgrup_id" class="<?= $Page->subgrup_id->headerCellClass() ?>"><div id="elh_akun_subgrup_id" class="akun_subgrup_id"><?= $Page->renderFieldHeader($Page->subgrup_id) ?></div></th>
 <?php } ?>
 <?php if ($Page->kode->Visible) { // kode ?>
         <th data-name="kode" class="<?= $Page->kode->headerCellClass() ?>"><div id="elh_akun_kode" class="akun_kode"><?= $Page->renderFieldHeader($Page->kode) ?></div></th>
 <?php } ?>
 <?php if ($Page->nama->Visible) { // nama ?>
         <th data-name="nama" class="<?= $Page->nama->headerCellClass() ?>"><div id="elh_akun_nama" class="akun_nama"><?= $Page->renderFieldHeader($Page->nama) ?></div></th>
-<?php } ?>
-<?php if ($Page->subgrup_id->Visible) { // subgrup_id ?>
-        <th data-name="subgrup_id" class="<?= $Page->subgrup_id->headerCellClass() ?>"><div id="elh_akun_subgrup_id" class="akun_subgrup_id"><?= $Page->renderFieldHeader($Page->subgrup_id) ?></div></th>
-<?php } ?>
-<?php if ($Page->user_id->Visible) { // user_id ?>
-        <th data-name="user_id" class="<?= $Page->user_id->headerCellClass() ?>"><div id="elh_akun_user_id" class="akun_user_id"><?= $Page->renderFieldHeader($Page->user_id) ?></div></th>
 <?php } ?>
 <?php if ($Page->matauang_id->Visible) { // matauang_id ?>
         <th data-name="matauang_id" class="<?= $Page->matauang_id->headerCellClass() ?>"><div id="elh_akun_matauang_id" class="akun_matauang_id"><?= $Page->renderFieldHeader($Page->matauang_id) ?></div></th>
@@ -200,11 +194,11 @@ while ($Page->RecordCount < $Page->StopRecord || $Page->RowIndex === '$rowindex$
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->id->Visible) { // id ?>
-        <td data-name="id"<?= $Page->id->cellAttributes() ?>>
-<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_akun_id" class="el_akun_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
+    <?php if ($Page->subgrup_id->Visible) { // subgrup_id ?>
+        <td data-name="subgrup_id"<?= $Page->subgrup_id->cellAttributes() ?>>
+<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_akun_subgrup_id" class="el_akun_subgrup_id">
+<span<?= $Page->subgrup_id->viewAttributes() ?>>
+<?= $Page->subgrup_id->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
@@ -221,22 +215,6 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_akun_nama" class="el_akun_nama">
 <span<?= $Page->nama->viewAttributes() ?>>
 <?= $Page->nama->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->subgrup_id->Visible) { // subgrup_id ?>
-        <td data-name="subgrup_id"<?= $Page->subgrup_id->cellAttributes() ?>>
-<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_akun_subgrup_id" class="el_akun_subgrup_id">
-<span<?= $Page->subgrup_id->viewAttributes() ?>>
-<?= $Page->subgrup_id->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->user_id->Visible) { // user_id ?>
-        <td data-name="user_id"<?= $Page->user_id->cellAttributes() ?>>
-<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_akun_user_id" class="el_akun_user_id">
-<span<?= $Page->user_id->viewAttributes() ?>>
-<?= $Page->user_id->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
