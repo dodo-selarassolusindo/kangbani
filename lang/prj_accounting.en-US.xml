@@ -65,9 +65,6 @@
     <menu id="12">
       <phrase id="menutext" value="Pengiriman" />
     </menu>
-    <menu id="7">
-      <phrase id="menutext" value="Klasifikasi" />
-    </menu>
     <menu id="15">
       <phrase id="menutext" value="Produk" />
     </menu>
@@ -76,6 +73,9 @@
     </menu>
     <menu id="22">
       <phrase id="menutext" value="Type" />
+    </menu>
+    <menu id="7">
+      <phrase id="menutext" value="Klasifikasi" />
     </menu>
     <menu id="14">
       <phrase id="menutext" value="Person" />
