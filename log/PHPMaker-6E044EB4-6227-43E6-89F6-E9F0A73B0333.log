@@ -4,6 +4,7 @@ C:\xampp\htdocs\kangbani\api\index.php
 C:\xampp\htdocs\kangbani\composer.json
 C:\xampp\htdocs\kangbani\controllers\AkunController.php
 C:\xampp\htdocs\kangbani\controllers\ApiController.php
+C:\xampp\htdocs\kangbani\controllers\BerandaController.php
 C:\xampp\htdocs\kangbani\controllers\ControllerBase.php
 C:\xampp\htdocs\kangbani\controllers\GrupController.php
 C:\xampp\htdocs\kangbani\controllers\GudangController.php
@@ -44,6 +45,7 @@ C:\xampp\htdocs\kangbani\models\AkunDelete.php
 C:\xampp\htdocs\kangbani\models\AkunEdit.php
 C:\xampp\htdocs\kangbani\models\AkunList.php
 C:\xampp\htdocs\kangbani\models\AkunView.php
+C:\xampp\htdocs\kangbani\models\Beranda.php
 C:\xampp\htdocs\kangbani\models\Grup.php
 C:\xampp\htdocs\kangbani\models\GrupAdd.php
 C:\xampp\htdocs\kangbani\models\GrupDelete.php
@@ -333,6 +335,7 @@ C:\xampp\htdocs\kangbani\views\AkunDelete.php
 C:\xampp\htdocs\kangbani\views\AkunEdit.php
 C:\xampp\htdocs\kangbani\views\AkunList.php
 C:\xampp\htdocs\kangbani\views\AkunView.php
+C:\xampp\htdocs\kangbani\views\Beranda.php
 C:\xampp\htdocs\kangbani\views\Error.php
 C:\xampp\htdocs\kangbani\views\GrupAdd.php
 C:\xampp\htdocs\kangbani\views\GrupDelete.php

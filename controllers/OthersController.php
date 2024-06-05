@@ -42,7 +42,7 @@ class OthersController extends ControllerBase
     #[Get("/[index]", [PermissionMiddleware::class], "index")]
     public function index(Request $request, Response $response, array $args): Response
     {
-        $url = "akunlist";
+        $url = "beranda";
         if ($url == "") {
             throw new HttpUnauthorizedException($request, DeniedMessage());
         }

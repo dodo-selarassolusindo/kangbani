@@ -186,8 +186,8 @@ ew.ready("head", [
                 <li class="nav-item d-block d-sm-none">
                     <a class="nav-link" data-widget="pushmenu" data-enable-remember="true" data-ew-action="none"><i class="fa-solid fa-bars ew-icon"></i></a>
                 </li>
-                <a class="navbar-brand d-none d-sm-block" href="#" data-ew-action="none">
-                    <span class="brand-text">PHPMaker 2024</span>
+                <a class="navbar-brand d-none d-sm-block" href="/">
+                    <span class="brand-text">Kang Bani</span>
                 </a>
             </ul>
             <!-- Right navbar links -->
@@ -199,8 +199,8 @@ ew.ready("head", [
     <aside class="<?= Config("SIDEBAR_CLASS") ?>">
         <div class="brand-container">
             <!-- Brand Logo //** Note: Only licensed users are allowed to change the logo ** -->
-            <a href="#" class="brand-link">
-                <span class="brand-text">PHPMaker 2024</span>
+            <a href="/" class="brand-link">
+                <span class="brand-text">Kang Bani</span>
             </a>
             <?php if (preg_match('/\bsidebar-mini\b/', Config("BODY_CLASS"))) { ?>
             <a class="pushmenu mx-1" data-pushmenu="mini" role="button"><i class="fa-solid fa-angle-double-left"></i></a>

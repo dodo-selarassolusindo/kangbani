@@ -4,6 +4,7 @@ namespace PHPMaker2024\prj_accounting;
 
 // Navbar menu
 $topMenu = new Menu("navbar", true, true);
+$topMenu->addMenuItem(25, "mi_beranda", $Language->menuPhrase("25", "MenuText"), "beranda", -1, "", true, false, false, "", "", true, false);
 $topMenu->addMenuItem(23, "mci_Master", $Language->menuPhrase("23", "MenuText"), "", -1, "", true, false, true, "", "", true, false);
 $topMenu->addMenuItem(13, "mi_periode", $Language->menuPhrase("13", "MenuText"), "periodelist", 23, "", true, false, false, "", "", true, false);
 $topMenu->addMenuItem(2, "mi_grup", $Language->menuPhrase("2", "MenuText"), "gruplist", 23, "", true, false, false, "", "", true, false);
@@ -31,6 +32,7 @@ echo $topMenu->toScript();
 
 // Sidebar menu
 $sideMenu = new Menu("menu", true, false);
+$sideMenu->addMenuItem(25, "mi_beranda", $Language->menuPhrase("25", "MenuText"), "beranda", -1, "", true, false, false, "", "", true, true);
 $sideMenu->addMenuItem(23, "mci_Master", $Language->menuPhrase("23", "MenuText"), "", -1, "", true, false, true, "", "", true, true);
 $sideMenu->addMenuItem(13, "mi_periode", $Language->menuPhrase("13", "MenuText"), "periodelist", 23, "", true, false, false, "", "", true, true);
 $sideMenu->addMenuItem(2, "mi_grup", $Language->menuPhrase("2", "MenuText"), "gruplist", 23, "", true, false, false, "", "", true, true);

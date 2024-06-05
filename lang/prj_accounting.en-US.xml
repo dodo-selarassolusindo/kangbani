@@ -1,6 +1,9 @@
 <ew-language date="2024/6/5" id="en-US" author="e.World Technology Limited">
   <project>
-    <phrase id="footertext" value="&amp;copy;2023 e.World Technology Limited. All rights reserved." />
+    <phrase id="footertext" value="&amp;copy;2024 KangBani Limited. All rights reserved." />
+    <menu id="25">
+      <phrase id="menutext" value="Beranda" />
+    </menu>
     <menu id="23">
       <phrase id="menutext" value="Master" />
     </menu>
@@ -535,6 +538,9 @@
       <field id="nama">
         <phrase id="fldcaption" value="nama" />
       </field>
+    </table>
+    <table id="beranda">
+      <phrase id="tblcaption" value="Beranda" />
     </table>
   </project>
 </ew-language>

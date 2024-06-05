@@ -42,7 +42,8 @@ $USER_LEVEL_PRIVS = [["{6E044EB4-6227-43E6-89F6-E9F0A73B0333}akun","-2","0"],
     ["{6E044EB4-6227-43E6-89F6-E9F0A73B0333}tipejurnal","-2","0"],
     ["{6E044EB4-6227-43E6-89F6-E9F0A73B0333}top","-2","0"],
     ["{6E044EB4-6227-43E6-89F6-E9F0A73B0333}tos","-2","0"],
-    ["{6E044EB4-6227-43E6-89F6-E9F0A73B0333}type","-2","0"]];
+    ["{6E044EB4-6227-43E6-89F6-E9F0A73B0333}type","-2","0"],
+    ["{6E044EB4-6227-43E6-89F6-E9F0A73B0333}beranda.php","-2","72"]];
 
 /**
  * Tables
@@ -76,4 +77,5 @@ $USER_LEVEL_TABLES = [["akun","akun","Akun",true,"{6E044EB4-6227-43E6-89F6-E9F0A
     ["tipejurnal","tipejurnal","tipejurnal",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","tipejurnallist"],
     ["top","top","top",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","toplist"],
     ["tos","tos","tos",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","toslist"],
-    ["type","type","type",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","typelist"]];
+    ["type","type","type",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","typelist"],
+    ["beranda.php","beranda","Beranda",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","beranda"]];
