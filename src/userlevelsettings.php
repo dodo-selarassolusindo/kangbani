@@ -75,7 +75,7 @@ $USER_LEVEL_TABLES = [["akun","akun","Akun",true,"{6E044EB4-6227-43E6-89F6-E9F0A
     ["satuan","satuan","Satuan",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","satuanlist"],
     ["subgrup","subgrup","Sub Grup",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","subgruplist"],
     ["tipejurnal","tipejurnal","Tipe Jurnal",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","tipejurnallist"],
-    ["top","top","TOP",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","toplist"],
-    ["tos","tos","TOS",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","toslist"],
+    ["top","top","Term of Payment",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","toplist"],
+    ["tos","tos","Term of Sale",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","toslist"],
     ["type","type","Type",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","typelist"],
     ["beranda.php","beranda","Beranda",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","beranda"]];

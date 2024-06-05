@@ -193,6 +193,7 @@ class Jurnal extends DbTable
             'FORMATTED TEXT', // View Tag
             'TEXT' // Edit Tag
         );
+        $this->createon->addMethod("getAutoUpdateValue", fn() => CurrentDateTime());
         $this->createon->InputTextType = "text";
         $this->createon->Raw = true;
         $this->createon->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
@@ -1376,9 +1377,6 @@ class Jurnal extends DbTable
         }
 
         // createon
-        $this->createon->setupEditAttributes();
-        $this->createon->EditValue = FormatDateTime($this->createon->CurrentValue, $this->createon->formatPattern());
-        $this->createon->PlaceHolder = RemoveHtml($this->createon->caption());
 
         // keterangan
         $this->keterangan->setupEditAttributes();

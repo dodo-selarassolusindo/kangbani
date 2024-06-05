@@ -65,11 +65,14 @@
     <menu id="14">
       <phrase id="menutext" value="Person" />
     </menu>
-    <menu id="20">
-      <phrase id="menutext" value="TOP" />
+    <menu id="74">
+      <phrase id="menutext" value="Setting" />
     </menu>
     <menu id="21">
-      <phrase id="menutext" value="TOS" />
+      <phrase id="menutext" value="Term of Sale" />
+    </menu>
+    <menu id="20">
+      <phrase id="menutext" value="Term of Payment" />
     </menu>
     <menu id="24">
       <phrase id="menutext" value="Transaksi" />
@@ -155,16 +158,16 @@
         <phrase id="fldcaption" value="id" />
       </field>
       <field id="jurnal_id">
-        <phrase id="fldcaption" value="jurnal id" />
+        <phrase id="fldcaption" value="Jurnal ID" />
       </field>
       <field id="akun_id">
-        <phrase id="fldcaption" value="akun id" />
+        <phrase id="fldcaption" value="Akun" />
       </field>
       <field id="debet">
-        <phrase id="fldcaption" value="debet" />
+        <phrase id="fldcaption" value="Debet" />
       </field>
       <field id="kredit">
-        <phrase id="fldcaption" value="kredit" />
+        <phrase id="fldcaption" value="Kredit" />
       </field>
     </table>
     <table id="kelompok">
@@ -502,7 +505,7 @@
       </field>
     </table>
     <table id="top">
-      <phrase id="tblcaption" value="TOP" />
+      <phrase id="tblcaption" value="Term of Payment" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
@@ -517,7 +520,7 @@
       </field>
     </table>
     <table id="tos">
-      <phrase id="tblcaption" value="TOS" />
+      <phrase id="tblcaption" value="Term of Sale" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>

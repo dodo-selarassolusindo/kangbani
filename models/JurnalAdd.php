@@ -701,7 +701,7 @@ class JurnalAdd extends Jurnal
             if (IsApi() && $val === null) {
                 $this->createon->Visible = false; // Disable update for API request
             } else {
-                $this->createon->setFormValue($val, true, $validate);
+                $this->createon->setFormValue($val);
             }
             $this->createon->CurrentValue = UnFormatDateTime($this->createon->CurrentValue, $this->createon->formatPattern());
         }
@@ -928,9 +928,6 @@ class JurnalAdd extends Jurnal
             }
 
             // createon
-            $this->createon->setupEditAttributes();
-            $this->createon->EditValue = HtmlEncode(FormatDateTime($this->createon->CurrentValue, $this->createon->formatPattern()));
-            $this->createon->PlaceHolder = RemoveHtml($this->createon->caption());
 
             // keterangan
             $this->keterangan->setupEditAttributes();
@@ -1016,9 +1013,6 @@ class JurnalAdd extends Jurnal
                 if (!$this->createon->IsDetailKey && EmptyValue($this->createon->FormValue)) {
                     $this->createon->addErrorMessage(str_replace("%s", $this->createon->caption(), $this->createon->RequiredErrorMessage));
                 }
-            }
-            if (!CheckDate($this->createon->FormValue, $this->createon->formatPattern())) {
-                $this->createon->addErrorMessage($this->createon->getErrorMessage(false));
             }
             if ($this->keterangan->Visible && $this->keterangan->Required) {
                 if (!$this->keterangan->IsDetailKey && EmptyValue($this->keterangan->FormValue)) {
@@ -1159,7 +1153,8 @@ class JurnalAdd extends Jurnal
         $this->period_id->setDbValueDef($rsnew, $this->period_id->CurrentValue, false);
 
         // createon
-        $this->createon->setDbValueDef($rsnew, UnFormatDateTime($this->createon->CurrentValue, $this->createon->formatPattern()), false);
+        $this->createon->CurrentValue = $this->createon->getAutoUpdateValue(); // PHP
+        $this->createon->setDbValueDef($rsnew, UnFormatDateTime($this->createon->CurrentValue, $this->createon->formatPattern()));
 
         // keterangan
         $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, false);

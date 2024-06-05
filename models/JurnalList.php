@@ -456,6 +456,9 @@ class JurnalList extends Jurnal
         if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
             $this->id->Visible = false;
         }
+        if ($this->isAddOrEdit()) {
+            $this->createon->Visible = false;
+        }
     }
 
     // Lookup data
