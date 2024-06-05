@@ -140,7 +140,7 @@ class PersonAdd extends Person
         $this->kota->setVisibility();
         $this->zip->setVisibility();
         $this->klasifikasi_id->setVisibility();
-        $this->id_FK->setVisibility();
+        $this->id_FK->Visible = false;
     }
 
     // Constructor
@@ -857,16 +857,6 @@ class PersonAdd extends Person
             }
         }
 
-        // Check field name 'id_FK' first before field var 'x_id_FK'
-        $val = $CurrentForm->hasValue("id_FK") ? $CurrentForm->getValue("id_FK") : $CurrentForm->getValue("x_id_FK");
-        if (!$this->id_FK->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->id_FK->Visible = false; // Disable update for API request
-            } else {
-                $this->id_FK->setFormValue($val, true, $validate);
-            }
-        }
-
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
     }
@@ -893,7 +883,6 @@ class PersonAdd extends Person
         $this->kota->CurrentValue = $this->kota->FormValue;
         $this->zip->CurrentValue = $this->zip->FormValue;
         $this->klasifikasi_id->CurrentValue = $this->klasifikasi_id->FormValue;
-        $this->id_FK->CurrentValue = $this->id_FK->FormValue;
     }
 
     /**
@@ -1103,7 +1092,7 @@ class PersonAdd extends Person
             $this->_username->ViewValue = $this->_username->CurrentValue;
 
             // password
-            $this->_password->ViewValue = $this->_password->CurrentValue;
+            $this->_password->ViewValue = $Language->phrase("PasswordMask");
 
             // telp2
             $this->telp2->ViewValue = $this->telp2->CurrentValue;
@@ -1193,9 +1182,6 @@ class PersonAdd extends Person
 
             // klasifikasi_id
             $this->klasifikasi_id->HrefValue = "";
-
-            // id_FK
-            $this->id_FK->HrefValue = "";
         } elseif ($this->RowType == RowType::ADD) {
             // kode
             $this->kode->setupEditAttributes();
@@ -1255,10 +1241,6 @@ class PersonAdd extends Person
 
             // password
             $this->_password->setupEditAttributes();
-            if (!$this->_password->Raw) {
-                $this->_password->CurrentValue = HtmlDecode($this->_password->CurrentValue);
-            }
-            $this->_password->EditValue = HtmlEncode($this->_password->CurrentValue);
             $this->_password->PlaceHolder = RemoveHtml($this->_password->caption());
 
             // telp2
@@ -1341,14 +1323,6 @@ class PersonAdd extends Person
                 $this->klasifikasi_id->EditValue = FormatNumber($this->klasifikasi_id->EditValue, null);
             }
 
-            // id_FK
-            $this->id_FK->setupEditAttributes();
-            $this->id_FK->EditValue = $this->id_FK->CurrentValue;
-            $this->id_FK->PlaceHolder = RemoveHtml($this->id_FK->caption());
-            if (strval($this->id_FK->EditValue) != "" && is_numeric($this->id_FK->EditValue)) {
-                $this->id_FK->EditValue = FormatNumber($this->id_FK->EditValue, null);
-            }
-
             // Add refer script
 
             // kode
@@ -1404,9 +1378,6 @@ class PersonAdd extends Person
 
             // klasifikasi_id
             $this->klasifikasi_id->HrefValue = "";
-
-            // id_FK
-            $this->id_FK->HrefValue = "";
         }
         if ($this->RowType == RowType::ADD || $this->RowType == RowType::EDIT || $this->RowType == RowType::SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1474,6 +1445,9 @@ class PersonAdd extends Person
                     $this->_password->addErrorMessage(str_replace("%s", $this->_password->caption(), $this->_password->RequiredErrorMessage));
                 }
             }
+            if (!$this->_password->Raw && Config("REMOVE_XSS") && CheckPassword($this->_password->FormValue)) {
+                $this->_password->addErrorMessage($Language->phrase("InvalidPasswordChars"));
+            }
             if ($this->telp2->Visible && $this->telp2->Required) {
                 if (!$this->telp2->IsDetailKey && EmptyValue($this->telp2->FormValue)) {
                     $this->telp2->addErrorMessage(str_replace("%s", $this->telp2->caption(), $this->telp2->RequiredErrorMessage));
@@ -1526,14 +1500,6 @@ class PersonAdd extends Person
             }
             if (!CheckInteger($this->klasifikasi_id->FormValue)) {
                 $this->klasifikasi_id->addErrorMessage($this->klasifikasi_id->getErrorMessage(false));
-            }
-            if ($this->id_FK->Visible && $this->id_FK->Required) {
-                if (!$this->id_FK->IsDetailKey && EmptyValue($this->id_FK->FormValue)) {
-                    $this->id_FK->addErrorMessage(str_replace("%s", $this->id_FK->caption(), $this->id_FK->RequiredErrorMessage));
-                }
-            }
-            if (!CheckInteger($this->id_FK->FormValue)) {
-                $this->id_FK->addErrorMessage($this->id_FK->getErrorMessage(false));
             }
 
         // Return validate result
@@ -1628,7 +1594,9 @@ class PersonAdd extends Person
         $this->_username->setDbValueDef($rsnew, $this->_username->CurrentValue, false);
 
         // password
-        $this->_password->setDbValueDef($rsnew, $this->_password->CurrentValue, false);
+        if (!IsMaskedPassword($this->_password->CurrentValue)) {
+            $this->_password->setDbValueDef($rsnew, $this->_password->CurrentValue, false);
+        }
 
         // telp2
         $this->telp2->setDbValueDef($rsnew, $this->telp2->CurrentValue, false);
@@ -1659,9 +1627,6 @@ class PersonAdd extends Person
 
         // klasifikasi_id
         $this->klasifikasi_id->setDbValueDef($rsnew, $this->klasifikasi_id->CurrentValue, false);
-
-        // id_FK
-        $this->id_FK->setDbValueDef($rsnew, $this->id_FK->CurrentValue, strval($this->id_FK->CurrentValue) == "");
         return $rsnew;
     }
 
@@ -1724,9 +1689,6 @@ class PersonAdd extends Person
         }
         if (isset($row['klasifikasi_id'])) { // klasifikasi_id
             $this->klasifikasi_id->setFormValue($row['klasifikasi_id']);
-        }
-        if (isset($row['id_FK'])) { // id_FK
-            $this->id_FK->setFormValue($row['id_FK']);
         }
     }
 

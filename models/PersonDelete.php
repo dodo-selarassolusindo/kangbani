@@ -121,7 +121,7 @@ class PersonDelete extends Person
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->kode->setVisibility();
         $this->nama->setVisibility();
         $this->kontak->setVisibility();
@@ -140,7 +140,7 @@ class PersonDelete extends Person
         $this->kota->setVisibility();
         $this->zip->setVisibility();
         $this->klasifikasi_id->setVisibility();
-        $this->id_FK->setVisibility();
+        $this->id_FK->Visible = false;
     }
 
     // Constructor
@@ -723,7 +723,7 @@ class PersonDelete extends Person
             $this->_username->ViewValue = $this->_username->CurrentValue;
 
             // password
-            $this->_password->ViewValue = $this->_password->CurrentValue;
+            $this->_password->ViewValue = $Language->phrase("PasswordMask");
 
             // telp2
             $this->telp2->ViewValue = $this->telp2->CurrentValue;
@@ -759,10 +759,6 @@ class PersonDelete extends Person
             // id_FK
             $this->id_FK->ViewValue = $this->id_FK->CurrentValue;
             $this->id_FK->ViewValue = FormatNumber($this->id_FK->ViewValue, $this->id_FK->formatPattern());
-
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // kode
             $this->kode->HrefValue = "";
@@ -835,10 +831,6 @@ class PersonDelete extends Person
             // klasifikasi_id
             $this->klasifikasi_id->HrefValue = "";
             $this->klasifikasi_id->TooltipValue = "";
-
-            // id_FK
-            $this->id_FK->HrefValue = "";
-            $this->id_FK->TooltipValue = "";
         }
 
         // Call Row Rendered event

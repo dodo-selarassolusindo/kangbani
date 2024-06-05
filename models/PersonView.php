@@ -981,7 +981,7 @@ class PersonView extends Person
             $this->_username->ViewValue = $this->_username->CurrentValue;
 
             // password
-            $this->_password->ViewValue = $this->_password->CurrentValue;
+            $this->_password->ViewValue = $Language->phrase("PasswordMask");
 
             // telp2
             $this->telp2->ViewValue = $this->telp2->CurrentValue;
@@ -1017,10 +1017,6 @@ class PersonView extends Person
             // id_FK
             $this->id_FK->ViewValue = $this->id_FK->CurrentValue;
             $this->id_FK->ViewValue = FormatNumber($this->id_FK->ViewValue, $this->id_FK->formatPattern());
-
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // kode
             $this->kode->HrefValue = "";
@@ -1093,10 +1089,6 @@ class PersonView extends Person
             // klasifikasi_id
             $this->klasifikasi_id->HrefValue = "";
             $this->klasifikasi_id->TooltipValue = "";
-
-            // id_FK
-            $this->id_FK->HrefValue = "";
-            $this->id_FK->TooltipValue = "";
         }
 
         // Call Row Rendered event

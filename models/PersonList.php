@@ -145,7 +145,7 @@ class PersonList extends Person
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->kode->setVisibility();
         $this->nama->setVisibility();
         $this->kontak->setVisibility();
@@ -164,7 +164,7 @@ class PersonList extends Person
         $this->kota->setVisibility();
         $this->zip->setVisibility();
         $this->klasifikasi_id->setVisibility();
-        $this->id_FK->setVisibility();
+        $this->id_FK->Visible = false;
     }
 
     // Constructor
@@ -1376,7 +1376,6 @@ class PersonList extends Person
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id); // id
             $this->updateSort($this->kode); // kode
             $this->updateSort($this->nama); // nama
             $this->updateSort($this->kontak); // kontak
@@ -1395,7 +1394,6 @@ class PersonList extends Person
             $this->updateSort($this->kota); // kota
             $this->updateSort($this->zip); // zip
             $this->updateSort($this->klasifikasi_id); // klasifikasi_id
-            $this->updateSort($this->id_FK); // id_FK
             $this->setStartRecordNumber(1); // Reset start position
         }
 
@@ -1689,7 +1687,6 @@ class PersonList extends Person
             $item = &$option->addGroupOption();
             $item->Body = "";
             $item->Visible = $this->UseColumnVisibility;
-            $this->createColumnOption($option, "id");
             $this->createColumnOption($option, "kode");
             $this->createColumnOption($option, "nama");
             $this->createColumnOption($option, "kontak");
@@ -1708,7 +1705,6 @@ class PersonList extends Person
             $this->createColumnOption($option, "kota");
             $this->createColumnOption($option, "zip");
             $this->createColumnOption($option, "klasifikasi_id");
-            $this->createColumnOption($option, "id_FK");
         }
 
         // Set up custom actions
@@ -2302,7 +2298,7 @@ class PersonList extends Person
             $this->_username->ViewValue = $this->_username->CurrentValue;
 
             // password
-            $this->_password->ViewValue = $this->_password->CurrentValue;
+            $this->_password->ViewValue = $Language->phrase("PasswordMask");
 
             // telp2
             $this->telp2->ViewValue = $this->telp2->CurrentValue;
@@ -2338,10 +2334,6 @@ class PersonList extends Person
             // id_FK
             $this->id_FK->ViewValue = $this->id_FK->CurrentValue;
             $this->id_FK->ViewValue = FormatNumber($this->id_FK->ViewValue, $this->id_FK->formatPattern());
-
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // kode
             $this->kode->HrefValue = "";
@@ -2414,10 +2406,6 @@ class PersonList extends Person
             // klasifikasi_id
             $this->klasifikasi_id->HrefValue = "";
             $this->klasifikasi_id->TooltipValue = "";
-
-            // id_FK
-            $this->id_FK->HrefValue = "";
-            $this->id_FK->TooltipValue = "";
         }
 
         // Call Row Rendered event

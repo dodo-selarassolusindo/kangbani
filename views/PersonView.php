@@ -56,17 +56,6 @@ loadjs.ready("head", function () {
 <input type="hidden" name="t" value="person">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <table class="<?= $Page->TableClass ?>">
-<?php if ($Page->id->Visible) { // id ?>
-    <tr id="r_id"<?= $Page->id->rowAttributes() ?>>
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_person_id"><?= $Page->id->caption() ?></span></td>
-        <td data-name="id"<?= $Page->id->cellAttributes() ?>>
-<span id="el_person_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
 <?php if ($Page->kode->Visible) { // kode ?>
     <tr id="r_kode"<?= $Page->kode->rowAttributes() ?>>
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_person_kode"><?= $Page->kode->caption() ?></span></td>
@@ -261,17 +250,6 @@ loadjs.ready("head", function () {
 <span id="el_person_klasifikasi_id">
 <span<?= $Page->klasifikasi_id->viewAttributes() ?>>
 <?= $Page->klasifikasi_id->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
-<?php if ($Page->id_FK->Visible) { // id_FK ?>
-    <tr id="r_id_FK"<?= $Page->id_FK->rowAttributes() ?>>
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_person_id_FK"><?= $Page->id_FK->caption() ?></span></td>
-        <td data-name="id_FK"<?= $Page->id_FK->cellAttributes() ?>>
-<span id="el_person_id_FK">
-<span<?= $Page->id_FK->viewAttributes() ?>>
-<?= $Page->id_FK->getViewValue() ?></span>
 </span>
 </td>
     </tr>

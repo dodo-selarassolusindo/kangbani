@@ -39,8 +39,7 @@ loadjs.ready(["wrapper", "head"], function () {
             ["alamat", [fields.alamat.visible && fields.alamat.required ? ew.Validators.required(fields.alamat.caption) : null], fields.alamat.isInvalid],
             ["kota", [fields.kota.visible && fields.kota.required ? ew.Validators.required(fields.kota.caption) : null], fields.kota.isInvalid],
             ["zip", [fields.zip.visible && fields.zip.required ? ew.Validators.required(fields.zip.caption) : null], fields.zip.isInvalid],
-            ["klasifikasi_id", [fields.klasifikasi_id.visible && fields.klasifikasi_id.required ? ew.Validators.required(fields.klasifikasi_id.caption) : null, ew.Validators.integer], fields.klasifikasi_id.isInvalid],
-            ["id_FK", [fields.id_FK.visible && fields.id_FK.required ? ew.Validators.required(fields.id_FK.caption) : null, ew.Validators.integer], fields.id_FK.isInvalid]
+            ["klasifikasi_id", [fields.klasifikasi_id.visible && fields.klasifikasi_id.required ? ew.Validators.required(fields.klasifikasi_id.caption) : null, ew.Validators.integer], fields.klasifikasi_id.isInvalid]
         ])
 
         // Form_CustomValidate
@@ -174,7 +173,10 @@ $Page->showMessage();
         <label id="elh_person__password" for="x__password" class="<?= $Page->LeftColumnClass ?>"><?= $Page->_password->caption() ?><?= $Page->_password->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->_password->cellAttributes() ?>>
 <span id="el_person__password">
-<input type="<?= $Page->_password->getInputTextType() ?>" name="x__password" id="x__password" data-table="person" data-field="x__password" value="<?= $Page->_password->EditValue ?>" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->_password->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->_password->formatPattern()) ?>"<?= $Page->_password->editAttributes() ?> aria-describedby="x__password_help">
+<div class="input-group">
+    <input type="password" name="x__password" id="x__password" autocomplete="new-password" data-table="person" data-field="x__password" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->_password->getPlaceHolder()) ?>"<?= $Page->_password->editAttributes() ?> aria-describedby="x__password_help">
+    <button type="button" class="btn btn-default ew-toggle-password rounded-end" data-ew-action="password"><i class="fa-solid fa-eye"></i></button>
+</div>
 <?= $Page->_password->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->_password->getErrorMessage() ?></div>
 </span>
@@ -297,18 +299,6 @@ $Page->showMessage();
 <input type="<?= $Page->klasifikasi_id->getInputTextType() ?>" name="x_klasifikasi_id" id="x_klasifikasi_id" data-table="person" data-field="x_klasifikasi_id" value="<?= $Page->klasifikasi_id->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->klasifikasi_id->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->klasifikasi_id->formatPattern()) ?>"<?= $Page->klasifikasi_id->editAttributes() ?> aria-describedby="x_klasifikasi_id_help">
 <?= $Page->klasifikasi_id->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->klasifikasi_id->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->id_FK->Visible) { // id_FK ?>
-    <div id="r_id_FK"<?= $Page->id_FK->rowAttributes() ?>>
-        <label id="elh_person_id_FK" for="x_id_FK" class="<?= $Page->LeftColumnClass ?>"><?= $Page->id_FK->caption() ?><?= $Page->id_FK->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->id_FK->cellAttributes() ?>>
-<span id="el_person_id_FK">
-<input type="<?= $Page->id_FK->getInputTextType() ?>" name="x_id_FK" id="x_id_FK" data-table="person" data-field="x_id_FK" value="<?= $Page->id_FK->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->id_FK->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->id_FK->formatPattern()) ?>"<?= $Page->id_FK->editAttributes() ?> aria-describedby="x_id_FK_help">
-<?= $Page->id_FK->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->id_FK->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

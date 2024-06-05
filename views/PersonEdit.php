@@ -31,7 +31,6 @@ loadjs.ready(["wrapper", "head"], function () {
 
         // Add fields
         .setFields([
-            ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null], fields.id.isInvalid],
             ["kode", [fields.kode.visible && fields.kode.required ? ew.Validators.required(fields.kode.caption) : null], fields.kode.isInvalid],
             ["nama", [fields.nama.visible && fields.nama.required ? ew.Validators.required(fields.nama.caption) : null], fields.nama.isInvalid],
             ["kontak", [fields.kontak.visible && fields.kontak.required ? ew.Validators.required(fields.kontak.caption) : null], fields.kontak.isInvalid],
@@ -49,8 +48,7 @@ loadjs.ready(["wrapper", "head"], function () {
             ["alamat", [fields.alamat.visible && fields.alamat.required ? ew.Validators.required(fields.alamat.caption) : null], fields.alamat.isInvalid],
             ["kota", [fields.kota.visible && fields.kota.required ? ew.Validators.required(fields.kota.caption) : null], fields.kota.isInvalid],
             ["zip", [fields.zip.visible && fields.zip.required ? ew.Validators.required(fields.zip.caption) : null], fields.zip.isInvalid],
-            ["klasifikasi_id", [fields.klasifikasi_id.visible && fields.klasifikasi_id.required ? ew.Validators.required(fields.klasifikasi_id.caption) : null, ew.Validators.integer], fields.klasifikasi_id.isInvalid],
-            ["id_FK", [fields.id_FK.visible && fields.id_FK.required ? ew.Validators.required(fields.id_FK.caption) : null, ew.Validators.integer], fields.id_FK.isInvalid]
+            ["klasifikasi_id", [fields.klasifikasi_id.visible && fields.klasifikasi_id.required ? ew.Validators.required(fields.klasifikasi_id.caption) : null, ew.Validators.integer], fields.klasifikasi_id.isInvalid]
         ])
 
         // Form_CustomValidate
@@ -90,18 +88,6 @@ loadjs.ready("head", function () {
 <?php } ?>
 <input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
 <div class="ew-edit-div"><!-- page* -->
-<?php if ($Page->id->Visible) { // id ?>
-    <div id="r_id"<?= $Page->id->rowAttributes() ?>>
-        <label id="elh_person_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->id->caption() ?><?= $Page->id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->id->cellAttributes() ?>>
-<span id="el_person_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->id->getDisplayValue($Page->id->EditValue))) ?>"></span>
-<input type="hidden" data-table="person" data-field="x_id" data-hidden="1" name="x_id" id="x_id" value="<?= HtmlEncode($Page->id->CurrentValue) ?>">
-</span>
-</div></div>
-    </div>
-<?php } ?>
 <?php if ($Page->kode->Visible) { // kode ?>
     <div id="r_kode"<?= $Page->kode->rowAttributes() ?>>
         <label id="elh_person_kode" for="x_kode" class="<?= $Page->LeftColumnClass ?>"><?= $Page->kode->caption() ?><?= $Page->kode->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -191,7 +177,10 @@ loadjs.ready("head", function () {
         <label id="elh_person__password" for="x__password" class="<?= $Page->LeftColumnClass ?>"><?= $Page->_password->caption() ?><?= $Page->_password->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->_password->cellAttributes() ?>>
 <span id="el_person__password">
-<input type="<?= $Page->_password->getInputTextType() ?>" name="x__password" id="x__password" data-table="person" data-field="x__password" value="<?= $Page->_password->EditValue ?>" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->_password->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->_password->formatPattern()) ?>"<?= $Page->_password->editAttributes() ?> aria-describedby="x__password_help">
+<div class="input-group">
+    <input type="password" name="x__password" id="x__password" autocomplete="new-password" data-table="person" data-field="x__password" value="<?= $Page->_password->EditValue ?>" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->_password->getPlaceHolder()) ?>"<?= $Page->_password->editAttributes() ?> aria-describedby="x__password_help">
+    <button type="button" class="btn btn-default ew-toggle-password rounded-end" data-ew-action="password"><i class="fa-solid fa-eye"></i></button>
+</div>
 <?= $Page->_password->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->_password->getErrorMessage() ?></div>
 </span>
@@ -318,19 +307,8 @@ loadjs.ready("head", function () {
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->id_FK->Visible) { // id_FK ?>
-    <div id="r_id_FK"<?= $Page->id_FK->rowAttributes() ?>>
-        <label id="elh_person_id_FK" for="x_id_FK" class="<?= $Page->LeftColumnClass ?>"><?= $Page->id_FK->caption() ?><?= $Page->id_FK->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->id_FK->cellAttributes() ?>>
-<span id="el_person_id_FK">
-<input type="<?= $Page->id_FK->getInputTextType() ?>" name="x_id_FK" id="x_id_FK" data-table="person" data-field="x_id_FK" value="<?= $Page->id_FK->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->id_FK->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->id_FK->formatPattern()) ?>"<?= $Page->id_FK->editAttributes() ?> aria-describedby="x_id_FK_help">
-<?= $Page->id_FK->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->id_FK->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
 </div><!-- /page* -->
+    <input type="hidden" data-table="person" data-field="x_id" data-hidden="1" name="x_id" id="x_id" value="<?= HtmlEncode($Page->id->CurrentValue) ?>">
 <?= $Page->IsModal ? '<template class="ew-modal-buttons">' : '<div class="row ew-buttons">' ?><!-- buttons .row -->
     <div class="<?= $Page->OffsetColumnClass ?>"><!-- buttons offset -->
 <button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit" form="fpersonedit"><?= $Language->phrase("SaveBtn") ?></button>

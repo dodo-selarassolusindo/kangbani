@@ -155,9 +155,6 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->id->Visible) { // id ?>
-        <th data-name="id" class="<?= $Page->id->headerCellClass() ?>"><div id="elh_person_id" class="person_id"><?= $Page->renderFieldHeader($Page->id) ?></div></th>
-<?php } ?>
 <?php if ($Page->kode->Visible) { // kode ?>
         <th data-name="kode" class="<?= $Page->kode->headerCellClass() ?>"><div id="elh_person_kode" class="person_kode"><?= $Page->renderFieldHeader($Page->kode) ?></div></th>
 <?php } ?>
@@ -212,9 +209,6 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->klasifikasi_id->Visible) { // klasifikasi_id ?>
         <th data-name="klasifikasi_id" class="<?= $Page->klasifikasi_id->headerCellClass() ?>"><div id="elh_person_klasifikasi_id" class="person_klasifikasi_id"><?= $Page->renderFieldHeader($Page->klasifikasi_id) ?></div></th>
 <?php } ?>
-<?php if ($Page->id_FK->Visible) { // id_FK ?>
-        <th data-name="id_FK" class="<?= $Page->id_FK->headerCellClass() ?>"><div id="elh_person_id_FK" class="person_id_FK"><?= $Page->renderFieldHeader($Page->id_FK) ?></div></th>
-<?php } ?>
 <?php
 // Render list options (header, right)
 $Page->ListOptions->render("header", "right");
@@ -242,14 +236,6 @@ while ($Page->RecordCount < $Page->StopRecord || $Page->RowIndex === '$rowindex$
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->id->Visible) { // id ?>
-        <td data-name="id"<?= $Page->id->cellAttributes() ?>>
-<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_person_id" class="el_person_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
     <?php if ($Page->kode->Visible) { // kode ?>
         <td data-name="kode"<?= $Page->kode->cellAttributes() ?>>
 <span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_person_kode" class="el_person_kode">
@@ -391,14 +377,6 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_person_klasifikasi_id" class="el_person_klasifikasi_id">
 <span<?= $Page->klasifikasi_id->viewAttributes() ?>>
 <?= $Page->klasifikasi_id->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->id_FK->Visible) { // id_FK ?>
-        <td data-name="id_FK"<?= $Page->id_FK->cellAttributes() ?>>
-<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_person_id_FK" class="el_person_id_FK">
-<span<?= $Page->id_FK->viewAttributes() ?>>
-<?= $Page->id_FK->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

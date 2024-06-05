@@ -313,10 +313,10 @@ class Person extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'PASSWORD' // Edit Tag
         );
         $this->_password->InputTextType = "text";
-        $this->_password->SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY", "IS NULL", "IS NOT NULL"];
+        $this->_password->SearchOperators = ["=", "<>", "IS NULL", "IS NOT NULL"];
         $this->Fields['password'] = &$this->_password;
 
         // telp2
@@ -1582,7 +1582,7 @@ class Person extends DbTable
         $this->_username->ViewValue = $this->_username->CurrentValue;
 
         // password
-        $this->_password->ViewValue = $this->_password->CurrentValue;
+        $this->_password->ViewValue = $Language->phrase("PasswordMask");
 
         // telp2
         $this->telp2->ViewValue = $this->telp2->CurrentValue;
@@ -1776,10 +1776,7 @@ class Person extends DbTable
 
         // password
         $this->_password->setupEditAttributes();
-        if (!$this->_password->Raw) {
-            $this->_password->CurrentValue = HtmlDecode($this->_password->CurrentValue);
-        }
-        $this->_password->EditValue = $this->_password->CurrentValue;
+        $this->_password->EditValue = $Language->phrase("PasswordMask"); // Show as masked password
         $this->_password->PlaceHolder = RemoveHtml($this->_password->caption());
 
         // telp2
@@ -1898,7 +1895,6 @@ class Person extends DbTable
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->id);
                     $doc->exportCaption($this->kode);
                     $doc->exportCaption($this->nama);
                     $doc->exportCaption($this->kontak);
@@ -1917,7 +1913,6 @@ class Person extends DbTable
                     $doc->exportCaption($this->kota);
                     $doc->exportCaption($this->zip);
                     $doc->exportCaption($this->klasifikasi_id);
-                    $doc->exportCaption($this->id_FK);
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->kode);
@@ -1965,7 +1960,6 @@ class Person extends DbTable
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->id);
                         $doc->exportField($this->kode);
                         $doc->exportField($this->nama);
                         $doc->exportField($this->kontak);
@@ -1984,7 +1978,6 @@ class Person extends DbTable
                         $doc->exportField($this->kota);
                         $doc->exportField($this->zip);
                         $doc->exportField($this->klasifikasi_id);
-                        $doc->exportField($this->id_FK);
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->kode);
