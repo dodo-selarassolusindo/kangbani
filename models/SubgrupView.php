@@ -909,10 +909,6 @@ class SubgrupView extends Subgrup
             // nama
             $this->nama->ViewValue = $this->nama->CurrentValue;
 
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
             // grup_id
             $this->grup_id->HrefValue = "";
             $this->grup_id->TooltipValue = "";

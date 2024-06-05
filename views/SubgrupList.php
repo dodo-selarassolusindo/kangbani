@@ -155,9 +155,6 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->id->Visible) { // id ?>
-        <th data-name="id" class="<?= $Page->id->headerCellClass() ?>"><div id="elh_subgrup_id" class="subgrup_id"><?= $Page->renderFieldHeader($Page->id) ?></div></th>
-<?php } ?>
 <?php if ($Page->grup_id->Visible) { // grup_id ?>
         <th data-name="grup_id" class="<?= $Page->grup_id->headerCellClass() ?>"><div id="elh_subgrup_grup_id" class="subgrup_grup_id"><?= $Page->renderFieldHeader($Page->grup_id) ?></div></th>
 <?php } ?>
@@ -194,14 +191,6 @@ while ($Page->RecordCount < $Page->StopRecord || $Page->RowIndex === '$rowindex$
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->id->Visible) { // id ?>
-        <td data-name="id"<?= $Page->id->cellAttributes() ?>>
-<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_subgrup_id" class="el_subgrup_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
     <?php if ($Page->grup_id->Visible) { // grup_id ?>
         <td data-name="grup_id"<?= $Page->grup_id->cellAttributes() ?>>
 <span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_subgrup_grup_id" class="el_subgrup_grup_id">

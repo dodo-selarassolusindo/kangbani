@@ -145,7 +145,7 @@ class SubgrupList extends Subgrup
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->grup_id->setVisibility();
         $this->kode->setVisibility();
         $this->nama->setVisibility();
@@ -1206,7 +1206,6 @@ class SubgrupList extends Subgrup
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id); // id
             $this->updateSort($this->grup_id); // grup_id
             $this->updateSort($this->kode); // kode
             $this->updateSort($this->nama); // nama
@@ -1475,7 +1474,6 @@ class SubgrupList extends Subgrup
             $item = &$option->addGroupOption();
             $item->Body = "";
             $item->Visible = $this->UseColumnVisibility;
-            $this->createColumnOption($option, "id");
             $this->createColumnOption($option, "grup_id");
             $this->createColumnOption($option, "kode");
             $this->createColumnOption($option, "nama");
@@ -2012,10 +2010,6 @@ class SubgrupList extends Subgrup
 
             // nama
             $this->nama->ViewValue = $this->nama->CurrentValue;
-
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // grup_id
             $this->grup_id->HrefValue = "";

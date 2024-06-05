@@ -31,7 +31,6 @@ loadjs.ready(["wrapper", "head"], function () {
 
         // Add fields
         .setFields([
-            ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null], fields.id.isInvalid],
             ["grup_id", [fields.grup_id.visible && fields.grup_id.required ? ew.Validators.required(fields.grup_id.caption) : null], fields.grup_id.isInvalid],
             ["kode", [fields.kode.visible && fields.kode.required ? ew.Validators.required(fields.kode.caption) : null], fields.kode.isInvalid],
             ["nama", [fields.nama.visible && fields.nama.required ? ew.Validators.required(fields.nama.caption) : null], fields.nama.isInvalid]
@@ -75,18 +74,6 @@ loadjs.ready("head", function () {
 <?php } ?>
 <input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
 <div class="ew-edit-div"><!-- page* -->
-<?php if ($Page->id->Visible) { // id ?>
-    <div id="r_id"<?= $Page->id->rowAttributes() ?>>
-        <label id="elh_subgrup_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->id->caption() ?><?= $Page->id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->id->cellAttributes() ?>>
-<span id="el_subgrup_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->id->getDisplayValue($Page->id->EditValue))) ?>"></span>
-<input type="hidden" data-table="subgrup" data-field="x_id" data-hidden="1" name="x_id" id="x_id" value="<?= HtmlEncode($Page->id->CurrentValue) ?>">
-</span>
-</div></div>
-    </div>
-<?php } ?>
 <?php if ($Page->grup_id->Visible) { // grup_id ?>
     <div id="r_grup_id"<?= $Page->grup_id->rowAttributes() ?>>
         <label id="elh_subgrup_grup_id" for="x_grup_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->grup_id->caption() ?><?= $Page->grup_id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -123,7 +110,7 @@ loadjs.ready("fsubgrupedit", function() {
     } else {
         options.ajax = { id: "x_grup_id", form: "fsubgrupedit", limit: ew.LOOKUP_PAGE_SIZE };
     }
-    options.minimumResultsForSearch = Infinity;
+    options.minimumInputLength = ew.selectMinimumInputLength;
     options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.subgrup.fields.grup_id.selectOptions);
     ew.createSelect(options);
 });
@@ -158,6 +145,7 @@ loadjs.ready("fsubgrupedit", function() {
     </div>
 <?php } ?>
 </div><!-- /page* -->
+    <input type="hidden" data-table="subgrup" data-field="x_id" data-hidden="1" name="x_id" id="x_id" value="<?= HtmlEncode($Page->id->CurrentValue) ?>">
 <?= $Page->IsModal ? '<template class="ew-modal-buttons">' : '<div class="row ew-buttons">' ?><!-- buttons .row -->
     <div class="<?= $Page->OffsetColumnClass ?>"><!-- buttons offset -->
 <button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit" form="fsubgrupedit"><?= $Language->phrase("SaveBtn") ?></button>

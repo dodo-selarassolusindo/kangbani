@@ -121,7 +121,7 @@ class SubgrupEdit extends Subgrup
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->grup_id->setVisibility();
         $this->kode->setVisibility();
         $this->nama->setVisibility();
@@ -752,12 +752,6 @@ class SubgrupEdit extends Subgrup
         global $CurrentForm;
         $validate = !Config("SERVER_VALIDATE");
 
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            $this->id->setFormValue($val);
-        }
-
         // Check field name 'grup_id' first before field var 'x_grup_id'
         $val = $CurrentForm->hasValue("grup_id") ? $CurrentForm->getValue("grup_id") : $CurrentForm->getValue("x_grup_id");
         if (!$this->grup_id->IsDetailKey) {
@@ -786,6 +780,12 @@ class SubgrupEdit extends Subgrup
             } else {
                 $this->nama->setFormValue($val);
             }
+        }
+
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        if (!$this->id->IsDetailKey) {
+            $this->id->setFormValue($val);
         }
     }
 
@@ -986,9 +986,6 @@ class SubgrupEdit extends Subgrup
             // nama
             $this->nama->ViewValue = $this->nama->CurrentValue;
 
-            // id
-            $this->id->HrefValue = "";
-
             // grup_id
             $this->grup_id->HrefValue = "";
 
@@ -998,10 +995,6 @@ class SubgrupEdit extends Subgrup
             // nama
             $this->nama->HrefValue = "";
         } elseif ($this->RowType == RowType::EDIT) {
-            // id
-            $this->id->setupEditAttributes();
-            $this->id->EditValue = $this->id->CurrentValue;
-
             // grup_id
             $this->grup_id->setupEditAttributes();
             $curVal = trim(strval($this->grup_id->CurrentValue));
@@ -1047,9 +1040,6 @@ class SubgrupEdit extends Subgrup
 
             // Edit refer script
 
-            // id
-            $this->id->HrefValue = "";
-
             // grup_id
             $this->grup_id->HrefValue = "";
 
@@ -1079,11 +1069,6 @@ class SubgrupEdit extends Subgrup
             return true;
         }
         $validateForm = true;
-            if ($this->id->Visible && $this->id->Required) {
-                if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
-                    $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
-                }
-            }
             if ($this->grup_id->Visible && $this->grup_id->Required) {
                 if (!$this->grup_id->IsDetailKey && EmptyValue($this->grup_id->FormValue)) {
                     $this->grup_id->addErrorMessage(str_replace("%s", $this->grup_id->caption(), $this->grup_id->RequiredErrorMessage));

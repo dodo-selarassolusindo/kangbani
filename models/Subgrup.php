@@ -146,7 +146,7 @@ class Subgrup extends DbTable
         $this->grup_id->setSelectMultiple(false); // Select one
         $this->grup_id->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->grup_id->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        $this->grup_id->Lookup = new Lookup($this->grup_id, 'grup', false, 'id', ["name","","",""], '', '', [], [], [], [], [], [], false, '', '', "`name`");
+        $this->grup_id->Lookup = new Lookup($this->grup_id, 'grup', false, 'id', ["id","name","",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(`id`, ''),'" . ValueSeparator(1, $this->grup_id) . "',COALESCE(`name`,''))");
         $this->grup_id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->grup_id->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
         $this->Fields['grup_id'] = &$this->grup_id;
@@ -1233,7 +1233,6 @@ class Subgrup extends DbTable
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->id);
                     $doc->exportCaption($this->grup_id);
                     $doc->exportCaption($this->kode);
                     $doc->exportCaption($this->nama);
@@ -1268,7 +1267,6 @@ class Subgrup extends DbTable
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->id);
                         $doc->exportField($this->grup_id);
                         $doc->exportField($this->kode);
                         $doc->exportField($this->nama);

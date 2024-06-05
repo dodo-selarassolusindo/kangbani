@@ -50,9 +50,6 @@ $Page->showMessage();
 <table class="<?= $Page->TableClass ?>">
     <thead>
     <tr class="ew-table-header">
-<?php if ($Page->id->Visible) { // id ?>
-        <th class="<?= $Page->id->headerCellClass() ?>"><span id="elh_subgrup_id" class="subgrup_id"><?= $Page->id->caption() ?></span></th>
-<?php } ?>
 <?php if ($Page->grup_id->Visible) { // grup_id ?>
         <th class="<?= $Page->grup_id->headerCellClass() ?>"><span id="elh_subgrup_grup_id" class="subgrup_grup_id"><?= $Page->grup_id->caption() ?></span></th>
 <?php } ?>
@@ -83,14 +80,6 @@ while ($Page->fetch()) {
     $Page->renderRow();
 ?>
     <tr <?= $Page->rowAttributes() ?>>
-<?php if ($Page->id->Visible) { // id ?>
-        <td<?= $Page->id->cellAttributes() ?>>
-<span id="">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($Page->grup_id->Visible) { // grup_id ?>
         <td<?= $Page->grup_id->cellAttributes() ?>>
 <span id="">

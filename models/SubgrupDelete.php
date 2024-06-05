@@ -121,7 +121,7 @@ class SubgrupDelete extends Subgrup
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->grup_id->setVisibility();
         $this->kode->setVisibility();
         $this->nama->setVisibility();
@@ -650,10 +650,6 @@ class SubgrupDelete extends Subgrup
 
             // nama
             $this->nama->ViewValue = $this->nama->CurrentValue;
-
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // grup_id
             $this->grup_id->HrefValue = "";

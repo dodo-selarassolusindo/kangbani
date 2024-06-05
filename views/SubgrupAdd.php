@@ -106,7 +106,7 @@ loadjs.ready("fsubgrupadd", function() {
     } else {
         options.ajax = { id: "x_grup_id", form: "fsubgrupadd", limit: ew.LOOKUP_PAGE_SIZE };
     }
-    options.minimumResultsForSearch = Infinity;
+    options.minimumInputLength = ew.selectMinimumInputLength;
     options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.subgrup.fields.grup_id.selectOptions);
     ew.createSelect(options);
 });

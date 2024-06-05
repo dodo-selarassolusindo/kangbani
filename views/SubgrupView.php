@@ -56,17 +56,6 @@ loadjs.ready("head", function () {
 <input type="hidden" name="t" value="subgrup">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <table class="<?= $Page->TableClass ?>">
-<?php if ($Page->id->Visible) { // id ?>
-    <tr id="r_id"<?= $Page->id->rowAttributes() ?>>
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_subgrup_id"><?= $Page->id->caption() ?></span></td>
-        <td data-name="id"<?= $Page->id->cellAttributes() ?>>
-<span id="el_subgrup_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
 <?php if ($Page->grup_id->Visible) { // grup_id ?>
     <tr id="r_grup_id"<?= $Page->grup_id->rowAttributes() ?>>
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_subgrup_grup_id"><?= $Page->grup_id->caption() ?></span></td>

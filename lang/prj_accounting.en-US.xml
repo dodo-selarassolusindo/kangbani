@@ -107,10 +107,10 @@
     <table id="grup">
       <phrase id="tblcaption" value="Grup" />
       <field id="id">
-        <phrase id="fldcaption" value="Grup ID" />
+        <phrase id="fldcaption" value="Kode" />
       </field>
       <field id="name">
-        <phrase id="fldcaption" value="Name" />
+        <phrase id="fldcaption" value="Nama" />
       </field>
     </table>
     <table id="gudang">
