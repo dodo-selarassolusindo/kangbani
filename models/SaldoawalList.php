@@ -689,6 +689,10 @@ class SaldoawalList extends Saldoawal
         // Setup other options
         $this->setupOtherOptions();
 
+        // Set up lookup cache
+        $this->setupLookupOptions($this->periode_id);
+        $this->setupLookupOptions($this->akun_id);
+
         // Update form name to avoid conflict
         if ($this->IsModal) {
             $this->FormName = "fsaldoawalgrid";
@@ -2032,12 +2036,50 @@ class SaldoawalList extends Saldoawal
             $this->id->ViewValue = $this->id->CurrentValue;
 
             // periode_id
-            $this->periode_id->ViewValue = $this->periode_id->CurrentValue;
-            $this->periode_id->ViewValue = FormatNumber($this->periode_id->ViewValue, $this->periode_id->formatPattern());
+            $curVal = strval($this->periode_id->CurrentValue);
+            if ($curVal != "") {
+                $this->periode_id->ViewValue = $this->periode_id->lookupCacheOption($curVal);
+                if ($this->periode_id->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->periode_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->periode_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->periode_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->periode_id->Lookup->renderViewRow($rswrk[0]);
+                        $this->periode_id->ViewValue = $this->periode_id->displayValue($arwrk);
+                    } else {
+                        $this->periode_id->ViewValue = FormatNumber($this->periode_id->CurrentValue, $this->periode_id->formatPattern());
+                    }
+                }
+            } else {
+                $this->periode_id->ViewValue = null;
+            }
 
             // akun_id
-            $this->akun_id->ViewValue = $this->akun_id->CurrentValue;
-            $this->akun_id->ViewValue = FormatNumber($this->akun_id->ViewValue, $this->akun_id->formatPattern());
+            $curVal = strval($this->akun_id->CurrentValue);
+            if ($curVal != "") {
+                $this->akun_id->ViewValue = $this->akun_id->lookupCacheOption($curVal);
+                if ($this->akun_id->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->akun_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->akun_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->akun_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->akun_id->Lookup->renderViewRow($rswrk[0]);
+                        $this->akun_id->ViewValue = $this->akun_id->displayValue($arwrk);
+                    } else {
+                        $this->akun_id->ViewValue = FormatNumber($this->akun_id->CurrentValue, $this->akun_id->formatPattern());
+                    }
+                }
+            } else {
+                $this->akun_id->ViewValue = null;
+            }
 
             // debet
             $this->debet->ViewValue = $this->debet->CurrentValue;
@@ -2164,6 +2206,10 @@ class SaldoawalList extends Saldoawal
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_periode_id":
+                    break;
+                case "x_akun_id":
+                    break;
                 default:
                     $lookupFilter = "";
                     break;

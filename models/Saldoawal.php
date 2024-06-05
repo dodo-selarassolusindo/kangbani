@@ -142,12 +142,16 @@ class Saldoawal extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'SELECT' // Edit Tag
         );
         $this->periode_id->InputTextType = "text";
         $this->periode_id->Raw = true;
+        $this->periode_id->setSelectMultiple(false); // Select one
+        $this->periode_id->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->periode_id->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->periode_id->Lookup = new Lookup($this->periode_id, 'periode', false, 'id', ["start","end","",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(" . CastDateFieldForLike("`start`", 0, "DB") . ", ''),'" . ValueSeparator(1, $this->periode_id) . "',COALESCE(" . CastDateFieldForLike("`end`", 0, "DB") . ",''))");
         $this->periode_id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->periode_id->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
+        $this->periode_id->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
         $this->Fields['periode_id'] = &$this->periode_id;
 
         // akun_id
@@ -166,12 +170,16 @@ class Saldoawal extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'SELECT' // Edit Tag
         );
         $this->akun_id->InputTextType = "text";
         $this->akun_id->Raw = true;
+        $this->akun_id->setSelectMultiple(false); // Select one
+        $this->akun_id->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->akun_id->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->akun_id->Lookup = new Lookup($this->akun_id, 'akun', false, 'id', ["kode","nama","",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(`kode`, ''),'" . ValueSeparator(1, $this->akun_id) . "',COALESCE(`nama`,''))");
         $this->akun_id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->akun_id->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
+        $this->akun_id->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
         $this->Fields['akun_id'] = &$this->akun_id;
 
         // debet
@@ -1208,12 +1216,50 @@ class Saldoawal extends DbTable
         $this->id->ViewValue = $this->id->CurrentValue;
 
         // periode_id
-        $this->periode_id->ViewValue = $this->periode_id->CurrentValue;
-        $this->periode_id->ViewValue = FormatNumber($this->periode_id->ViewValue, $this->periode_id->formatPattern());
+        $curVal = strval($this->periode_id->CurrentValue);
+        if ($curVal != "") {
+            $this->periode_id->ViewValue = $this->periode_id->lookupCacheOption($curVal);
+            if ($this->periode_id->ViewValue === null) { // Lookup from database
+                $filterWrk = SearchFilter($this->periode_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->periode_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                $sqlWrk = $this->periode_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->periode_id->Lookup->renderViewRow($rswrk[0]);
+                    $this->periode_id->ViewValue = $this->periode_id->displayValue($arwrk);
+                } else {
+                    $this->periode_id->ViewValue = FormatNumber($this->periode_id->CurrentValue, $this->periode_id->formatPattern());
+                }
+            }
+        } else {
+            $this->periode_id->ViewValue = null;
+        }
 
         // akun_id
-        $this->akun_id->ViewValue = $this->akun_id->CurrentValue;
-        $this->akun_id->ViewValue = FormatNumber($this->akun_id->ViewValue, $this->akun_id->formatPattern());
+        $curVal = strval($this->akun_id->CurrentValue);
+        if ($curVal != "") {
+            $this->akun_id->ViewValue = $this->akun_id->lookupCacheOption($curVal);
+            if ($this->akun_id->ViewValue === null) { // Lookup from database
+                $filterWrk = SearchFilter($this->akun_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->akun_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                $sqlWrk = $this->akun_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->akun_id->Lookup->renderViewRow($rswrk[0]);
+                    $this->akun_id->ViewValue = $this->akun_id->displayValue($arwrk);
+                } else {
+                    $this->akun_id->ViewValue = FormatNumber($this->akun_id->CurrentValue, $this->akun_id->formatPattern());
+                }
+            }
+        } else {
+            $this->akun_id->ViewValue = null;
+        }
 
         // debet
         $this->debet->ViewValue = $this->debet->CurrentValue;
@@ -1279,19 +1325,11 @@ class Saldoawal extends DbTable
 
         // periode_id
         $this->periode_id->setupEditAttributes();
-        $this->periode_id->EditValue = $this->periode_id->CurrentValue;
         $this->periode_id->PlaceHolder = RemoveHtml($this->periode_id->caption());
-        if (strval($this->periode_id->EditValue) != "" && is_numeric($this->periode_id->EditValue)) {
-            $this->periode_id->EditValue = FormatNumber($this->periode_id->EditValue, null);
-        }
 
         // akun_id
         $this->akun_id->setupEditAttributes();
-        $this->akun_id->EditValue = $this->akun_id->CurrentValue;
         $this->akun_id->PlaceHolder = RemoveHtml($this->akun_id->caption());
-        if (strval($this->akun_id->EditValue) != "" && is_numeric($this->akun_id->EditValue)) {
-            $this->akun_id->EditValue = FormatNumber($this->akun_id->EditValue, null);
-        }
 
         // debet
         $this->debet->setupEditAttributes();

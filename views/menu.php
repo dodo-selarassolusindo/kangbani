@@ -5,6 +5,7 @@ namespace PHPMaker2024\prj_accounting;
 // Navbar menu
 $topMenu = new Menu("navbar", true, true);
 $topMenu->addMenuItem(23, "mci_Master", $Language->menuPhrase("23", "MenuText"), "", -1, "", true, false, true, "", "", true, false);
+$topMenu->addMenuItem(13, "mi_periode", $Language->menuPhrase("13", "MenuText"), "periodelist", 23, "", true, false, false, "", "", true, false);
 $topMenu->addMenuItem(2, "mi_grup", $Language->menuPhrase("2", "MenuText"), "gruplist", 23, "", true, false, false, "", "", true, false);
 $topMenu->addMenuItem(18, "mi_subgrup", $Language->menuPhrase("18", "MenuText"), "subgruplist", 23, "", true, false, false, "", "", true, false);
 $topMenu->addMenuItem(1, "mi_akun", $Language->menuPhrase("1", "MenuText"), "akunlist", 23, "", true, false, false, "", "", true, false);
@@ -19,7 +20,6 @@ $topMenu->addMenuItem(9, "mi_kurs", $Language->menuPhrase("9", "MenuText"), "kur
 $topMenu->addMenuItem(10, "mi_matauang", $Language->menuPhrase("10", "MenuText"), "matauanglist", -1, "", true, false, false, "", "", true, false);
 $topMenu->addMenuItem(11, "mi_pajak", $Language->menuPhrase("11", "MenuText"), "pajaklist", -1, "", true, false, false, "", "", true, false);
 $topMenu->addMenuItem(12, "mi_pengiriman", $Language->menuPhrase("12", "MenuText"), "pengirimanlist", -1, "", true, false, false, "", "", true, false);
-$topMenu->addMenuItem(13, "mi_periode", $Language->menuPhrase("13", "MenuText"), "periodelist", -1, "", true, false, false, "", "", true, false);
 $topMenu->addMenuItem(14, "mi_person", $Language->menuPhrase("14", "MenuText"), "personlist", -1, "", true, false, false, "", "", true, false);
 $topMenu->addMenuItem(15, "mi_produk", $Language->menuPhrase("15", "MenuText"), "produklist", -1, "", true, false, false, "", "", true, false);
 $topMenu->addMenuItem(17, "mi_satuan", $Language->menuPhrase("17", "MenuText"), "satuanlist", -1, "", true, false, false, "", "", true, false);
@@ -32,6 +32,7 @@ echo $topMenu->toScript();
 // Sidebar menu
 $sideMenu = new Menu("menu", true, false);
 $sideMenu->addMenuItem(23, "mci_Master", $Language->menuPhrase("23", "MenuText"), "", -1, "", true, false, true, "", "", true, true);
+$sideMenu->addMenuItem(13, "mi_periode", $Language->menuPhrase("13", "MenuText"), "periodelist", 23, "", true, false, false, "", "", true, true);
 $sideMenu->addMenuItem(2, "mi_grup", $Language->menuPhrase("2", "MenuText"), "gruplist", 23, "", true, false, false, "", "", true, true);
 $sideMenu->addMenuItem(18, "mi_subgrup", $Language->menuPhrase("18", "MenuText"), "subgruplist", 23, "", true, false, false, "", "", true, true);
 $sideMenu->addMenuItem(1, "mi_akun", $Language->menuPhrase("1", "MenuText"), "akunlist", 23, "", true, false, false, "", "", true, true);
@@ -46,7 +47,6 @@ $sideMenu->addMenuItem(9, "mi_kurs", $Language->menuPhrase("9", "MenuText"), "ku
 $sideMenu->addMenuItem(10, "mi_matauang", $Language->menuPhrase("10", "MenuText"), "matauanglist", -1, "", true, false, false, "", "", true, true);
 $sideMenu->addMenuItem(11, "mi_pajak", $Language->menuPhrase("11", "MenuText"), "pajaklist", -1, "", true, false, false, "", "", true, true);
 $sideMenu->addMenuItem(12, "mi_pengiriman", $Language->menuPhrase("12", "MenuText"), "pengirimanlist", -1, "", true, false, false, "", "", true, true);
-$sideMenu->addMenuItem(13, "mi_periode", $Language->menuPhrase("13", "MenuText"), "periodelist", -1, "", true, false, false, "", "", true, true);
 $sideMenu->addMenuItem(14, "mi_person", $Language->menuPhrase("14", "MenuText"), "personlist", -1, "", true, false, false, "", "", true, true);
 $sideMenu->addMenuItem(15, "mi_produk", $Language->menuPhrase("15", "MenuText"), "produklist", -1, "", true, false, false, "", "", true, true);
 $sideMenu->addMenuItem(17, "mi_satuan", $Language->menuPhrase("17", "MenuText"), "satuanlist", -1, "", true, false, false, "", "", true, true);

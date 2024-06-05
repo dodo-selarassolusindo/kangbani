@@ -32,8 +32,8 @@ loadjs.ready(["wrapper", "head"], function () {
         // Add fields
         .setFields([
             ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null], fields.id.isInvalid],
-            ["periode_id", [fields.periode_id.visible && fields.periode_id.required ? ew.Validators.required(fields.periode_id.caption) : null, ew.Validators.integer], fields.periode_id.isInvalid],
-            ["akun_id", [fields.akun_id.visible && fields.akun_id.required ? ew.Validators.required(fields.akun_id.caption) : null, ew.Validators.integer], fields.akun_id.isInvalid],
+            ["periode_id", [fields.periode_id.visible && fields.periode_id.required ? ew.Validators.required(fields.periode_id.caption) : null], fields.periode_id.isInvalid],
+            ["akun_id", [fields.akun_id.visible && fields.akun_id.required ? ew.Validators.required(fields.akun_id.caption) : null], fields.akun_id.isInvalid],
             ["debet", [fields.debet.visible && fields.debet.required ? ew.Validators.required(fields.debet.caption) : null, ew.Validators.float], fields.debet.isInvalid],
             ["kredit", [fields.kredit.visible && fields.kredit.required ? ew.Validators.required(fields.kredit.caption) : null], fields.kredit.isInvalid],
             ["user_id", [fields.user_id.visible && fields.user_id.required ? ew.Validators.required(fields.user_id.caption) : null, ew.Validators.integer], fields.user_id.isInvalid],
@@ -53,6 +53,8 @@ loadjs.ready(["wrapper", "head"], function () {
 
         // Dynamic selection lists
         .setLists({
+            "periode_id": <?= $Page->periode_id->toClientList($Page) ?>,
+            "akun_id": <?= $Page->akun_id->toClientList($Page) ?>,
         })
         .build();
     window[form.id] = form;
@@ -94,9 +96,43 @@ loadjs.ready("head", function () {
         <label id="elh_saldoawal_periode_id" for="x_periode_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->periode_id->caption() ?><?= $Page->periode_id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->periode_id->cellAttributes() ?>>
 <span id="el_saldoawal_periode_id">
-<input type="<?= $Page->periode_id->getInputTextType() ?>" name="x_periode_id" id="x_periode_id" data-table="saldoawal" data-field="x_periode_id" value="<?= $Page->periode_id->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->periode_id->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->periode_id->formatPattern()) ?>"<?= $Page->periode_id->editAttributes() ?> aria-describedby="x_periode_id_help">
-<?= $Page->periode_id->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->periode_id->getErrorMessage() ?></div>
+    <select
+        id="x_periode_id"
+        name="x_periode_id"
+        class="form-select ew-select<?= $Page->periode_id->isInvalidClass() ?>"
+        <?php if (!$Page->periode_id->IsNativeSelect) { ?>
+        data-select2-id="fsaldoawaledit_x_periode_id"
+        <?php } ?>
+        data-table="saldoawal"
+        data-field="x_periode_id"
+        data-value-separator="<?= $Page->periode_id->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->periode_id->getPlaceHolder()) ?>"
+        <?= $Page->periode_id->editAttributes() ?>>
+        <?= $Page->periode_id->selectOptionListHtml("x_periode_id") ?>
+    </select>
+    <?= $Page->periode_id->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->periode_id->getErrorMessage() ?></div>
+<?= $Page->periode_id->Lookup->getParamTag($Page, "p_x_periode_id") ?>
+<?php if (!$Page->periode_id->IsNativeSelect) { ?>
+<script>
+loadjs.ready("fsaldoawaledit", function() {
+    var options = { name: "x_periode_id", selectId: "fsaldoawaledit_x_periode_id" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    if (!el)
+        return;
+    options.closeOnSelect = !options.multiple;
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fsaldoawaledit.lists.periode_id?.lookupOptions.length) {
+        options.data = { id: "x_periode_id", form: "fsaldoawaledit" };
+    } else {
+        options.ajax = { id: "x_periode_id", form: "fsaldoawaledit", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.saldoawal.fields.periode_id.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+<?php } ?>
 </span>
 </div></div>
     </div>
@@ -106,9 +142,43 @@ loadjs.ready("head", function () {
         <label id="elh_saldoawal_akun_id" for="x_akun_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->akun_id->caption() ?><?= $Page->akun_id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->akun_id->cellAttributes() ?>>
 <span id="el_saldoawal_akun_id">
-<input type="<?= $Page->akun_id->getInputTextType() ?>" name="x_akun_id" id="x_akun_id" data-table="saldoawal" data-field="x_akun_id" value="<?= $Page->akun_id->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->akun_id->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->akun_id->formatPattern()) ?>"<?= $Page->akun_id->editAttributes() ?> aria-describedby="x_akun_id_help">
-<?= $Page->akun_id->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->akun_id->getErrorMessage() ?></div>
+    <select
+        id="x_akun_id"
+        name="x_akun_id"
+        class="form-select ew-select<?= $Page->akun_id->isInvalidClass() ?>"
+        <?php if (!$Page->akun_id->IsNativeSelect) { ?>
+        data-select2-id="fsaldoawaledit_x_akun_id"
+        <?php } ?>
+        data-table="saldoawal"
+        data-field="x_akun_id"
+        data-value-separator="<?= $Page->akun_id->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->akun_id->getPlaceHolder()) ?>"
+        <?= $Page->akun_id->editAttributes() ?>>
+        <?= $Page->akun_id->selectOptionListHtml("x_akun_id") ?>
+    </select>
+    <?= $Page->akun_id->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->akun_id->getErrorMessage() ?></div>
+<?= $Page->akun_id->Lookup->getParamTag($Page, "p_x_akun_id") ?>
+<?php if (!$Page->akun_id->IsNativeSelect) { ?>
+<script>
+loadjs.ready("fsaldoawaledit", function() {
+    var options = { name: "x_akun_id", selectId: "fsaldoawaledit_x_akun_id" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    if (!el)
+        return;
+    options.closeOnSelect = !options.multiple;
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fsaldoawaledit.lists.akun_id?.lookupOptions.length) {
+        options.data = { id: "x_akun_id", form: "fsaldoawaledit" };
+    } else {
+        options.ajax = { id: "x_akun_id", form: "fsaldoawaledit", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.saldoawal.fields.akun_id.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+<?php } ?>
 </span>
 </div></div>
     </div>

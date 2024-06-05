@@ -506,6 +506,10 @@ class SaldoawalAdd extends Saldoawal
             $this->InlineDelete = true;
         }
 
+        // Set up lookup cache
+        $this->setupLookupOptions($this->periode_id);
+        $this->setupLookupOptions($this->akun_id);
+
         // Load default values for add
         $this->loadDefaultValues();
 
@@ -670,7 +674,7 @@ class SaldoawalAdd extends Saldoawal
             if (IsApi() && $val === null) {
                 $this->periode_id->Visible = false; // Disable update for API request
             } else {
-                $this->periode_id->setFormValue($val, true, $validate);
+                $this->periode_id->setFormValue($val);
             }
         }
 
@@ -680,7 +684,7 @@ class SaldoawalAdd extends Saldoawal
             if (IsApi() && $val === null) {
                 $this->akun_id->Visible = false; // Disable update for API request
             } else {
-                $this->akun_id->setFormValue($val, true, $validate);
+                $this->akun_id->setFormValue($val);
             }
         }
 
@@ -859,12 +863,50 @@ class SaldoawalAdd extends Saldoawal
             $this->id->ViewValue = $this->id->CurrentValue;
 
             // periode_id
-            $this->periode_id->ViewValue = $this->periode_id->CurrentValue;
-            $this->periode_id->ViewValue = FormatNumber($this->periode_id->ViewValue, $this->periode_id->formatPattern());
+            $curVal = strval($this->periode_id->CurrentValue);
+            if ($curVal != "") {
+                $this->periode_id->ViewValue = $this->periode_id->lookupCacheOption($curVal);
+                if ($this->periode_id->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->periode_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->periode_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->periode_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->periode_id->Lookup->renderViewRow($rswrk[0]);
+                        $this->periode_id->ViewValue = $this->periode_id->displayValue($arwrk);
+                    } else {
+                        $this->periode_id->ViewValue = FormatNumber($this->periode_id->CurrentValue, $this->periode_id->formatPattern());
+                    }
+                }
+            } else {
+                $this->periode_id->ViewValue = null;
+            }
 
             // akun_id
-            $this->akun_id->ViewValue = $this->akun_id->CurrentValue;
-            $this->akun_id->ViewValue = FormatNumber($this->akun_id->ViewValue, $this->akun_id->formatPattern());
+            $curVal = strval($this->akun_id->CurrentValue);
+            if ($curVal != "") {
+                $this->akun_id->ViewValue = $this->akun_id->lookupCacheOption($curVal);
+                if ($this->akun_id->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->akun_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->akun_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->akun_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->akun_id->Lookup->renderViewRow($rswrk[0]);
+                        $this->akun_id->ViewValue = $this->akun_id->displayValue($arwrk);
+                    } else {
+                        $this->akun_id->ViewValue = FormatNumber($this->akun_id->CurrentValue, $this->akun_id->formatPattern());
+                    }
+                }
+            } else {
+                $this->akun_id->ViewValue = null;
+            }
 
             // debet
             $this->debet->ViewValue = $this->debet->CurrentValue;
@@ -901,19 +943,60 @@ class SaldoawalAdd extends Saldoawal
         } elseif ($this->RowType == RowType::ADD) {
             // periode_id
             $this->periode_id->setupEditAttributes();
-            $this->periode_id->EditValue = $this->periode_id->CurrentValue;
-            $this->periode_id->PlaceHolder = RemoveHtml($this->periode_id->caption());
-            if (strval($this->periode_id->EditValue) != "" && is_numeric($this->periode_id->EditValue)) {
-                $this->periode_id->EditValue = FormatNumber($this->periode_id->EditValue, null);
+            $curVal = trim(strval($this->periode_id->CurrentValue));
+            if ($curVal != "") {
+                $this->periode_id->ViewValue = $this->periode_id->lookupCacheOption($curVal);
+            } else {
+                $this->periode_id->ViewValue = $this->periode_id->Lookup !== null && is_array($this->periode_id->lookupOptions()) && count($this->periode_id->lookupOptions()) > 0 ? $curVal : null;
             }
+            if ($this->periode_id->ViewValue !== null) { // Load from cache
+                $this->periode_id->EditValue = array_values($this->periode_id->lookupOptions());
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = SearchFilter($this->periode_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $this->periode_id->CurrentValue, $this->periode_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                }
+                $sqlWrk = $this->periode_id->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                foreach ($arwrk as &$row) {
+                    $row = $this->periode_id->Lookup->renderViewRow($row);
+                }
+                $this->periode_id->EditValue = $arwrk;
+            }
+            $this->periode_id->PlaceHolder = RemoveHtml($this->periode_id->caption());
 
             // akun_id
             $this->akun_id->setupEditAttributes();
-            $this->akun_id->EditValue = $this->akun_id->CurrentValue;
-            $this->akun_id->PlaceHolder = RemoveHtml($this->akun_id->caption());
-            if (strval($this->akun_id->EditValue) != "" && is_numeric($this->akun_id->EditValue)) {
-                $this->akun_id->EditValue = FormatNumber($this->akun_id->EditValue, null);
+            $curVal = trim(strval($this->akun_id->CurrentValue));
+            if ($curVal != "") {
+                $this->akun_id->ViewValue = $this->akun_id->lookupCacheOption($curVal);
+            } else {
+                $this->akun_id->ViewValue = $this->akun_id->Lookup !== null && is_array($this->akun_id->lookupOptions()) && count($this->akun_id->lookupOptions()) > 0 ? $curVal : null;
             }
+            if ($this->akun_id->ViewValue !== null) { // Load from cache
+                $this->akun_id->EditValue = array_values($this->akun_id->lookupOptions());
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = SearchFilter($this->akun_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $this->akun_id->CurrentValue, $this->akun_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                }
+                $sqlWrk = $this->akun_id->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->akun_id->EditValue = $arwrk;
+            }
+            $this->akun_id->PlaceHolder = RemoveHtml($this->akun_id->caption());
 
             // debet
             $this->debet->setupEditAttributes();
@@ -992,16 +1075,10 @@ class SaldoawalAdd extends Saldoawal
                     $this->periode_id->addErrorMessage(str_replace("%s", $this->periode_id->caption(), $this->periode_id->RequiredErrorMessage));
                 }
             }
-            if (!CheckInteger($this->periode_id->FormValue)) {
-                $this->periode_id->addErrorMessage($this->periode_id->getErrorMessage(false));
-            }
             if ($this->akun_id->Visible && $this->akun_id->Required) {
                 if (!$this->akun_id->IsDetailKey && EmptyValue($this->akun_id->FormValue)) {
                     $this->akun_id->addErrorMessage(str_replace("%s", $this->akun_id->caption(), $this->akun_id->RequiredErrorMessage));
                 }
-            }
-            if (!CheckInteger($this->akun_id->FormValue)) {
-                $this->akun_id->addErrorMessage($this->akun_id->getErrorMessage(false));
             }
             if ($this->debet->Visible && $this->debet->Required) {
                 if (!$this->debet->IsDetailKey && EmptyValue($this->debet->FormValue)) {
@@ -1173,6 +1250,10 @@ class SaldoawalAdd extends Saldoawal
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_periode_id":
+                    break;
+                case "x_akun_id":
+                    break;
                 default:
                     $lookupFilter = "";
                     break;

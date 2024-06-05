@@ -4,26 +4,29 @@
     <menu id="23">
       <phrase id="menutext" value="Master" />
     </menu>
+    <menu id="13">
+      <phrase id="menutext" value="Periode" />
+    </menu>
     <menu id="2">
-      <phrase id="menutext" value="grup" />
+      <phrase id="menutext" value="Grup" />
     </menu>
     <menu id="18">
-      <phrase id="menutext" value="subgrup" />
+      <phrase id="menutext" value="Sub Grup" />
     </menu>
     <menu id="1">
-      <phrase id="menutext" value="akun" />
+      <phrase id="menutext" value="Akun" />
     </menu>
     <menu id="16">
-      <phrase id="menutext" value="saldoawal" />
+      <phrase id="menutext" value="Saldo Awal" />
     </menu>
     <menu id="24">
       <phrase id="menutext" value="Transaksi" />
     </menu>
     <menu id="4">
-      <phrase id="menutext" value="jurnal" />
+      <phrase id="menutext" value="Jurnal" />
     </menu>
     <menu id="5">
-      <phrase id="menutext" value="jurnald" />
+      <phrase id="menutext" value="Jurnal Detail" />
     </menu>
     <menu id="3">
       <phrase id="menutext" value="gudang" />
@@ -49,9 +52,6 @@
     <menu id="12">
       <phrase id="menutext" value="pengiriman" />
     </menu>
-    <menu id="13">
-      <phrase id="menutext" value="periode" />
-    </menu>
     <menu id="14">
       <phrase id="menutext" value="person" />
     </menu>
@@ -74,7 +74,7 @@
       <phrase id="menutext" value="type" />
     </menu>
     <table id="akun">
-      <phrase id="tblcaption" value="akun" />
+      <phrase id="tblcaption" value="Akun" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
@@ -95,7 +95,7 @@
       </field>
     </table>
     <table id="grup">
-      <phrase id="tblcaption" value="grup" />
+      <phrase id="tblcaption" value="Grup" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
@@ -119,7 +119,7 @@
       </field>
     </table>
     <table id="jurnal">
-      <phrase id="tblcaption" value="jurnal" />
+      <phrase id="tblcaption" value="Jurnal" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
@@ -143,7 +143,7 @@
       </field>
     </table>
     <table id="jurnald">
-      <phrase id="tblcaption" value="jurnald" />
+      <phrase id="tblcaption" value="Jurnal Detail" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
@@ -272,7 +272,7 @@
       </field>
     </table>
     <table id="periode">
-      <phrase id="tblcaption" value="periode" />
+      <phrase id="tblcaption" value="Periode" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
@@ -426,7 +426,7 @@
       </field>
     </table>
     <table id="saldoawal">
-      <phrase id="tblcaption" value="saldoawal" />
+      <phrase id="tblcaption" value="Saldo Awal" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
@@ -468,7 +468,7 @@
       </field>
     </table>
     <table id="subgrup">
-      <phrase id="tblcaption" value="subgrup" />
+      <phrase id="tblcaption" value="Sub Grup" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
