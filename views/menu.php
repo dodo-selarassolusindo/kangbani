@@ -4,10 +4,12 @@ namespace PHPMaker2024\prj_accounting;
 
 // Navbar menu
 $topMenu = new Menu("navbar", true, true);
+$topMenu->addMenuItem(23, "mci_Master", $Language->menuPhrase("23", "MenuText"), "", -1, "", true, false, true, "", "", true, false);
 $topMenu->addMenuItem(2, "mi_grup", $Language->menuPhrase("2", "MenuText"), "gruplist", 23, "", true, false, false, "", "", true, false);
 $topMenu->addMenuItem(18, "mi_subgrup", $Language->menuPhrase("18", "MenuText"), "subgruplist", 23, "", true, false, false, "", "", true, false);
 $topMenu->addMenuItem(1, "mi_akun", $Language->menuPhrase("1", "MenuText"), "akunlist", 23, "", true, false, false, "", "", true, false);
 $topMenu->addMenuItem(16, "mi_saldoawal", $Language->menuPhrase("16", "MenuText"), "saldoawallist", 23, "", true, false, false, "", "", true, false);
+$topMenu->addMenuItem(24, "mci_Transaksi", $Language->menuPhrase("24", "MenuText"), "", -1, "", true, false, true, "", "", true, false);
 $topMenu->addMenuItem(4, "mi_jurnal", $Language->menuPhrase("4", "MenuText"), "jurnallist", 24, "", true, false, false, "", "", true, false);
 $topMenu->addMenuItem(3, "mi_gudang", $Language->menuPhrase("3", "MenuText"), "gudanglist", -1, "", true, false, false, "", "", true, false);
 $topMenu->addMenuItem(6, "mi_kelompok", $Language->menuPhrase("6", "MenuText"), "kelompoklist", -1, "", true, false, false, "", "", true, false);
@@ -29,12 +31,12 @@ echo $topMenu->toScript();
 
 // Sidebar menu
 $sideMenu = new Menu("menu", true, false);
-$sideMenu->addMenuItem(23, "mci_Master", $Language->menuPhrase("23", "MenuText"), "", -1, "", true, false, true, "", "", false, true);
+$sideMenu->addMenuItem(23, "mci_Master", $Language->menuPhrase("23", "MenuText"), "", -1, "", true, false, true, "", "", true, true);
 $sideMenu->addMenuItem(2, "mi_grup", $Language->menuPhrase("2", "MenuText"), "gruplist", 23, "", true, false, false, "", "", true, true);
 $sideMenu->addMenuItem(18, "mi_subgrup", $Language->menuPhrase("18", "MenuText"), "subgruplist", 23, "", true, false, false, "", "", true, true);
 $sideMenu->addMenuItem(1, "mi_akun", $Language->menuPhrase("1", "MenuText"), "akunlist", 23, "", true, false, false, "", "", true, true);
 $sideMenu->addMenuItem(16, "mi_saldoawal", $Language->menuPhrase("16", "MenuText"), "saldoawallist", 23, "", true, false, false, "", "", true, true);
-$sideMenu->addMenuItem(24, "mci_Transaksi", $Language->menuPhrase("24", "MenuText"), "", -1, "", true, false, true, "", "", false, true);
+$sideMenu->addMenuItem(24, "mci_Transaksi", $Language->menuPhrase("24", "MenuText"), "", -1, "", true, false, true, "", "", true, true);
 $sideMenu->addMenuItem(4, "mi_jurnal", $Language->menuPhrase("4", "MenuText"), "jurnallist", 24, "", true, false, false, "", "", true, true);
 $sideMenu->addMenuItem(3, "mi_gudang", $Language->menuPhrase("3", "MenuText"), "gudanglist", -1, "", true, false, false, "", "", true, true);
 $sideMenu->addMenuItem(6, "mi_kelompok", $Language->menuPhrase("6", "MenuText"), "kelompoklist", -1, "", true, false, false, "", "", true, true);

@@ -183,10 +183,10 @@ ew.ready("head", [
         <div class="container-fluid">
             <!-- Left navbar links -->
             <ul id="ew-navbar" class="navbar-nav">
-                <li class="nav-item d-block">
+                <li class="nav-item d-block d-sm-none">
                     <a class="nav-link" data-widget="pushmenu" data-enable-remember="true" data-ew-action="none"><i class="fa-solid fa-bars ew-icon"></i></a>
                 </li>
-                <a class="navbar-brand d-none" href="#" data-ew-action="none">
+                <a class="navbar-brand d-none d-sm-block" href="#" data-ew-action="none">
                     <span class="brand-text">PHPMaker 2024</span>
                 </a>
             </ul>
