@@ -50,9 +50,6 @@ $Page->showMessage();
 <table class="<?= $Page->TableClass ?>">
     <thead>
     <tr class="ew-table-header">
-<?php if ($Page->id->Visible) { // id ?>
-        <th class="<?= $Page->id->headerCellClass() ?>"><span id="elh_kurs_id" class="kurs_id"><?= $Page->id->caption() ?></span></th>
-<?php } ?>
 <?php if ($Page->matauang_id->Visible) { // matauang_id ?>
         <th class="<?= $Page->matauang_id->headerCellClass() ?>"><span id="elh_kurs_matauang_id" class="kurs_matauang_id"><?= $Page->matauang_id->caption() ?></span></th>
 <?php } ?>
@@ -83,14 +80,6 @@ while ($Page->fetch()) {
     $Page->renderRow();
 ?>
     <tr <?= $Page->rowAttributes() ?>>
-<?php if ($Page->id->Visible) { // id ?>
-        <td<?= $Page->id->cellAttributes() ?>>
-<span id="">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($Page->matauang_id->Visible) { // matauang_id ?>
         <td<?= $Page->matauang_id->cellAttributes() ?>>
 <span id="">

@@ -121,7 +121,7 @@ class PajakDelete extends Pajak
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->kode->setVisibility();
         $this->nama->setVisibility();
         $this->nilai->setVisibility();
@@ -628,10 +628,6 @@ class PajakDelete extends Pajak
             // nilai
             $this->nilai->ViewValue = $this->nilai->CurrentValue;
             $this->nilai->ViewValue = FormatNumber($this->nilai->ViewValue, $this->nilai->formatPattern());
-
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // kode
             $this->kode->HrefValue = "";

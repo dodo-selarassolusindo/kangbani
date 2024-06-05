@@ -121,7 +121,7 @@ class KlasifikasiEdit extends Klasifikasi
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->kode->setVisibility();
         $this->nama->setVisibility();
     }
@@ -745,19 +745,6 @@ class KlasifikasiEdit extends Klasifikasi
         global $CurrentForm;
         $validate = !Config("SERVER_VALIDATE");
 
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->id->Visible = false; // Disable update for API request
-            } else {
-                $this->id->setFormValue($val, true, $validate);
-            }
-        }
-        if ($CurrentForm->hasValue("o_id")) {
-            $this->id->setOldValue($CurrentForm->getValue("o_id"));
-        }
-
         // Check field name 'kode' first before field var 'x_kode'
         $val = $CurrentForm->hasValue("kode") ? $CurrentForm->getValue("kode") : $CurrentForm->getValue("x_kode");
         if (!$this->kode->IsDetailKey) {
@@ -777,13 +764,19 @@ class KlasifikasiEdit extends Klasifikasi
                 $this->nama->setFormValue($val);
             }
         }
+
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        if (!$this->id->IsDetailKey) {
+            $this->id->setFormValue($val);
+        }
     }
 
     // Restore form values
     public function restoreFormValues()
     {
         global $CurrentForm;
-        $this->id->CurrentValue = $this->id->FormValue;
+                        $this->id->CurrentValue = $this->id->FormValue;
         $this->kode->CurrentValue = $this->kode->FormValue;
         $this->nama->CurrentValue = $this->nama->FormValue;
     }
@@ -948,20 +941,12 @@ class KlasifikasiEdit extends Klasifikasi
             // nama
             $this->nama->ViewValue = $this->nama->CurrentValue;
 
-            // id
-            $this->id->HrefValue = "";
-
             // kode
             $this->kode->HrefValue = "";
 
             // nama
             $this->nama->HrefValue = "";
         } elseif ($this->RowType == RowType::EDIT) {
-            // id
-            $this->id->setupEditAttributes();
-            $this->id->EditValue = $this->id->CurrentValue;
-            $this->id->PlaceHolder = RemoveHtml($this->id->caption());
-
             // kode
             $this->kode->setupEditAttributes();
             if (!$this->kode->Raw) {
@@ -979,9 +964,6 @@ class KlasifikasiEdit extends Klasifikasi
             $this->nama->PlaceHolder = RemoveHtml($this->nama->caption());
 
             // Edit refer script
-
-            // id
-            $this->id->HrefValue = "";
 
             // kode
             $this->kode->HrefValue = "";
@@ -1009,14 +991,6 @@ class KlasifikasiEdit extends Klasifikasi
             return true;
         }
         $validateForm = true;
-            if ($this->id->Visible && $this->id->Required) {
-                if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
-                    $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
-                }
-            }
-            if (!CheckInteger($this->id->FormValue)) {
-                $this->id->addErrorMessage($this->id->getErrorMessage(false));
-            }
             if ($this->kode->Visible && $this->kode->Required) {
                 if (!$this->kode->IsDetailKey && EmptyValue($this->kode->FormValue)) {
                     $this->kode->addErrorMessage(str_replace("%s", $this->kode->caption(), $this->kode->RequiredErrorMessage));
@@ -1065,24 +1039,6 @@ class KlasifikasiEdit extends Klasifikasi
 
         // Update current values
         $this->setCurrentValues($rsnew);
-
-        // Check field with unique index (id)
-        if ($this->id->CurrentValue != "") {
-            $filterChk = "(`id` = " . AdjustSql($this->id->CurrentValue, $this->Dbid) . ")";
-            $filterChk .= " AND NOT (" . $filter . ")";
-            $this->CurrentFilter = $filterChk;
-            $sqlChk = $this->getCurrentSql();
-            $rsChk = $conn->executeQuery($sqlChk);
-            if (!$rsChk) {
-                return false;
-            }
-            if ($rsChk->fetch()) {
-                $idxErrMsg = str_replace("%f", $this->id->caption(), $Language->phrase("DupIndex"));
-                $idxErrMsg = str_replace("%v", $this->id->CurrentValue, $idxErrMsg);
-                $this->setFailureMessage($idxErrMsg);
-                return false;
-            }
-        }
 
         // Call Row Updating event
         $updateRow = $this->rowUpdating($rsold, $rsnew);
@@ -1147,9 +1103,6 @@ class KlasifikasiEdit extends Klasifikasi
         global $Security;
         $rsnew = [];
 
-        // id
-        $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, $this->id->ReadOnly);
-
         // kode
         $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, $this->kode->ReadOnly);
 
@@ -1164,9 +1117,6 @@ class KlasifikasiEdit extends Klasifikasi
      */
     protected function restoreEditFormFromRow($row)
     {
-        if (isset($row['id'])) { // id
-            $this->id->CurrentValue = $row['id'];
-        }
         if (isset($row['kode'])) { // kode
             $this->kode->CurrentValue = $row['kode'];
         }

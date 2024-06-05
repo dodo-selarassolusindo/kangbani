@@ -503,6 +503,9 @@ class KursAdd extends Kurs
             $this->InlineDelete = true;
         }
 
+        // Set up lookup cache
+        $this->setupLookupOptions($this->matauang_id);
+
         // Load default values for add
         $this->loadDefaultValues();
 
@@ -665,7 +668,7 @@ class KursAdd extends Kurs
             if (IsApi() && $val === null) {
                 $this->matauang_id->Visible = false; // Disable update for API request
             } else {
-                $this->matauang_id->setFormValue($val, true, $validate);
+                $this->matauang_id->setFormValue($val);
             }
         }
 
@@ -806,8 +809,27 @@ class KursAdd extends Kurs
             $this->id->ViewValue = $this->id->CurrentValue;
 
             // matauang_id
-            $this->matauang_id->ViewValue = $this->matauang_id->CurrentValue;
-            $this->matauang_id->ViewValue = FormatNumber($this->matauang_id->ViewValue, $this->matauang_id->formatPattern());
+            $curVal = strval($this->matauang_id->CurrentValue);
+            if ($curVal != "") {
+                $this->matauang_id->ViewValue = $this->matauang_id->lookupCacheOption($curVal);
+                if ($this->matauang_id->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->matauang_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->matauang_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->matauang_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->matauang_id->Lookup->renderViewRow($rswrk[0]);
+                        $this->matauang_id->ViewValue = $this->matauang_id->displayValue($arwrk);
+                    } else {
+                        $this->matauang_id->ViewValue = FormatNumber($this->matauang_id->CurrentValue, $this->matauang_id->formatPattern());
+                    }
+                }
+            } else {
+                $this->matauang_id->ViewValue = null;
+            }
 
             // tanggal
             $this->tanggal->ViewValue = $this->tanggal->CurrentValue;
@@ -828,11 +850,30 @@ class KursAdd extends Kurs
         } elseif ($this->RowType == RowType::ADD) {
             // matauang_id
             $this->matauang_id->setupEditAttributes();
-            $this->matauang_id->EditValue = $this->matauang_id->CurrentValue;
-            $this->matauang_id->PlaceHolder = RemoveHtml($this->matauang_id->caption());
-            if (strval($this->matauang_id->EditValue) != "" && is_numeric($this->matauang_id->EditValue)) {
-                $this->matauang_id->EditValue = FormatNumber($this->matauang_id->EditValue, null);
+            $curVal = trim(strval($this->matauang_id->CurrentValue));
+            if ($curVal != "") {
+                $this->matauang_id->ViewValue = $this->matauang_id->lookupCacheOption($curVal);
+            } else {
+                $this->matauang_id->ViewValue = $this->matauang_id->Lookup !== null && is_array($this->matauang_id->lookupOptions()) && count($this->matauang_id->lookupOptions()) > 0 ? $curVal : null;
             }
+            if ($this->matauang_id->ViewValue !== null) { // Load from cache
+                $this->matauang_id->EditValue = array_values($this->matauang_id->lookupOptions());
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = SearchFilter($this->matauang_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $this->matauang_id->CurrentValue, $this->matauang_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                }
+                $sqlWrk = $this->matauang_id->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->matauang_id->EditValue = $arwrk;
+            }
+            $this->matauang_id->PlaceHolder = RemoveHtml($this->matauang_id->caption());
 
             // tanggal
             $this->tanggal->setupEditAttributes();
@@ -885,9 +926,6 @@ class KursAdd extends Kurs
                 if (!$this->matauang_id->IsDetailKey && EmptyValue($this->matauang_id->FormValue)) {
                     $this->matauang_id->addErrorMessage(str_replace("%s", $this->matauang_id->caption(), $this->matauang_id->RequiredErrorMessage));
                 }
-            }
-            if (!CheckInteger($this->matauang_id->FormValue)) {
-                $this->matauang_id->addErrorMessage($this->matauang_id->getErrorMessage(false));
             }
             if ($this->tanggal->Visible && $this->tanggal->Required) {
                 if (!$this->tanggal->IsDetailKey && EmptyValue($this->tanggal->FormValue)) {
@@ -1028,6 +1066,8 @@ class KursAdd extends Kurs
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_matauang_id":
+                    break;
                 default:
                     $lookupFilter = "";
                     break;

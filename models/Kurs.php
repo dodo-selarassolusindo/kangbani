@@ -139,12 +139,16 @@ class Kurs extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'SELECT' // Edit Tag
         );
         $this->matauang_id->InputTextType = "text";
         $this->matauang_id->Raw = true;
+        $this->matauang_id->setSelectMultiple(false); // Select one
+        $this->matauang_id->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->matauang_id->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->matauang_id->Lookup = new Lookup($this->matauang_id, 'matauang', false, 'id', ["nama","kode","",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(`nama`, ''),'" . ValueSeparator(1, $this->matauang_id) . "',COALESCE(`kode`,''))");
         $this->matauang_id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->matauang_id->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
+        $this->matauang_id->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
         $this->Fields['matauang_id'] = &$this->matauang_id;
 
         // tanggal
@@ -1122,8 +1126,27 @@ class Kurs extends DbTable
         $this->id->ViewValue = $this->id->CurrentValue;
 
         // matauang_id
-        $this->matauang_id->ViewValue = $this->matauang_id->CurrentValue;
-        $this->matauang_id->ViewValue = FormatNumber($this->matauang_id->ViewValue, $this->matauang_id->formatPattern());
+        $curVal = strval($this->matauang_id->CurrentValue);
+        if ($curVal != "") {
+            $this->matauang_id->ViewValue = $this->matauang_id->lookupCacheOption($curVal);
+            if ($this->matauang_id->ViewValue === null) { // Lookup from database
+                $filterWrk = SearchFilter($this->matauang_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->matauang_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                $sqlWrk = $this->matauang_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->matauang_id->Lookup->renderViewRow($rswrk[0]);
+                    $this->matauang_id->ViewValue = $this->matauang_id->displayValue($arwrk);
+                } else {
+                    $this->matauang_id->ViewValue = FormatNumber($this->matauang_id->CurrentValue, $this->matauang_id->formatPattern());
+                }
+            }
+        } else {
+            $this->matauang_id->ViewValue = null;
+        }
 
         // tanggal
         $this->tanggal->ViewValue = $this->tanggal->CurrentValue;
@@ -1170,11 +1193,7 @@ class Kurs extends DbTable
 
         // matauang_id
         $this->matauang_id->setupEditAttributes();
-        $this->matauang_id->EditValue = $this->matauang_id->CurrentValue;
         $this->matauang_id->PlaceHolder = RemoveHtml($this->matauang_id->caption());
-        if (strval($this->matauang_id->EditValue) != "" && is_numeric($this->matauang_id->EditValue)) {
-            $this->matauang_id->EditValue = FormatNumber($this->matauang_id->EditValue, null);
-        }
 
         // tanggal
         $this->tanggal->setupEditAttributes();
@@ -1220,7 +1239,6 @@ class Kurs extends DbTable
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->id);
                     $doc->exportCaption($this->matauang_id);
                     $doc->exportCaption($this->tanggal);
                     $doc->exportCaption($this->nilai);
@@ -1255,7 +1273,6 @@ class Kurs extends DbTable
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->id);
                         $doc->exportField($this->matauang_id);
                         $doc->exportField($this->tanggal);
                         $doc->exportField($this->nilai);

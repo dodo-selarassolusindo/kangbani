@@ -31,8 +31,7 @@ loadjs.ready(["wrapper", "head"], function () {
 
         // Add fields
         .setFields([
-            ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null], fields.id.isInvalid],
-            ["matauang_id", [fields.matauang_id.visible && fields.matauang_id.required ? ew.Validators.required(fields.matauang_id.caption) : null, ew.Validators.integer], fields.matauang_id.isInvalid],
+            ["matauang_id", [fields.matauang_id.visible && fields.matauang_id.required ? ew.Validators.required(fields.matauang_id.caption) : null], fields.matauang_id.isInvalid],
             ["tanggal", [fields.tanggal.visible && fields.tanggal.required ? ew.Validators.required(fields.tanggal.caption) : null, ew.Validators.integer], fields.tanggal.isInvalid],
             ["nilai", [fields.nilai.visible && fields.nilai.required ? ew.Validators.required(fields.nilai.caption) : null, ew.Validators.integer], fields.nilai.isInvalid]
         ])
@@ -50,6 +49,7 @@ loadjs.ready(["wrapper", "head"], function () {
 
         // Dynamic selection lists
         .setLists({
+            "matauang_id": <?= $Page->matauang_id->toClientList($Page) ?>,
         })
         .build();
     window[form.id] = form;
@@ -74,26 +74,48 @@ loadjs.ready("head", function () {
 <?php } ?>
 <input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
 <div class="ew-edit-div"><!-- page* -->
-<?php if ($Page->id->Visible) { // id ?>
-    <div id="r_id"<?= $Page->id->rowAttributes() ?>>
-        <label id="elh_kurs_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->id->caption() ?><?= $Page->id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->id->cellAttributes() ?>>
-<span id="el_kurs_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->id->getDisplayValue($Page->id->EditValue))) ?>"></span>
-<input type="hidden" data-table="kurs" data-field="x_id" data-hidden="1" name="x_id" id="x_id" value="<?= HtmlEncode($Page->id->CurrentValue) ?>">
-</span>
-</div></div>
-    </div>
-<?php } ?>
 <?php if ($Page->matauang_id->Visible) { // matauang_id ?>
     <div id="r_matauang_id"<?= $Page->matauang_id->rowAttributes() ?>>
         <label id="elh_kurs_matauang_id" for="x_matauang_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->matauang_id->caption() ?><?= $Page->matauang_id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->matauang_id->cellAttributes() ?>>
 <span id="el_kurs_matauang_id">
-<input type="<?= $Page->matauang_id->getInputTextType() ?>" name="x_matauang_id" id="x_matauang_id" data-table="kurs" data-field="x_matauang_id" value="<?= $Page->matauang_id->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->matauang_id->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->matauang_id->formatPattern()) ?>"<?= $Page->matauang_id->editAttributes() ?> aria-describedby="x_matauang_id_help">
-<?= $Page->matauang_id->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->matauang_id->getErrorMessage() ?></div>
+    <select
+        id="x_matauang_id"
+        name="x_matauang_id"
+        class="form-select ew-select<?= $Page->matauang_id->isInvalidClass() ?>"
+        <?php if (!$Page->matauang_id->IsNativeSelect) { ?>
+        data-select2-id="fkursedit_x_matauang_id"
+        <?php } ?>
+        data-table="kurs"
+        data-field="x_matauang_id"
+        data-value-separator="<?= $Page->matauang_id->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->matauang_id->getPlaceHolder()) ?>"
+        <?= $Page->matauang_id->editAttributes() ?>>
+        <?= $Page->matauang_id->selectOptionListHtml("x_matauang_id") ?>
+    </select>
+    <?= $Page->matauang_id->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->matauang_id->getErrorMessage() ?></div>
+<?= $Page->matauang_id->Lookup->getParamTag($Page, "p_x_matauang_id") ?>
+<?php if (!$Page->matauang_id->IsNativeSelect) { ?>
+<script>
+loadjs.ready("fkursedit", function() {
+    var options = { name: "x_matauang_id", selectId: "fkursedit_x_matauang_id" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    if (!el)
+        return;
+    options.closeOnSelect = !options.multiple;
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fkursedit.lists.matauang_id?.lookupOptions.length) {
+        options.data = { id: "x_matauang_id", form: "fkursedit" };
+    } else {
+        options.ajax = { id: "x_matauang_id", form: "fkursedit", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.kurs.fields.matauang_id.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+<?php } ?>
 </span>
 </div></div>
     </div>
@@ -123,6 +145,7 @@ loadjs.ready("head", function () {
     </div>
 <?php } ?>
 </div><!-- /page* -->
+    <input type="hidden" data-table="kurs" data-field="x_id" data-hidden="1" name="x_id" id="x_id" value="<?= HtmlEncode($Page->id->CurrentValue) ?>">
 <?= $Page->IsModal ? '<template class="ew-modal-buttons">' : '<div class="row ew-buttons">' ?><!-- buttons .row -->
     <div class="<?= $Page->OffsetColumnClass ?>"><!-- buttons offset -->
 <button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit" form="fkursedit"><?= $Language->phrase("SaveBtn") ?></button>

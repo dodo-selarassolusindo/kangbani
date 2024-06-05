@@ -145,7 +145,7 @@ class KursList extends Kurs
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->matauang_id->setVisibility();
         $this->tanggal->setVisibility();
         $this->nilai->setVisibility();
@@ -686,6 +686,9 @@ class KursList extends Kurs
         // Setup other options
         $this->setupOtherOptions();
 
+        // Set up lookup cache
+        $this->setupLookupOptions($this->matauang_id);
+
         // Update form name to avoid conflict
         if ($this->IsModal) {
             $this->FormName = "fkursgrid";
@@ -968,7 +971,6 @@ class KursList extends Kurs
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id); // id
             $this->updateSort($this->matauang_id); // matauang_id
             $this->updateSort($this->tanggal); // tanggal
             $this->updateSort($this->nilai); // nilai
@@ -1232,7 +1234,6 @@ class KursList extends Kurs
             $item = &$option->addGroupOption();
             $item->Body = "";
             $item->Visible = $this->UseColumnVisibility;
-            $this->createColumnOption($option, "id");
             $this->createColumnOption($option, "matauang_id");
             $this->createColumnOption($option, "tanggal");
             $this->createColumnOption($option, "nilai");
@@ -1732,8 +1733,27 @@ class KursList extends Kurs
             $this->id->ViewValue = $this->id->CurrentValue;
 
             // matauang_id
-            $this->matauang_id->ViewValue = $this->matauang_id->CurrentValue;
-            $this->matauang_id->ViewValue = FormatNumber($this->matauang_id->ViewValue, $this->matauang_id->formatPattern());
+            $curVal = strval($this->matauang_id->CurrentValue);
+            if ($curVal != "") {
+                $this->matauang_id->ViewValue = $this->matauang_id->lookupCacheOption($curVal);
+                if ($this->matauang_id->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->matauang_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->matauang_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->matauang_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->matauang_id->Lookup->renderViewRow($rswrk[0]);
+                        $this->matauang_id->ViewValue = $this->matauang_id->displayValue($arwrk);
+                    } else {
+                        $this->matauang_id->ViewValue = FormatNumber($this->matauang_id->CurrentValue, $this->matauang_id->formatPattern());
+                    }
+                }
+            } else {
+                $this->matauang_id->ViewValue = null;
+            }
 
             // tanggal
             $this->tanggal->ViewValue = $this->tanggal->CurrentValue;
@@ -1742,10 +1762,6 @@ class KursList extends Kurs
             // nilai
             $this->nilai->ViewValue = $this->nilai->CurrentValue;
             $this->nilai->ViewValue = FormatNumber($this->nilai->ViewValue, $this->nilai->formatPattern());
-
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // matauang_id
             $this->matauang_id->HrefValue = "";
@@ -1826,6 +1842,8 @@ class KursList extends Kurs
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_matauang_id":
+                    break;
                 default:
                     $lookupFilter = "";
                     break;

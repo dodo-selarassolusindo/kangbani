@@ -121,7 +121,7 @@ class KlasifikasiDelete extends Klasifikasi
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->kode->setVisibility();
         $this->nama->setVisibility();
     }
@@ -617,10 +617,6 @@ class KlasifikasiDelete extends Klasifikasi
 
             // nama
             $this->nama->ViewValue = $this->nama->CurrentValue;
-
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // kode
             $this->kode->HrefValue = "";
