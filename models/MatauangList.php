@@ -145,9 +145,9 @@ class MatauangList extends Matauang
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
-        $this->kode->setVisibility();
+        $this->id->Visible = false;
         $this->nama->setVisibility();
+        $this->kode->setVisibility();
     }
 
     // Constructor
@@ -1013,8 +1013,8 @@ class MatauangList extends Matauang
         $filterList = "";
         $savedFilterList = "";
         $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
-        $filterList = Concat($filterList, $this->kode->AdvancedSearch->toJson(), ","); // Field kode
         $filterList = Concat($filterList, $this->nama->AdvancedSearch->toJson(), ","); // Field nama
+        $filterList = Concat($filterList, $this->kode->AdvancedSearch->toJson(), ","); // Field kode
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -1062,14 +1062,6 @@ class MatauangList extends Matauang
         $this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
         $this->id->AdvancedSearch->save();
 
-        // Field kode
-        $this->kode->AdvancedSearch->SearchValue = @$filter["x_kode"];
-        $this->kode->AdvancedSearch->SearchOperator = @$filter["z_kode"];
-        $this->kode->AdvancedSearch->SearchCondition = @$filter["v_kode"];
-        $this->kode->AdvancedSearch->SearchValue2 = @$filter["y_kode"];
-        $this->kode->AdvancedSearch->SearchOperator2 = @$filter["w_kode"];
-        $this->kode->AdvancedSearch->save();
-
         // Field nama
         $this->nama->AdvancedSearch->SearchValue = @$filter["x_nama"];
         $this->nama->AdvancedSearch->SearchOperator = @$filter["z_nama"];
@@ -1077,6 +1069,14 @@ class MatauangList extends Matauang
         $this->nama->AdvancedSearch->SearchValue2 = @$filter["y_nama"];
         $this->nama->AdvancedSearch->SearchOperator2 = @$filter["w_nama"];
         $this->nama->AdvancedSearch->save();
+
+        // Field kode
+        $this->kode->AdvancedSearch->SearchValue = @$filter["x_kode"];
+        $this->kode->AdvancedSearch->SearchOperator = @$filter["z_kode"];
+        $this->kode->AdvancedSearch->SearchCondition = @$filter["v_kode"];
+        $this->kode->AdvancedSearch->SearchValue2 = @$filter["y_kode"];
+        $this->kode->AdvancedSearch->SearchOperator2 = @$filter["w_kode"];
+        $this->kode->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1113,8 +1113,8 @@ class MatauangList extends Matauang
 
         // Fields to search
         $searchFlds = [];
-        $searchFlds[] = &$this->kode;
         $searchFlds[] = &$this->nama;
+        $searchFlds[] = &$this->kode;
         $searchKeyword = $default ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
         $searchType = $default ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
 
@@ -1193,9 +1193,8 @@ class MatauangList extends Matauang
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id); // id
-            $this->updateSort($this->kode); // kode
             $this->updateSort($this->nama); // nama
+            $this->updateSort($this->kode); // kode
             $this->setStartRecordNumber(1); // Reset start position
         }
 
@@ -1221,8 +1220,8 @@ class MatauangList extends Matauang
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
                 $this->id->setSort("");
-                $this->kode->setSort("");
                 $this->nama->setSort("");
+                $this->kode->setSort("");
             }
 
             // Reset start position
@@ -1285,6 +1284,14 @@ class MatauangList extends Matauang
         $item->ShowInDropDown = false;
         $item->ShowInButtonGroup = false;
 
+        // "sequence"
+        $item = &$this->ListOptions->add("sequence");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = true;
+        $item->OnLeft = true; // Always on left
+        $item->ShowInDropDown = false;
+        $item->ShowInButtonGroup = false;
+
         // Drop down button for ListOptions
         $this->ListOptions->UseDropDownButton = false;
         $this->ListOptions->DropDownButtonPhrase = $Language->phrase("ButtonListOptions");
@@ -1322,6 +1329,10 @@ class MatauangList extends Matauang
 
         // Call ListOptions_Rendering event
         $this->listOptionsRendering();
+
+        // "sequence"
+        $opt = $this->ListOptions["sequence"];
+        $opt->Body = FormatSequenceNumber($this->RecordCount);
         $pageUrl = $this->pageUrl(false);
         if ($this->CurrentMode == "view") {
             // "view"
@@ -1460,9 +1471,8 @@ class MatauangList extends Matauang
             $item = &$option->addGroupOption();
             $item->Body = "";
             $item->Visible = $this->UseColumnVisibility;
-            $this->createColumnOption($option, "id");
-            $this->createColumnOption($option, "kode");
             $this->createColumnOption($option, "nama");
+            $this->createColumnOption($option, "kode");
         }
 
         // Set up custom actions
@@ -1902,8 +1912,8 @@ class MatauangList extends Matauang
         // Call Row Selected event
         $this->rowSelected($row);
         $this->id->setDbValue($row['id']);
-        $this->kode->setDbValue($row['kode']);
         $this->nama->setDbValue($row['nama']);
+        $this->kode->setDbValue($row['kode']);
     }
 
     // Return a row with default values
@@ -1911,8 +1921,8 @@ class MatauangList extends Matauang
     {
         $row = [];
         $row['id'] = $this->id->DefaultValue;
-        $row['kode'] = $this->kode->DefaultValue;
         $row['nama'] = $this->nama->DefaultValue;
+        $row['kode'] = $this->kode->DefaultValue;
         return $row;
     }
 
@@ -1955,32 +1965,28 @@ class MatauangList extends Matauang
 
         // id
 
-        // kode
-
         // nama
+
+        // kode
 
         // View row
         if ($this->RowType == RowType::VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
 
+            // nama
+            $this->nama->ViewValue = $this->nama->CurrentValue;
+
             // kode
             $this->kode->ViewValue = $this->kode->CurrentValue;
 
             // nama
-            $this->nama->ViewValue = $this->nama->CurrentValue;
-
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
+            $this->nama->HrefValue = "";
+            $this->nama->TooltipValue = "";
 
             // kode
             $this->kode->HrefValue = "";
             $this->kode->TooltipValue = "";
-
-            // nama
-            $this->nama->HrefValue = "";
-            $this->nama->TooltipValue = "";
         }
 
         // Call Row Rendered event

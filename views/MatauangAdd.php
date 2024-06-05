@@ -22,8 +22,8 @@ loadjs.ready(["wrapper", "head"], function () {
 
         // Add fields
         .setFields([
-            ["kode", [fields.kode.visible && fields.kode.required ? ew.Validators.required(fields.kode.caption) : null], fields.kode.isInvalid],
-            ["nama", [fields.nama.visible && fields.nama.required ? ew.Validators.required(fields.nama.caption) : null], fields.nama.isInvalid]
+            ["nama", [fields.nama.visible && fields.nama.required ? ew.Validators.required(fields.nama.caption) : null], fields.nama.isInvalid],
+            ["kode", [fields.kode.visible && fields.kode.required ? ew.Validators.required(fields.kode.caption) : null], fields.kode.isInvalid]
         ])
 
         // Form_CustomValidate
@@ -68,18 +68,6 @@ $Page->showMessage();
 <?php } ?>
 <input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
 <div class="ew-add-div"><!-- page* -->
-<?php if ($Page->kode->Visible) { // kode ?>
-    <div id="r_kode"<?= $Page->kode->rowAttributes() ?>>
-        <label id="elh_matauang_kode" for="x_kode" class="<?= $Page->LeftColumnClass ?>"><?= $Page->kode->caption() ?><?= $Page->kode->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->kode->cellAttributes() ?>>
-<span id="el_matauang_kode">
-<input type="<?= $Page->kode->getInputTextType() ?>" name="x_kode" id="x_kode" data-table="matauang" data-field="x_kode" value="<?= $Page->kode->EditValue ?>" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->kode->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->kode->formatPattern()) ?>"<?= $Page->kode->editAttributes() ?> aria-describedby="x_kode_help">
-<?= $Page->kode->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->kode->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
 <?php if ($Page->nama->Visible) { // nama ?>
     <div id="r_nama"<?= $Page->nama->rowAttributes() ?>>
         <label id="elh_matauang_nama" for="x_nama" class="<?= $Page->LeftColumnClass ?>"><?= $Page->nama->caption() ?><?= $Page->nama->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -88,6 +76,18 @@ $Page->showMessage();
 <input type="<?= $Page->nama->getInputTextType() ?>" name="x_nama" id="x_nama" data-table="matauang" data-field="x_nama" value="<?= $Page->nama->EditValue ?>" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->nama->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->nama->formatPattern()) ?>"<?= $Page->nama->editAttributes() ?> aria-describedby="x_nama_help">
 <?= $Page->nama->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->nama->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->kode->Visible) { // kode ?>
+    <div id="r_kode"<?= $Page->kode->rowAttributes() ?>>
+        <label id="elh_matauang_kode" for="x_kode" class="<?= $Page->LeftColumnClass ?>"><?= $Page->kode->caption() ?><?= $Page->kode->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->kode->cellAttributes() ?>>
+<span id="el_matauang_kode">
+<input type="<?= $Page->kode->getInputTextType() ?>" name="x_kode" id="x_kode" data-table="matauang" data-field="x_kode" value="<?= $Page->kode->EditValue ?>" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->kode->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->kode->formatPattern()) ?>"<?= $Page->kode->editAttributes() ?> aria-describedby="x_kode_help">
+<?= $Page->kode->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->kode->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

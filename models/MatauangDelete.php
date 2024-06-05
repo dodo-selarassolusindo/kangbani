@@ -121,9 +121,9 @@ class MatauangDelete extends Matauang
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
-        $this->kode->setVisibility();
+        $this->id->Visible = false;
         $this->nama->setVisibility();
+        $this->kode->setVisibility();
     }
 
     // Constructor
@@ -577,8 +577,8 @@ class MatauangDelete extends Matauang
         // Call Row Selected event
         $this->rowSelected($row);
         $this->id->setDbValue($row['id']);
-        $this->kode->setDbValue($row['kode']);
         $this->nama->setDbValue($row['nama']);
+        $this->kode->setDbValue($row['kode']);
     }
 
     // Return a row with default values
@@ -586,8 +586,8 @@ class MatauangDelete extends Matauang
     {
         $row = [];
         $row['id'] = $this->id->DefaultValue;
-        $row['kode'] = $this->kode->DefaultValue;
         $row['nama'] = $this->nama->DefaultValue;
+        $row['kode'] = $this->kode->DefaultValue;
         return $row;
     }
 
@@ -605,32 +605,28 @@ class MatauangDelete extends Matauang
 
         // id
 
-        // kode
-
         // nama
+
+        // kode
 
         // View row
         if ($this->RowType == RowType::VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
 
+            // nama
+            $this->nama->ViewValue = $this->nama->CurrentValue;
+
             // kode
             $this->kode->ViewValue = $this->kode->CurrentValue;
 
             // nama
-            $this->nama->ViewValue = $this->nama->CurrentValue;
-
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
+            $this->nama->HrefValue = "";
+            $this->nama->TooltipValue = "";
 
             // kode
             $this->kode->HrefValue = "";
             $this->kode->TooltipValue = "";
-
-            // nama
-            $this->nama->HrefValue = "";
-            $this->nama->TooltipValue = "";
         }
 
         // Call Row Rendered event

@@ -50,14 +50,11 @@ $Page->showMessage();
 <table class="<?= $Page->TableClass ?>">
     <thead>
     <tr class="ew-table-header">
-<?php if ($Page->id->Visible) { // id ?>
-        <th class="<?= $Page->id->headerCellClass() ?>"><span id="elh_matauang_id" class="matauang_id"><?= $Page->id->caption() ?></span></th>
+<?php if ($Page->nama->Visible) { // nama ?>
+        <th class="<?= $Page->nama->headerCellClass() ?>"><span id="elh_matauang_nama" class="matauang_nama"><?= $Page->nama->caption() ?></span></th>
 <?php } ?>
 <?php if ($Page->kode->Visible) { // kode ?>
         <th class="<?= $Page->kode->headerCellClass() ?>"><span id="elh_matauang_kode" class="matauang_kode"><?= $Page->kode->caption() ?></span></th>
-<?php } ?>
-<?php if ($Page->nama->Visible) { // nama ?>
-        <th class="<?= $Page->nama->headerCellClass() ?>"><span id="elh_matauang_nama" class="matauang_nama"><?= $Page->nama->caption() ?></span></th>
 <?php } ?>
     </tr>
     </thead>
@@ -80,11 +77,11 @@ while ($Page->fetch()) {
     $Page->renderRow();
 ?>
     <tr <?= $Page->rowAttributes() ?>>
-<?php if ($Page->id->Visible) { // id ?>
-        <td<?= $Page->id->cellAttributes() ?>>
+<?php if ($Page->nama->Visible) { // nama ?>
+        <td<?= $Page->nama->cellAttributes() ?>>
 <span id="">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
+<span<?= $Page->nama->viewAttributes() ?>>
+<?= $Page->nama->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
@@ -93,14 +90,6 @@ while ($Page->fetch()) {
 <span id="">
 <span<?= $Page->kode->viewAttributes() ?>>
 <?= $Page->kode->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($Page->nama->Visible) { // nama ?>
-        <td<?= $Page->nama->cellAttributes() ?>>
-<span id="">
-<span<?= $Page->nama->viewAttributes() ?>>
-<?= $Page->nama->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

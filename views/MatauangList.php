@@ -155,14 +155,11 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->id->Visible) { // id ?>
-        <th data-name="id" class="<?= $Page->id->headerCellClass() ?>"><div id="elh_matauang_id" class="matauang_id"><?= $Page->renderFieldHeader($Page->id) ?></div></th>
+<?php if ($Page->nama->Visible) { // nama ?>
+        <th data-name="nama" class="<?= $Page->nama->headerCellClass() ?>"><div id="elh_matauang_nama" class="matauang_nama"><?= $Page->renderFieldHeader($Page->nama) ?></div></th>
 <?php } ?>
 <?php if ($Page->kode->Visible) { // kode ?>
         <th data-name="kode" class="<?= $Page->kode->headerCellClass() ?>"><div id="elh_matauang_kode" class="matauang_kode"><?= $Page->renderFieldHeader($Page->kode) ?></div></th>
-<?php } ?>
-<?php if ($Page->nama->Visible) { // nama ?>
-        <th data-name="nama" class="<?= $Page->nama->headerCellClass() ?>"><div id="elh_matauang_nama" class="matauang_nama"><?= $Page->renderFieldHeader($Page->nama) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -191,11 +188,11 @@ while ($Page->RecordCount < $Page->StopRecord || $Page->RowIndex === '$rowindex$
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->id->Visible) { // id ?>
-        <td data-name="id"<?= $Page->id->cellAttributes() ?>>
-<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_matauang_id" class="el_matauang_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
+    <?php if ($Page->nama->Visible) { // nama ?>
+        <td data-name="nama"<?= $Page->nama->cellAttributes() ?>>
+<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_matauang_nama" class="el_matauang_nama">
+<span<?= $Page->nama->viewAttributes() ?>>
+<?= $Page->nama->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
@@ -204,14 +201,6 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_matauang_kode" class="el_matauang_kode">
 <span<?= $Page->kode->viewAttributes() ?>>
 <?= $Page->kode->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->nama->Visible) { // nama ?>
-        <td data-name="nama"<?= $Page->nama->cellAttributes() ?>>
-<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_matauang_nama" class="el_matauang_nama">
-<span<?= $Page->nama->viewAttributes() ?>>
-<?= $Page->nama->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

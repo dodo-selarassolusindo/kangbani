@@ -122,8 +122,8 @@ class MatauangAdd extends Matauang
     public function setVisibility()
     {
         $this->id->Visible = false;
-        $this->kode->setVisibility();
         $this->nama->setVisibility();
+        $this->kode->setVisibility();
     }
 
     // Constructor
@@ -658,16 +658,6 @@ class MatauangAdd extends Matauang
         global $CurrentForm;
         $validate = !Config("SERVER_VALIDATE");
 
-        // Check field name 'kode' first before field var 'x_kode'
-        $val = $CurrentForm->hasValue("kode") ? $CurrentForm->getValue("kode") : $CurrentForm->getValue("x_kode");
-        if (!$this->kode->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->kode->Visible = false; // Disable update for API request
-            } else {
-                $this->kode->setFormValue($val);
-            }
-        }
-
         // Check field name 'nama' first before field var 'x_nama'
         $val = $CurrentForm->hasValue("nama") ? $CurrentForm->getValue("nama") : $CurrentForm->getValue("x_nama");
         if (!$this->nama->IsDetailKey) {
@@ -675,6 +665,16 @@ class MatauangAdd extends Matauang
                 $this->nama->Visible = false; // Disable update for API request
             } else {
                 $this->nama->setFormValue($val);
+            }
+        }
+
+        // Check field name 'kode' first before field var 'x_kode'
+        $val = $CurrentForm->hasValue("kode") ? $CurrentForm->getValue("kode") : $CurrentForm->getValue("x_kode");
+        if (!$this->kode->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->kode->Visible = false; // Disable update for API request
+            } else {
+                $this->kode->setFormValue($val);
             }
         }
 
@@ -686,8 +686,8 @@ class MatauangAdd extends Matauang
     public function restoreFormValues()
     {
         global $CurrentForm;
-        $this->kode->CurrentValue = $this->kode->FormValue;
         $this->nama->CurrentValue = $this->nama->FormValue;
+        $this->kode->CurrentValue = $this->kode->FormValue;
     }
 
     /**
@@ -729,8 +729,8 @@ class MatauangAdd extends Matauang
         // Call Row Selected event
         $this->rowSelected($row);
         $this->id->setDbValue($row['id']);
-        $this->kode->setDbValue($row['kode']);
         $this->nama->setDbValue($row['nama']);
+        $this->kode->setDbValue($row['kode']);
     }
 
     // Return a row with default values
@@ -738,8 +738,8 @@ class MatauangAdd extends Matauang
     {
         $row = [];
         $row['id'] = $this->id->DefaultValue;
-        $row['kode'] = $this->kode->DefaultValue;
         $row['nama'] = $this->nama->DefaultValue;
+        $row['kode'] = $this->kode->DefaultValue;
         return $row;
     }
 
@@ -777,37 +777,29 @@ class MatauangAdd extends Matauang
         // id
         $this->id->RowCssClass = "row";
 
-        // kode
-        $this->kode->RowCssClass = "row";
-
         // nama
         $this->nama->RowCssClass = "row";
+
+        // kode
+        $this->kode->RowCssClass = "row";
 
         // View row
         if ($this->RowType == RowType::VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
 
-            // kode
-            $this->kode->ViewValue = $this->kode->CurrentValue;
-
             // nama
             $this->nama->ViewValue = $this->nama->CurrentValue;
 
             // kode
-            $this->kode->HrefValue = "";
+            $this->kode->ViewValue = $this->kode->CurrentValue;
 
             // nama
             $this->nama->HrefValue = "";
-        } elseif ($this->RowType == RowType::ADD) {
-            // kode
-            $this->kode->setupEditAttributes();
-            if (!$this->kode->Raw) {
-                $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
-            }
-            $this->kode->EditValue = HtmlEncode($this->kode->CurrentValue);
-            $this->kode->PlaceHolder = RemoveHtml($this->kode->caption());
 
+            // kode
+            $this->kode->HrefValue = "";
+        } elseif ($this->RowType == RowType::ADD) {
             // nama
             $this->nama->setupEditAttributes();
             if (!$this->nama->Raw) {
@@ -816,13 +808,21 @@ class MatauangAdd extends Matauang
             $this->nama->EditValue = HtmlEncode($this->nama->CurrentValue);
             $this->nama->PlaceHolder = RemoveHtml($this->nama->caption());
 
-            // Add refer script
-
             // kode
-            $this->kode->HrefValue = "";
+            $this->kode->setupEditAttributes();
+            if (!$this->kode->Raw) {
+                $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
+            }
+            $this->kode->EditValue = HtmlEncode($this->kode->CurrentValue);
+            $this->kode->PlaceHolder = RemoveHtml($this->kode->caption());
+
+            // Add refer script
 
             // nama
             $this->nama->HrefValue = "";
+
+            // kode
+            $this->kode->HrefValue = "";
         }
         if ($this->RowType == RowType::ADD || $this->RowType == RowType::EDIT || $this->RowType == RowType::SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -844,14 +844,14 @@ class MatauangAdd extends Matauang
             return true;
         }
         $validateForm = true;
-            if ($this->kode->Visible && $this->kode->Required) {
-                if (!$this->kode->IsDetailKey && EmptyValue($this->kode->FormValue)) {
-                    $this->kode->addErrorMessage(str_replace("%s", $this->kode->caption(), $this->kode->RequiredErrorMessage));
-                }
-            }
             if ($this->nama->Visible && $this->nama->Required) {
                 if (!$this->nama->IsDetailKey && EmptyValue($this->nama->FormValue)) {
                     $this->nama->addErrorMessage(str_replace("%s", $this->nama->caption(), $this->nama->RequiredErrorMessage));
+                }
+            }
+            if ($this->kode->Visible && $this->kode->Required) {
+                if (!$this->kode->IsDetailKey && EmptyValue($this->kode->FormValue)) {
+                    $this->kode->addErrorMessage(str_replace("%s", $this->kode->caption(), $this->kode->RequiredErrorMessage));
                 }
             }
 
@@ -925,11 +925,11 @@ class MatauangAdd extends Matauang
         global $Security;
         $rsnew = [];
 
-        // kode
-        $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, false);
-
         // nama
         $this->nama->setDbValueDef($rsnew, $this->nama->CurrentValue, false);
+
+        // kode
+        $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, false);
         return $rsnew;
     }
 
@@ -939,11 +939,11 @@ class MatauangAdd extends Matauang
      */
     protected function restoreAddFormFromRow($row)
     {
-        if (isset($row['kode'])) { // kode
-            $this->kode->setFormValue($row['kode']);
-        }
         if (isset($row['nama'])) { // nama
             $this->nama->setFormValue($row['nama']);
+        }
+        if (isset($row['kode'])) { // kode
+            $this->kode->setFormValue($row['kode']);
         }
     }
 

@@ -56,13 +56,13 @@ loadjs.ready("head", function () {
 <input type="hidden" name="t" value="matauang">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <table class="<?= $Page->TableClass ?>">
-<?php if ($Page->id->Visible) { // id ?>
-    <tr id="r_id"<?= $Page->id->rowAttributes() ?>>
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_matauang_id"><?= $Page->id->caption() ?></span></td>
-        <td data-name="id"<?= $Page->id->cellAttributes() ?>>
-<span id="el_matauang_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
+<?php if ($Page->nama->Visible) { // nama ?>
+    <tr id="r_nama"<?= $Page->nama->rowAttributes() ?>>
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_matauang_nama"><?= $Page->nama->caption() ?></span></td>
+        <td data-name="nama"<?= $Page->nama->cellAttributes() ?>>
+<span id="el_matauang_nama">
+<span<?= $Page->nama->viewAttributes() ?>>
+<?= $Page->nama->getViewValue() ?></span>
 </span>
 </td>
     </tr>
@@ -74,17 +74,6 @@ loadjs.ready("head", function () {
 <span id="el_matauang_kode">
 <span<?= $Page->kode->viewAttributes() ?>>
 <?= $Page->kode->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
-<?php if ($Page->nama->Visible) { // nama ?>
-    <tr id="r_nama"<?= $Page->nama->rowAttributes() ?>>
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_matauang_nama"><?= $Page->nama->caption() ?></span></td>
-        <td data-name="nama"<?= $Page->nama->cellAttributes() ?>>
-<span id="el_matauang_nama">
-<span<?= $Page->nama->viewAttributes() ?>>
-<?= $Page->nama->getViewValue() ?></span>
 </span>
 </td>
     </tr>

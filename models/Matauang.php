@@ -47,8 +47,8 @@ class Matauang extends DbTable
 
     // Fields
     public $id;
-    public $kode;
     public $nama;
+    public $kode;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -122,28 +122,6 @@ class Matauang extends DbTable
         $this->id->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
         $this->Fields['id'] = &$this->id;
 
-        // kode
-        $this->kode = new DbField(
-            $this, // Table
-            'x_kode', // Variable name
-            'kode', // Name
-            '`kode`', // Expression
-            '`kode`', // Basic search expression
-            200, // Type
-            50, // Size
-            -1, // Date/Time format
-            false, // Is upload field
-            '`kode`', // Virtual expression
-            false, // Is virtual
-            false, // Force selection
-            false, // Is Virtual search
-            'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
-        );
-        $this->kode->InputTextType = "text";
-        $this->kode->SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY", "IS NULL", "IS NOT NULL"];
-        $this->Fields['kode'] = &$this->kode;
-
         // nama
         $this->nama = new DbField(
             $this, // Table
@@ -165,6 +143,28 @@ class Matauang extends DbTable
         $this->nama->InputTextType = "text";
         $this->nama->SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY", "IS NULL", "IS NOT NULL"];
         $this->Fields['nama'] = &$this->nama;
+
+        // kode
+        $this->kode = new DbField(
+            $this, // Table
+            'x_kode', // Variable name
+            'kode', // Name
+            '`kode`', // Expression
+            '`kode`', // Basic search expression
+            200, // Type
+            50, // Size
+            -1, // Date/Time format
+            false, // Is upload field
+            '`kode`', // Virtual expression
+            false, // Is virtual
+            false, // Force selection
+            false, // Is Virtual search
+            'FORMATTED TEXT', // View Tag
+            'TEXT' // Edit Tag
+        );
+        $this->kode->InputTextType = "text";
+        $this->kode->SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY", "IS NULL", "IS NOT NULL"];
+        $this->Fields['kode'] = &$this->kode;
 
         // Add Doctrine Cache
         $this->Cache = new \Symfony\Component\Cache\Adapter\ArrayAdapter();
@@ -685,8 +685,8 @@ class Matauang extends DbTable
             return;
         }
         $this->id->DbValue = $row['id'];
-        $this->kode->DbValue = $row['kode'];
         $this->nama->DbValue = $row['nama'];
+        $this->kode->DbValue = $row['kode'];
     }
 
     // Delete uploaded files
@@ -1047,8 +1047,8 @@ class Matauang extends DbTable
             return;
         }
         $this->id->setDbValue($row['id']);
-        $this->kode->setDbValue($row['kode']);
         $this->nama->setDbValue($row['nama']);
+        $this->kode->setDbValue($row['kode']);
     }
 
     // Render list content
@@ -1081,30 +1081,30 @@ class Matauang extends DbTable
 
         // id
 
-        // kode
-
         // nama
+
+        // kode
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
 
-        // kode
-        $this->kode->ViewValue = $this->kode->CurrentValue;
-
         // nama
         $this->nama->ViewValue = $this->nama->CurrentValue;
+
+        // kode
+        $this->kode->ViewValue = $this->kode->CurrentValue;
 
         // id
         $this->id->HrefValue = "";
         $this->id->TooltipValue = "";
 
-        // kode
-        $this->kode->HrefValue = "";
-        $this->kode->TooltipValue = "";
-
         // nama
         $this->nama->HrefValue = "";
         $this->nama->TooltipValue = "";
+
+        // kode
+        $this->kode->HrefValue = "";
+        $this->kode->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1125,14 +1125,6 @@ class Matauang extends DbTable
         $this->id->setupEditAttributes();
         $this->id->EditValue = $this->id->CurrentValue;
 
-        // kode
-        $this->kode->setupEditAttributes();
-        if (!$this->kode->Raw) {
-            $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
-        }
-        $this->kode->EditValue = $this->kode->CurrentValue;
-        $this->kode->PlaceHolder = RemoveHtml($this->kode->caption());
-
         // nama
         $this->nama->setupEditAttributes();
         if (!$this->nama->Raw) {
@@ -1140,6 +1132,14 @@ class Matauang extends DbTable
         }
         $this->nama->EditValue = $this->nama->CurrentValue;
         $this->nama->PlaceHolder = RemoveHtml($this->nama->caption());
+
+        // kode
+        $this->kode->setupEditAttributes();
+        if (!$this->kode->Raw) {
+            $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
+        }
+        $this->kode->EditValue = $this->kode->CurrentValue;
+        $this->kode->PlaceHolder = RemoveHtml($this->kode->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1169,13 +1169,12 @@ class Matauang extends DbTable
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->id);
-                    $doc->exportCaption($this->kode);
                     $doc->exportCaption($this->nama);
+                    $doc->exportCaption($this->kode);
                 } else {
                     $doc->exportCaption($this->id);
-                    $doc->exportCaption($this->kode);
                     $doc->exportCaption($this->nama);
+                    $doc->exportCaption($this->kode);
                 }
                 $doc->endExportRow();
             }
@@ -1202,13 +1201,12 @@ class Matauang extends DbTable
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->id);
-                        $doc->exportField($this->kode);
                         $doc->exportField($this->nama);
+                        $doc->exportField($this->kode);
                     } else {
                         $doc->exportField($this->id);
-                        $doc->exportField($this->kode);
                         $doc->exportField($this->nama);
+                        $doc->exportField($this->kode);
                     }
                     $doc->endExportRow($rowCnt);
                 }

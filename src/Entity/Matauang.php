@@ -34,10 +34,10 @@ class Matauang extends AbstractEntity
     private int $id;
 
     #[Column(type: "string", nullable: true)]
-    private ?string $kode;
+    private ?string $nama;
 
     #[Column(type: "string", nullable: true)]
-    private ?string $nama;
+    private ?string $kode;
 
     public function getId(): int
     {
@@ -50,17 +50,6 @@ class Matauang extends AbstractEntity
         return $this;
     }
 
-    public function getKode(): ?string
-    {
-        return HtmlDecode($this->kode);
-    }
-
-    public function setKode(?string $value): static
-    {
-        $this->kode = RemoveXss($value);
-        return $this;
-    }
-
     public function getNama(): ?string
     {
         return HtmlDecode($this->nama);
@@ -69,6 +58,17 @@ class Matauang extends AbstractEntity
     public function setNama(?string $value): static
     {
         $this->nama = RemoveXss($value);
+        return $this;
+    }
+
+    public function getKode(): ?string
+    {
+        return HtmlDecode($this->kode);
+    }
+
+    public function setKode(?string $value): static
+    {
+        $this->kode = RemoveXss($value);
         return $this;
     }
 }
