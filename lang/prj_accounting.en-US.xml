@@ -41,6 +41,9 @@
     <menu id="17">
       <phrase id="menutext" value="Satuan" />
     </menu>
+    <menu id="8">
+      <phrase id="menutext" value="Konversi" />
+    </menu>
     <menu id="3">
       <phrase id="menutext" value="Gudang" />
     </menu>
@@ -70,9 +73,6 @@
     </menu>
     <menu id="20">
       <phrase id="menutext" value="Term of Payment" />
-    </menu>
-    <menu id="8">
-      <phrase id="menutext" value="Konversi" />
     </menu>
     <menu id="9">
       <phrase id="menutext" value="Kurs" />
@@ -206,16 +206,16 @@
         <phrase id="fldcaption" value="id" />
       </field>
       <field id="satuan_id">
-        <phrase id="fldcaption" value="satuan id" />
+        <phrase id="fldcaption" value="Satuan 1" />
       </field>
       <field id="nilai">
-        <phrase id="fldcaption" value="nilai" />
+        <phrase id="fldcaption" value="Nilai" />
       </field>
       <field id="satuan_id2">
-        <phrase id="fldcaption" value="satuan id 2" />
+        <phrase id="fldcaption" value="Satuan 2" />
       </field>
       <field id="operasi">
-        <phrase id="fldcaption" value="operasi" />
+        <phrase id="fldcaption" value="Operasi" />
       </field>
       <field id="id_fk">
         <phrase id="fldcaption" value="id FK" />

@@ -91,9 +91,6 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->id->Visible) { // id ?>
-        <th data-name="id" class="<?= $Page->id->headerCellClass() ?>"><div id="elh_konversi_id" class="konversi_id"><?= $Page->renderFieldHeader($Page->id) ?></div></th>
-<?php } ?>
 <?php if ($Page->satuan_id->Visible) { // satuan_id ?>
         <th data-name="satuan_id" class="<?= $Page->satuan_id->headerCellClass() ?>"><div id="elh_konversi_satuan_id" class="konversi_satuan_id"><?= $Page->renderFieldHeader($Page->satuan_id) ?></div></th>
 <?php } ?>
@@ -105,9 +102,6 @@ $Page->ListOptions->render("header", "left");
 <?php } ?>
 <?php if ($Page->operasi->Visible) { // operasi ?>
         <th data-name="operasi" class="<?= $Page->operasi->headerCellClass() ?>"><div id="elh_konversi_operasi" class="konversi_operasi"><?= $Page->renderFieldHeader($Page->operasi) ?></div></th>
-<?php } ?>
-<?php if ($Page->id_FK->Visible) { // id_FK ?>
-        <th data-name="id_FK" class="<?= $Page->id_FK->headerCellClass() ?>"><div id="elh_konversi_id_FK" class="konversi_id_FK"><?= $Page->renderFieldHeader($Page->id_FK) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -136,14 +130,6 @@ while ($Page->RecordCount < $Page->StopRecord || $Page->RowIndex === '$rowindex$
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->id->Visible) { // id ?>
-        <td data-name="id"<?= $Page->id->cellAttributes() ?>>
-<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_konversi_id" class="el_konversi_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
     <?php if ($Page->satuan_id->Visible) { // satuan_id ?>
         <td data-name="satuan_id"<?= $Page->satuan_id->cellAttributes() ?>>
 <span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_konversi_satuan_id" class="el_konversi_satuan_id">
@@ -173,14 +159,6 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_konversi_operasi" class="el_konversi_operasi">
 <span<?= $Page->operasi->viewAttributes() ?>>
 <?= $Page->operasi->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->id_FK->Visible) { // id_FK ?>
-        <td data-name="id_FK"<?= $Page->id_FK->cellAttributes() ?>>
-<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_konversi_id_FK" class="el_konversi_id_FK">
-<span<?= $Page->id_FK->viewAttributes() ?>>
-<?= $Page->id_FK->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

@@ -121,12 +121,12 @@ class KonversiDelete extends Konversi
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->satuan_id->setVisibility();
         $this->nilai->setVisibility();
         $this->satuan_id2->setVisibility();
         $this->operasi->setVisibility();
-        $this->id_FK->setVisibility();
+        $this->id_FK->Visible = false;
     }
 
     // Constructor
@@ -400,6 +400,10 @@ class KonversiDelete extends Konversi
             $this->InlineDelete = true;
         }
 
+        // Set up lookup cache
+        $this->setupLookupOptions($this->satuan_id);
+        $this->setupLookupOptions($this->satuan_id2);
+
         // Set up Breadcrumb
         $this->setupBreadcrumb();
 
@@ -630,16 +634,54 @@ class KonversiDelete extends Konversi
             $this->id->ViewValue = $this->id->CurrentValue;
 
             // satuan_id
-            $this->satuan_id->ViewValue = $this->satuan_id->CurrentValue;
-            $this->satuan_id->ViewValue = FormatNumber($this->satuan_id->ViewValue, $this->satuan_id->formatPattern());
+            $curVal = strval($this->satuan_id->CurrentValue);
+            if ($curVal != "") {
+                $this->satuan_id->ViewValue = $this->satuan_id->lookupCacheOption($curVal);
+                if ($this->satuan_id->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->satuan_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->satuan_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->satuan_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->satuan_id->Lookup->renderViewRow($rswrk[0]);
+                        $this->satuan_id->ViewValue = $this->satuan_id->displayValue($arwrk);
+                    } else {
+                        $this->satuan_id->ViewValue = FormatNumber($this->satuan_id->CurrentValue, $this->satuan_id->formatPattern());
+                    }
+                }
+            } else {
+                $this->satuan_id->ViewValue = null;
+            }
 
             // nilai
             $this->nilai->ViewValue = $this->nilai->CurrentValue;
             $this->nilai->ViewValue = FormatNumber($this->nilai->ViewValue, $this->nilai->formatPattern());
 
             // satuan_id2
-            $this->satuan_id2->ViewValue = $this->satuan_id2->CurrentValue;
-            $this->satuan_id2->ViewValue = FormatNumber($this->satuan_id2->ViewValue, $this->satuan_id2->formatPattern());
+            $curVal = strval($this->satuan_id2->CurrentValue);
+            if ($curVal != "") {
+                $this->satuan_id2->ViewValue = $this->satuan_id2->lookupCacheOption($curVal);
+                if ($this->satuan_id2->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->satuan_id2->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->satuan_id2->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->satuan_id2->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->satuan_id2->Lookup->renderViewRow($rswrk[0]);
+                        $this->satuan_id2->ViewValue = $this->satuan_id2->displayValue($arwrk);
+                    } else {
+                        $this->satuan_id2->ViewValue = FormatNumber($this->satuan_id2->CurrentValue, $this->satuan_id2->formatPattern());
+                    }
+                }
+            } else {
+                $this->satuan_id2->ViewValue = null;
+            }
 
             // operasi
             $this->operasi->ViewValue = $this->operasi->CurrentValue;
@@ -648,10 +690,6 @@ class KonversiDelete extends Konversi
             // id_FK
             $this->id_FK->ViewValue = $this->id_FK->CurrentValue;
             $this->id_FK->ViewValue = FormatNumber($this->id_FK->ViewValue, $this->id_FK->formatPattern());
-
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // satuan_id
             $this->satuan_id->HrefValue = "";
@@ -668,10 +706,6 @@ class KonversiDelete extends Konversi
             // operasi
             $this->operasi->HrefValue = "";
             $this->operasi->TooltipValue = "";
-
-            // id_FK
-            $this->id_FK->HrefValue = "";
-            $this->id_FK->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -799,6 +833,10 @@ class KonversiDelete extends Konversi
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_satuan_id":
+                    break;
+                case "x_satuan_id2":
+                    break;
                 default:
                     $lookupFilter = "";
                     break;

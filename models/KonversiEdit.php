@@ -121,12 +121,12 @@ class KonversiEdit extends Konversi
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->satuan_id->setVisibility();
         $this->nilai->setVisibility();
         $this->satuan_id2->setVisibility();
         $this->operasi->setVisibility();
-        $this->id_FK->setVisibility();
+        $this->id_FK->Visible = false;
     }
 
     // Constructor
@@ -511,6 +511,10 @@ class KonversiEdit extends Konversi
             $this->InlineDelete = true;
         }
 
+        // Set up lookup cache
+        $this->setupLookupOptions($this->satuan_id);
+        $this->setupLookupOptions($this->satuan_id2);
+
         // Check modal
         if ($this->IsModal) {
             $SkipHeaderFooter = true;
@@ -751,19 +755,13 @@ class KonversiEdit extends Konversi
         global $CurrentForm;
         $validate = !Config("SERVER_VALIDATE");
 
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            $this->id->setFormValue($val);
-        }
-
         // Check field name 'satuan_id' first before field var 'x_satuan_id'
         $val = $CurrentForm->hasValue("satuan_id") ? $CurrentForm->getValue("satuan_id") : $CurrentForm->getValue("x_satuan_id");
         if (!$this->satuan_id->IsDetailKey) {
             if (IsApi() && $val === null) {
                 $this->satuan_id->Visible = false; // Disable update for API request
             } else {
-                $this->satuan_id->setFormValue($val, true, $validate);
+                $this->satuan_id->setFormValue($val);
             }
         }
 
@@ -783,7 +781,7 @@ class KonversiEdit extends Konversi
             if (IsApi() && $val === null) {
                 $this->satuan_id2->Visible = false; // Disable update for API request
             } else {
-                $this->satuan_id2->setFormValue($val, true, $validate);
+                $this->satuan_id2->setFormValue($val);
             }
         }
 
@@ -797,14 +795,10 @@ class KonversiEdit extends Konversi
             }
         }
 
-        // Check field name 'id_FK' first before field var 'x_id_FK'
-        $val = $CurrentForm->hasValue("id_FK") ? $CurrentForm->getValue("id_FK") : $CurrentForm->getValue("x_id_FK");
-        if (!$this->id_FK->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->id_FK->Visible = false; // Disable update for API request
-            } else {
-                $this->id_FK->setFormValue($val, true, $validate);
-            }
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        if (!$this->id->IsDetailKey) {
+            $this->id->setFormValue($val);
         }
     }
 
@@ -817,7 +811,6 @@ class KonversiEdit extends Konversi
         $this->nilai->CurrentValue = $this->nilai->FormValue;
         $this->satuan_id2->CurrentValue = $this->satuan_id2->FormValue;
         $this->operasi->CurrentValue = $this->operasi->FormValue;
-        $this->id_FK->CurrentValue = $this->id_FK->FormValue;
     }
 
     /**
@@ -989,16 +982,54 @@ class KonversiEdit extends Konversi
             $this->id->ViewValue = $this->id->CurrentValue;
 
             // satuan_id
-            $this->satuan_id->ViewValue = $this->satuan_id->CurrentValue;
-            $this->satuan_id->ViewValue = FormatNumber($this->satuan_id->ViewValue, $this->satuan_id->formatPattern());
+            $curVal = strval($this->satuan_id->CurrentValue);
+            if ($curVal != "") {
+                $this->satuan_id->ViewValue = $this->satuan_id->lookupCacheOption($curVal);
+                if ($this->satuan_id->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->satuan_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->satuan_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->satuan_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->satuan_id->Lookup->renderViewRow($rswrk[0]);
+                        $this->satuan_id->ViewValue = $this->satuan_id->displayValue($arwrk);
+                    } else {
+                        $this->satuan_id->ViewValue = FormatNumber($this->satuan_id->CurrentValue, $this->satuan_id->formatPattern());
+                    }
+                }
+            } else {
+                $this->satuan_id->ViewValue = null;
+            }
 
             // nilai
             $this->nilai->ViewValue = $this->nilai->CurrentValue;
             $this->nilai->ViewValue = FormatNumber($this->nilai->ViewValue, $this->nilai->formatPattern());
 
             // satuan_id2
-            $this->satuan_id2->ViewValue = $this->satuan_id2->CurrentValue;
-            $this->satuan_id2->ViewValue = FormatNumber($this->satuan_id2->ViewValue, $this->satuan_id2->formatPattern());
+            $curVal = strval($this->satuan_id2->CurrentValue);
+            if ($curVal != "") {
+                $this->satuan_id2->ViewValue = $this->satuan_id2->lookupCacheOption($curVal);
+                if ($this->satuan_id2->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->satuan_id2->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->satuan_id2->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->satuan_id2->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->satuan_id2->Lookup->renderViewRow($rswrk[0]);
+                        $this->satuan_id2->ViewValue = $this->satuan_id2->displayValue($arwrk);
+                    } else {
+                        $this->satuan_id2->ViewValue = FormatNumber($this->satuan_id2->CurrentValue, $this->satuan_id2->formatPattern());
+                    }
+                }
+            } else {
+                $this->satuan_id2->ViewValue = null;
+            }
 
             // operasi
             $this->operasi->ViewValue = $this->operasi->CurrentValue;
@@ -1007,9 +1038,6 @@ class KonversiEdit extends Konversi
             // id_FK
             $this->id_FK->ViewValue = $this->id_FK->CurrentValue;
             $this->id_FK->ViewValue = FormatNumber($this->id_FK->ViewValue, $this->id_FK->formatPattern());
-
-            // id
-            $this->id->HrefValue = "";
 
             // satuan_id
             $this->satuan_id->HrefValue = "";
@@ -1022,21 +1050,36 @@ class KonversiEdit extends Konversi
 
             // operasi
             $this->operasi->HrefValue = "";
-
-            // id_FK
-            $this->id_FK->HrefValue = "";
         } elseif ($this->RowType == RowType::EDIT) {
-            // id
-            $this->id->setupEditAttributes();
-            $this->id->EditValue = $this->id->CurrentValue;
-
             // satuan_id
             $this->satuan_id->setupEditAttributes();
-            $this->satuan_id->EditValue = $this->satuan_id->CurrentValue;
-            $this->satuan_id->PlaceHolder = RemoveHtml($this->satuan_id->caption());
-            if (strval($this->satuan_id->EditValue) != "" && is_numeric($this->satuan_id->EditValue)) {
-                $this->satuan_id->EditValue = FormatNumber($this->satuan_id->EditValue, null);
+            $curVal = trim(strval($this->satuan_id->CurrentValue));
+            if ($curVal != "") {
+                $this->satuan_id->ViewValue = $this->satuan_id->lookupCacheOption($curVal);
+            } else {
+                $this->satuan_id->ViewValue = $this->satuan_id->Lookup !== null && is_array($this->satuan_id->lookupOptions()) && count($this->satuan_id->lookupOptions()) > 0 ? $curVal : null;
             }
+            if ($this->satuan_id->ViewValue !== null) { // Load from cache
+                $this->satuan_id->EditValue = array_values($this->satuan_id->lookupOptions());
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = SearchFilter($this->satuan_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $this->satuan_id->CurrentValue, $this->satuan_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                }
+                $sqlWrk = $this->satuan_id->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                foreach ($arwrk as &$row) {
+                    $row = $this->satuan_id->Lookup->renderViewRow($row);
+                }
+                $this->satuan_id->EditValue = $arwrk;
+            }
+            $this->satuan_id->PlaceHolder = RemoveHtml($this->satuan_id->caption());
 
             // nilai
             $this->nilai->setupEditAttributes();
@@ -1048,11 +1091,33 @@ class KonversiEdit extends Konversi
 
             // satuan_id2
             $this->satuan_id2->setupEditAttributes();
-            $this->satuan_id2->EditValue = $this->satuan_id2->CurrentValue;
-            $this->satuan_id2->PlaceHolder = RemoveHtml($this->satuan_id2->caption());
-            if (strval($this->satuan_id2->EditValue) != "" && is_numeric($this->satuan_id2->EditValue)) {
-                $this->satuan_id2->EditValue = FormatNumber($this->satuan_id2->EditValue, null);
+            $curVal = trim(strval($this->satuan_id2->CurrentValue));
+            if ($curVal != "") {
+                $this->satuan_id2->ViewValue = $this->satuan_id2->lookupCacheOption($curVal);
+            } else {
+                $this->satuan_id2->ViewValue = $this->satuan_id2->Lookup !== null && is_array($this->satuan_id2->lookupOptions()) && count($this->satuan_id2->lookupOptions()) > 0 ? $curVal : null;
             }
+            if ($this->satuan_id2->ViewValue !== null) { // Load from cache
+                $this->satuan_id2->EditValue = array_values($this->satuan_id2->lookupOptions());
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = SearchFilter($this->satuan_id2->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $this->satuan_id2->CurrentValue, $this->satuan_id2->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                }
+                $sqlWrk = $this->satuan_id2->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                foreach ($arwrk as &$row) {
+                    $row = $this->satuan_id2->Lookup->renderViewRow($row);
+                }
+                $this->satuan_id2->EditValue = $arwrk;
+            }
+            $this->satuan_id2->PlaceHolder = RemoveHtml($this->satuan_id2->caption());
 
             // operasi
             $this->operasi->setupEditAttributes();
@@ -1062,18 +1127,7 @@ class KonversiEdit extends Konversi
                 $this->operasi->EditValue = FormatNumber($this->operasi->EditValue, null);
             }
 
-            // id_FK
-            $this->id_FK->setupEditAttributes();
-            $this->id_FK->EditValue = $this->id_FK->CurrentValue;
-            $this->id_FK->PlaceHolder = RemoveHtml($this->id_FK->caption());
-            if (strval($this->id_FK->EditValue) != "" && is_numeric($this->id_FK->EditValue)) {
-                $this->id_FK->EditValue = FormatNumber($this->id_FK->EditValue, null);
-            }
-
             // Edit refer script
-
-            // id
-            $this->id->HrefValue = "";
 
             // satuan_id
             $this->satuan_id->HrefValue = "";
@@ -1086,9 +1140,6 @@ class KonversiEdit extends Konversi
 
             // operasi
             $this->operasi->HrefValue = "";
-
-            // id_FK
-            $this->id_FK->HrefValue = "";
         }
         if ($this->RowType == RowType::ADD || $this->RowType == RowType::EDIT || $this->RowType == RowType::SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1110,18 +1161,10 @@ class KonversiEdit extends Konversi
             return true;
         }
         $validateForm = true;
-            if ($this->id->Visible && $this->id->Required) {
-                if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
-                    $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
-                }
-            }
             if ($this->satuan_id->Visible && $this->satuan_id->Required) {
                 if (!$this->satuan_id->IsDetailKey && EmptyValue($this->satuan_id->FormValue)) {
                     $this->satuan_id->addErrorMessage(str_replace("%s", $this->satuan_id->caption(), $this->satuan_id->RequiredErrorMessage));
                 }
-            }
-            if (!CheckInteger($this->satuan_id->FormValue)) {
-                $this->satuan_id->addErrorMessage($this->satuan_id->getErrorMessage(false));
             }
             if ($this->nilai->Visible && $this->nilai->Required) {
                 if (!$this->nilai->IsDetailKey && EmptyValue($this->nilai->FormValue)) {
@@ -1136,9 +1179,6 @@ class KonversiEdit extends Konversi
                     $this->satuan_id2->addErrorMessage(str_replace("%s", $this->satuan_id2->caption(), $this->satuan_id2->RequiredErrorMessage));
                 }
             }
-            if (!CheckInteger($this->satuan_id2->FormValue)) {
-                $this->satuan_id2->addErrorMessage($this->satuan_id2->getErrorMessage(false));
-            }
             if ($this->operasi->Visible && $this->operasi->Required) {
                 if (!$this->operasi->IsDetailKey && EmptyValue($this->operasi->FormValue)) {
                     $this->operasi->addErrorMessage(str_replace("%s", $this->operasi->caption(), $this->operasi->RequiredErrorMessage));
@@ -1146,14 +1186,6 @@ class KonversiEdit extends Konversi
             }
             if (!CheckInteger($this->operasi->FormValue)) {
                 $this->operasi->addErrorMessage($this->operasi->getErrorMessage(false));
-            }
-            if ($this->id_FK->Visible && $this->id_FK->Required) {
-                if (!$this->id_FK->IsDetailKey && EmptyValue($this->id_FK->FormValue)) {
-                    $this->id_FK->addErrorMessage(str_replace("%s", $this->id_FK->caption(), $this->id_FK->RequiredErrorMessage));
-                }
-            }
-            if (!CheckInteger($this->id_FK->FormValue)) {
-                $this->id_FK->addErrorMessage($this->id_FK->getErrorMessage(false));
             }
 
         // Return validate result
@@ -1255,9 +1287,6 @@ class KonversiEdit extends Konversi
 
         // operasi
         $this->operasi->setDbValueDef($rsnew, $this->operasi->CurrentValue, $this->operasi->ReadOnly);
-
-        // id_FK
-        $this->id_FK->setDbValueDef($rsnew, $this->id_FK->CurrentValue, $this->id_FK->ReadOnly);
         return $rsnew;
     }
 
@@ -1278,9 +1307,6 @@ class KonversiEdit extends Konversi
         }
         if (isset($row['operasi'])) { // operasi
             $this->operasi->CurrentValue = $row['operasi'];
-        }
-        if (isset($row['id_FK'])) { // id_FK
-            $this->id_FK->CurrentValue = $row['id_FK'];
         }
     }
 
@@ -1308,6 +1334,10 @@ class KonversiEdit extends Konversi
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_satuan_id":
+                    break;
+                case "x_satuan_id2":
+                    break;
                 default:
                     $lookupFilter = "";
                     break;

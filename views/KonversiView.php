@@ -56,17 +56,6 @@ loadjs.ready("head", function () {
 <input type="hidden" name="t" value="konversi">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <table class="<?= $Page->TableClass ?>">
-<?php if ($Page->id->Visible) { // id ?>
-    <tr id="r_id"<?= $Page->id->rowAttributes() ?>>
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_konversi_id"><?= $Page->id->caption() ?></span></td>
-        <td data-name="id"<?= $Page->id->cellAttributes() ?>>
-<span id="el_konversi_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
 <?php if ($Page->satuan_id->Visible) { // satuan_id ?>
     <tr id="r_satuan_id"<?= $Page->satuan_id->rowAttributes() ?>>
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_konversi_satuan_id"><?= $Page->satuan_id->caption() ?></span></td>
@@ -107,17 +96,6 @@ loadjs.ready("head", function () {
 <span id="el_konversi_operasi">
 <span<?= $Page->operasi->viewAttributes() ?>>
 <?= $Page->operasi->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
-<?php if ($Page->id_FK->Visible) { // id_FK ?>
-    <tr id="r_id_FK"<?= $Page->id_FK->rowAttributes() ?>>
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_konversi_id_FK"><?= $Page->id_FK->caption() ?></span></td>
-        <td data-name="id_FK"<?= $Page->id_FK->cellAttributes() ?>>
-<span id="el_konversi_id_FK">
-<span<?= $Page->id_FK->viewAttributes() ?>>
-<?= $Page->id_FK->getViewValue() ?></span>
 </span>
 </td>
     </tr>

@@ -141,12 +141,16 @@ class Konversi extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'SELECT' // Edit Tag
         );
         $this->satuan_id->InputTextType = "text";
         $this->satuan_id->Raw = true;
+        $this->satuan_id->setSelectMultiple(false); // Select one
+        $this->satuan_id->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->satuan_id->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->satuan_id->Lookup = new Lookup($this->satuan_id, 'satuan', false, 'id', ["kode","nama","unitdasar",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(`kode`, ''),'" . ValueSeparator(1, $this->satuan_id) . "',COALESCE(`nama`,''),'" . ValueSeparator(2, $this->satuan_id) . "',COALESCE(`unitdasar`,''))");
         $this->satuan_id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->satuan_id->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
+        $this->satuan_id->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
         $this->Fields['satuan_id'] = &$this->satuan_id;
 
         // nilai
@@ -189,12 +193,16 @@ class Konversi extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'SELECT' // Edit Tag
         );
         $this->satuan_id2->InputTextType = "text";
         $this->satuan_id2->Raw = true;
+        $this->satuan_id2->setSelectMultiple(false); // Select one
+        $this->satuan_id2->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->satuan_id2->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->satuan_id2->Lookup = new Lookup($this->satuan_id2, 'satuan', false, 'id', ["kode","nama","unitdasar",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(`kode`, ''),'" . ValueSeparator(1, $this->satuan_id2) . "',COALESCE(`nama`,''),'" . ValueSeparator(2, $this->satuan_id2) . "',COALESCE(`unitdasar`,''))");
         $this->satuan_id2->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->satuan_id2->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
+        $this->satuan_id2->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
         $this->Fields['satuan_id2'] = &$this->satuan_id2;
 
         // operasi
@@ -1183,16 +1191,54 @@ class Konversi extends DbTable
         $this->id->ViewValue = $this->id->CurrentValue;
 
         // satuan_id
-        $this->satuan_id->ViewValue = $this->satuan_id->CurrentValue;
-        $this->satuan_id->ViewValue = FormatNumber($this->satuan_id->ViewValue, $this->satuan_id->formatPattern());
+        $curVal = strval($this->satuan_id->CurrentValue);
+        if ($curVal != "") {
+            $this->satuan_id->ViewValue = $this->satuan_id->lookupCacheOption($curVal);
+            if ($this->satuan_id->ViewValue === null) { // Lookup from database
+                $filterWrk = SearchFilter($this->satuan_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->satuan_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                $sqlWrk = $this->satuan_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->satuan_id->Lookup->renderViewRow($rswrk[0]);
+                    $this->satuan_id->ViewValue = $this->satuan_id->displayValue($arwrk);
+                } else {
+                    $this->satuan_id->ViewValue = FormatNumber($this->satuan_id->CurrentValue, $this->satuan_id->formatPattern());
+                }
+            }
+        } else {
+            $this->satuan_id->ViewValue = null;
+        }
 
         // nilai
         $this->nilai->ViewValue = $this->nilai->CurrentValue;
         $this->nilai->ViewValue = FormatNumber($this->nilai->ViewValue, $this->nilai->formatPattern());
 
         // satuan_id2
-        $this->satuan_id2->ViewValue = $this->satuan_id2->CurrentValue;
-        $this->satuan_id2->ViewValue = FormatNumber($this->satuan_id2->ViewValue, $this->satuan_id2->formatPattern());
+        $curVal = strval($this->satuan_id2->CurrentValue);
+        if ($curVal != "") {
+            $this->satuan_id2->ViewValue = $this->satuan_id2->lookupCacheOption($curVal);
+            if ($this->satuan_id2->ViewValue === null) { // Lookup from database
+                $filterWrk = SearchFilter($this->satuan_id2->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->satuan_id2->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                $sqlWrk = $this->satuan_id2->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->satuan_id2->Lookup->renderViewRow($rswrk[0]);
+                    $this->satuan_id2->ViewValue = $this->satuan_id2->displayValue($arwrk);
+                } else {
+                    $this->satuan_id2->ViewValue = FormatNumber($this->satuan_id2->CurrentValue, $this->satuan_id2->formatPattern());
+                }
+            }
+        } else {
+            $this->satuan_id2->ViewValue = null;
+        }
 
         // operasi
         $this->operasi->ViewValue = $this->operasi->CurrentValue;
@@ -1247,11 +1293,7 @@ class Konversi extends DbTable
 
         // satuan_id
         $this->satuan_id->setupEditAttributes();
-        $this->satuan_id->EditValue = $this->satuan_id->CurrentValue;
         $this->satuan_id->PlaceHolder = RemoveHtml($this->satuan_id->caption());
-        if (strval($this->satuan_id->EditValue) != "" && is_numeric($this->satuan_id->EditValue)) {
-            $this->satuan_id->EditValue = FormatNumber($this->satuan_id->EditValue, null);
-        }
 
         // nilai
         $this->nilai->setupEditAttributes();
@@ -1263,11 +1305,7 @@ class Konversi extends DbTable
 
         // satuan_id2
         $this->satuan_id2->setupEditAttributes();
-        $this->satuan_id2->EditValue = $this->satuan_id2->CurrentValue;
         $this->satuan_id2->PlaceHolder = RemoveHtml($this->satuan_id2->caption());
-        if (strval($this->satuan_id2->EditValue) != "" && is_numeric($this->satuan_id2->EditValue)) {
-            $this->satuan_id2->EditValue = FormatNumber($this->satuan_id2->EditValue, null);
-        }
 
         // operasi
         $this->operasi->setupEditAttributes();
@@ -1313,12 +1351,10 @@ class Konversi extends DbTable
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->id);
                     $doc->exportCaption($this->satuan_id);
                     $doc->exportCaption($this->nilai);
                     $doc->exportCaption($this->satuan_id2);
                     $doc->exportCaption($this->operasi);
-                    $doc->exportCaption($this->id_FK);
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->satuan_id);
@@ -1352,12 +1388,10 @@ class Konversi extends DbTable
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->id);
                         $doc->exportField($this->satuan_id);
                         $doc->exportField($this->nilai);
                         $doc->exportField($this->satuan_id2);
                         $doc->exportField($this->operasi);
-                        $doc->exportField($this->id_FK);
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->satuan_id);

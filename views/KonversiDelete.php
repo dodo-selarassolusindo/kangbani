@@ -50,9 +50,6 @@ $Page->showMessage();
 <table class="<?= $Page->TableClass ?>">
     <thead>
     <tr class="ew-table-header">
-<?php if ($Page->id->Visible) { // id ?>
-        <th class="<?= $Page->id->headerCellClass() ?>"><span id="elh_konversi_id" class="konversi_id"><?= $Page->id->caption() ?></span></th>
-<?php } ?>
 <?php if ($Page->satuan_id->Visible) { // satuan_id ?>
         <th class="<?= $Page->satuan_id->headerCellClass() ?>"><span id="elh_konversi_satuan_id" class="konversi_satuan_id"><?= $Page->satuan_id->caption() ?></span></th>
 <?php } ?>
@@ -64,9 +61,6 @@ $Page->showMessage();
 <?php } ?>
 <?php if ($Page->operasi->Visible) { // operasi ?>
         <th class="<?= $Page->operasi->headerCellClass() ?>"><span id="elh_konversi_operasi" class="konversi_operasi"><?= $Page->operasi->caption() ?></span></th>
-<?php } ?>
-<?php if ($Page->id_FK->Visible) { // id_FK ?>
-        <th class="<?= $Page->id_FK->headerCellClass() ?>"><span id="elh_konversi_id_FK" class="konversi_id_FK"><?= $Page->id_FK->caption() ?></span></th>
 <?php } ?>
     </tr>
     </thead>
@@ -89,14 +83,6 @@ while ($Page->fetch()) {
     $Page->renderRow();
 ?>
     <tr <?= $Page->rowAttributes() ?>>
-<?php if ($Page->id->Visible) { // id ?>
-        <td<?= $Page->id->cellAttributes() ?>>
-<span id="">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($Page->satuan_id->Visible) { // satuan_id ?>
         <td<?= $Page->satuan_id->cellAttributes() ?>>
 <span id="">
@@ -126,14 +112,6 @@ while ($Page->fetch()) {
 <span id="">
 <span<?= $Page->operasi->viewAttributes() ?>>
 <?= $Page->operasi->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($Page->id_FK->Visible) { // id_FK ?>
-        <td<?= $Page->id_FK->cellAttributes() ?>>
-<span id="">
-<span<?= $Page->id_FK->viewAttributes() ?>>
-<?= $Page->id_FK->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
