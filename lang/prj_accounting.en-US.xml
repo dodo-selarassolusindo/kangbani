@@ -134,22 +134,22 @@
         <phrase id="fldcaption" value="id" />
       </field>
       <field id="tipejurnal_id">
-        <phrase id="fldcaption" value="tipejurnal id" />
+        <phrase id="fldcaption" value="Tipe Jurnal" />
       </field>
       <field id="period_id">
-        <phrase id="fldcaption" value="period id" />
+        <phrase id="fldcaption" value="Period" />
       </field>
       <field id="createon">
-        <phrase id="fldcaption" value="createon" />
+        <phrase id="fldcaption" value="Create On" />
       </field>
       <field id="keterangan">
-        <phrase id="fldcaption" value="keterangan" />
+        <phrase id="fldcaption" value="Keterangan" />
       </field>
       <field id="person_id">
-        <phrase id="fldcaption" value="person id" />
+        <phrase id="fldcaption" value="Person" />
       </field>
       <field id="nomer">
-        <phrase id="fldcaption" value="nomer" />
+        <phrase id="fldcaption" value="Nomer" />
       </field>
     </table>
     <table id="jurnald">

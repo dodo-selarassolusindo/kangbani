@@ -150,7 +150,7 @@ class Jurnal extends DbTable
         $this->tipejurnal_id->setSelectMultiple(false); // Select one
         $this->tipejurnal_id->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->tipejurnal_id->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        $this->tipejurnal_id->Lookup = new Lookup($this->tipejurnal_id, 'tipejurnal', false, 'id', ["kode","nama","",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(`kode`, ''),'" . ValueSeparator(1, $this->tipejurnal_id) . "',COALESCE(`nama`,''))");
+        $this->tipejurnal_id->Lookup = new Lookup($this->tipejurnal_id, 'tipejurnal', false, 'id', ["nama","","",""], '', '', [], [], [], [], [], [], false, '', '', "`nama`");
         $this->tipejurnal_id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->tipejurnal_id->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
         $this->Fields['tipejurnal_id'] = &$this->tipejurnal_id;
@@ -189,10 +189,10 @@ class Jurnal extends DbTable
             'x_createon', // Variable name
             'createon', // Name
             '`createon`', // Expression
-            CastDateFieldForLike("`createon`", 0, "DB"), // Basic search expression
+            CastDateFieldForLike("`createon`", 7, "DB"), // Basic search expression
             135, // Type
             19, // Size
-            0, // Date/Time format
+            7, // Date/Time format
             false, // Is upload field
             '`createon`', // Virtual expression
             false, // Is virtual
@@ -204,7 +204,7 @@ class Jurnal extends DbTable
         $this->createon->addMethod("getAutoUpdateValue", fn() => CurrentDateTime());
         $this->createon->InputTextType = "text";
         $this->createon->Raw = true;
-        $this->createon->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->createon->DefaultErrorMessage = str_replace("%s", DateFormat(7), $Language->phrase("IncorrectDate"));
         $this->createon->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
         $this->Fields['createon'] = &$this->createon;
 
