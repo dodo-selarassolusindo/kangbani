@@ -14,6 +14,9 @@
     <menu id="13">
       <phrase id="menutext" value="Periode" />
     </menu>
+    <menu id="10">
+      <phrase id="menutext" value="Mata Uang" />
+    </menu>
     <menu id="2">
       <phrase id="menutext" value="Grup" />
     </menu>
@@ -26,23 +29,8 @@
     <menu id="16">
       <phrase id="menutext" value="Saldo Awal" />
     </menu>
-    <menu id="10">
-      <phrase id="menutext" value="Mata Uang" />
-    </menu>
     <menu id="19">
       <phrase id="menutext" value="Tipe Jurnal" />
-    </menu>
-    <menu id="22">
-      <phrase id="menutext" value="Type" />
-    </menu>
-    <menu id="7">
-      <phrase id="menutext" value="Klasifikasi" />
-    </menu>
-    <menu id="12">
-      <phrase id="menutext" value="Pengiriman" />
-    </menu>
-    <menu id="14">
-      <phrase id="menutext" value="Person" />
     </menu>
     <menu id="83">
       <phrase id="menutext" value="Barang" />
@@ -58,6 +46,18 @@
     </menu>
     <menu id="15">
       <phrase id="menutext" value="Produk" />
+    </menu>
+    <menu id="22">
+      <phrase id="menutext" value="Type" />
+    </menu>
+    <menu id="7">
+      <phrase id="menutext" value="Klasifikasi" />
+    </menu>
+    <menu id="12">
+      <phrase id="menutext" value="Pengiriman" />
+    </menu>
+    <menu id="14">
+      <phrase id="menutext" value="Person" />
     </menu>
     <menu id="74">
       <phrase id="menutext" value="Setting" />
