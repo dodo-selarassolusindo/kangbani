@@ -34,7 +34,7 @@ loadjs.ready(["wrapper", "head"], function () {
             ["kode", [fields.kode.visible && fields.kode.required ? ew.Validators.required(fields.kode.caption) : null], fields.kode.isInvalid],
             ["nama", [fields.nama.visible && fields.nama.required ? ew.Validators.required(fields.nama.caption) : null], fields.nama.isInvalid],
             ["kontak", [fields.kontak.visible && fields.kontak.required ? ew.Validators.required(fields.kontak.caption) : null], fields.kontak.isInvalid],
-            ["type_id", [fields.type_id.visible && fields.type_id.required ? ew.Validators.required(fields.type_id.caption) : null, ew.Validators.integer], fields.type_id.isInvalid],
+            ["type_id", [fields.type_id.visible && fields.type_id.required ? ew.Validators.required(fields.type_id.caption) : null], fields.type_id.isInvalid],
             ["telp1", [fields.telp1.visible && fields.telp1.required ? ew.Validators.required(fields.telp1.caption) : null], fields.telp1.isInvalid],
             ["matauang_id", [fields.matauang_id.visible && fields.matauang_id.required ? ew.Validators.required(fields.matauang_id.caption) : null, ew.Validators.integer], fields.matauang_id.isInvalid],
             ["_username", [fields._username.visible && fields._username.required ? ew.Validators.required(fields._username.caption) : null], fields._username.isInvalid],
@@ -48,7 +48,7 @@ loadjs.ready(["wrapper", "head"], function () {
             ["alamat", [fields.alamat.visible && fields.alamat.required ? ew.Validators.required(fields.alamat.caption) : null], fields.alamat.isInvalid],
             ["kota", [fields.kota.visible && fields.kota.required ? ew.Validators.required(fields.kota.caption) : null], fields.kota.isInvalid],
             ["zip", [fields.zip.visible && fields.zip.required ? ew.Validators.required(fields.zip.caption) : null], fields.zip.isInvalid],
-            ["klasifikasi_id", [fields.klasifikasi_id.visible && fields.klasifikasi_id.required ? ew.Validators.required(fields.klasifikasi_id.caption) : null, ew.Validators.integer], fields.klasifikasi_id.isInvalid]
+            ["klasifikasi_id", [fields.klasifikasi_id.visible && fields.klasifikasi_id.required ? ew.Validators.required(fields.klasifikasi_id.caption) : null], fields.klasifikasi_id.isInvalid]
         ])
 
         // Form_CustomValidate
@@ -64,6 +64,8 @@ loadjs.ready(["wrapper", "head"], function () {
 
         // Dynamic selection lists
         .setLists({
+            "type_id": <?= $Page->type_id->toClientList($Page) ?>,
+            "klasifikasi_id": <?= $Page->klasifikasi_id->toClientList($Page) ?>,
         })
         .build();
     window[form.id] = form;
@@ -129,9 +131,43 @@ loadjs.ready("head", function () {
         <label id="elh_person_type_id" for="x_type_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->type_id->caption() ?><?= $Page->type_id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->type_id->cellAttributes() ?>>
 <span id="el_person_type_id">
-<input type="<?= $Page->type_id->getInputTextType() ?>" name="x_type_id" id="x_type_id" data-table="person" data-field="x_type_id" value="<?= $Page->type_id->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->type_id->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->type_id->formatPattern()) ?>"<?= $Page->type_id->editAttributes() ?> aria-describedby="x_type_id_help">
-<?= $Page->type_id->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->type_id->getErrorMessage() ?></div>
+    <select
+        id="x_type_id"
+        name="x_type_id"
+        class="form-select ew-select<?= $Page->type_id->isInvalidClass() ?>"
+        <?php if (!$Page->type_id->IsNativeSelect) { ?>
+        data-select2-id="fpersonedit_x_type_id"
+        <?php } ?>
+        data-table="person"
+        data-field="x_type_id"
+        data-value-separator="<?= $Page->type_id->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->type_id->getPlaceHolder()) ?>"
+        <?= $Page->type_id->editAttributes() ?>>
+        <?= $Page->type_id->selectOptionListHtml("x_type_id") ?>
+    </select>
+    <?= $Page->type_id->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->type_id->getErrorMessage() ?></div>
+<?= $Page->type_id->Lookup->getParamTag($Page, "p_x_type_id") ?>
+<?php if (!$Page->type_id->IsNativeSelect) { ?>
+<script>
+loadjs.ready("fpersonedit", function() {
+    var options = { name: "x_type_id", selectId: "fpersonedit_x_type_id" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    if (!el)
+        return;
+    options.closeOnSelect = !options.multiple;
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fpersonedit.lists.type_id?.lookupOptions.length) {
+        options.data = { id: "x_type_id", form: "fpersonedit" };
+    } else {
+        options.ajax = { id: "x_type_id", form: "fpersonedit", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.person.fields.type_id.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+<?php } ?>
 </span>
 </div></div>
     </div>
@@ -300,9 +336,43 @@ loadjs.ready("head", function () {
         <label id="elh_person_klasifikasi_id" for="x_klasifikasi_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->klasifikasi_id->caption() ?><?= $Page->klasifikasi_id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->klasifikasi_id->cellAttributes() ?>>
 <span id="el_person_klasifikasi_id">
-<input type="<?= $Page->klasifikasi_id->getInputTextType() ?>" name="x_klasifikasi_id" id="x_klasifikasi_id" data-table="person" data-field="x_klasifikasi_id" value="<?= $Page->klasifikasi_id->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->klasifikasi_id->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->klasifikasi_id->formatPattern()) ?>"<?= $Page->klasifikasi_id->editAttributes() ?> aria-describedby="x_klasifikasi_id_help">
-<?= $Page->klasifikasi_id->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->klasifikasi_id->getErrorMessage() ?></div>
+    <select
+        id="x_klasifikasi_id"
+        name="x_klasifikasi_id"
+        class="form-select ew-select<?= $Page->klasifikasi_id->isInvalidClass() ?>"
+        <?php if (!$Page->klasifikasi_id->IsNativeSelect) { ?>
+        data-select2-id="fpersonedit_x_klasifikasi_id"
+        <?php } ?>
+        data-table="person"
+        data-field="x_klasifikasi_id"
+        data-value-separator="<?= $Page->klasifikasi_id->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->klasifikasi_id->getPlaceHolder()) ?>"
+        <?= $Page->klasifikasi_id->editAttributes() ?>>
+        <?= $Page->klasifikasi_id->selectOptionListHtml("x_klasifikasi_id") ?>
+    </select>
+    <?= $Page->klasifikasi_id->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->klasifikasi_id->getErrorMessage() ?></div>
+<?= $Page->klasifikasi_id->Lookup->getParamTag($Page, "p_x_klasifikasi_id") ?>
+<?php if (!$Page->klasifikasi_id->IsNativeSelect) { ?>
+<script>
+loadjs.ready("fpersonedit", function() {
+    var options = { name: "x_klasifikasi_id", selectId: "fpersonedit_x_klasifikasi_id" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    if (!el)
+        return;
+    options.closeOnSelect = !options.multiple;
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fpersonedit.lists.klasifikasi_id?.lookupOptions.length) {
+        options.data = { id: "x_klasifikasi_id", form: "fpersonedit" };
+    } else {
+        options.ajax = { id: "x_klasifikasi_id", form: "fpersonedit", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.person.fields.klasifikasi_id.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+<?php } ?>
 </span>
 </div></div>
     </div>

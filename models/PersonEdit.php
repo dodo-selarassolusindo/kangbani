@@ -525,6 +525,10 @@ class PersonEdit extends Person
             $this->InlineDelete = true;
         }
 
+        // Set up lookup cache
+        $this->setupLookupOptions($this->type_id);
+        $this->setupLookupOptions($this->klasifikasi_id);
+
         // Check modal
         if ($this->IsModal) {
             $SkipHeaderFooter = true;
@@ -801,7 +805,7 @@ class PersonEdit extends Person
             if (IsApi() && $val === null) {
                 $this->type_id->Visible = false; // Disable update for API request
             } else {
-                $this->type_id->setFormValue($val, true, $validate);
+                $this->type_id->setFormValue($val);
             }
         }
 
@@ -941,7 +945,7 @@ class PersonEdit extends Person
             if (IsApi() && $val === null) {
                 $this->klasifikasi_id->Visible = false; // Disable update for API request
             } else {
-                $this->klasifikasi_id->setFormValue($val, true, $validate);
+                $this->klasifikasi_id->setFormValue($val);
             }
         }
 
@@ -1225,8 +1229,27 @@ class PersonEdit extends Person
             $this->kontak->ViewValue = $this->kontak->CurrentValue;
 
             // type_id
-            $this->type_id->ViewValue = $this->type_id->CurrentValue;
-            $this->type_id->ViewValue = FormatNumber($this->type_id->ViewValue, $this->type_id->formatPattern());
+            $curVal = strval($this->type_id->CurrentValue);
+            if ($curVal != "") {
+                $this->type_id->ViewValue = $this->type_id->lookupCacheOption($curVal);
+                if ($this->type_id->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->type_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->type_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->type_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->type_id->Lookup->renderViewRow($rswrk[0]);
+                        $this->type_id->ViewValue = $this->type_id->displayValue($arwrk);
+                    } else {
+                        $this->type_id->ViewValue = FormatNumber($this->type_id->CurrentValue, $this->type_id->formatPattern());
+                    }
+                }
+            } else {
+                $this->type_id->ViewValue = null;
+            }
 
             // telp1
             $this->telp1->ViewValue = $this->telp1->CurrentValue;
@@ -1269,8 +1292,27 @@ class PersonEdit extends Person
             $this->zip->ViewValue = $this->zip->CurrentValue;
 
             // klasifikasi_id
-            $this->klasifikasi_id->ViewValue = $this->klasifikasi_id->CurrentValue;
-            $this->klasifikasi_id->ViewValue = FormatNumber($this->klasifikasi_id->ViewValue, $this->klasifikasi_id->formatPattern());
+            $curVal = strval($this->klasifikasi_id->CurrentValue);
+            if ($curVal != "") {
+                $this->klasifikasi_id->ViewValue = $this->klasifikasi_id->lookupCacheOption($curVal);
+                if ($this->klasifikasi_id->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->klasifikasi_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->klasifikasi_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->klasifikasi_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->klasifikasi_id->Lookup->renderViewRow($rswrk[0]);
+                        $this->klasifikasi_id->ViewValue = $this->klasifikasi_id->displayValue($arwrk);
+                    } else {
+                        $this->klasifikasi_id->ViewValue = FormatNumber($this->klasifikasi_id->CurrentValue, $this->klasifikasi_id->formatPattern());
+                    }
+                }
+            } else {
+                $this->klasifikasi_id->ViewValue = null;
+            }
 
             // id_FK
             $this->id_FK->ViewValue = $this->id_FK->CurrentValue;
@@ -1356,11 +1398,30 @@ class PersonEdit extends Person
 
             // type_id
             $this->type_id->setupEditAttributes();
-            $this->type_id->EditValue = $this->type_id->CurrentValue;
-            $this->type_id->PlaceHolder = RemoveHtml($this->type_id->caption());
-            if (strval($this->type_id->EditValue) != "" && is_numeric($this->type_id->EditValue)) {
-                $this->type_id->EditValue = FormatNumber($this->type_id->EditValue, null);
+            $curVal = trim(strval($this->type_id->CurrentValue));
+            if ($curVal != "") {
+                $this->type_id->ViewValue = $this->type_id->lookupCacheOption($curVal);
+            } else {
+                $this->type_id->ViewValue = $this->type_id->Lookup !== null && is_array($this->type_id->lookupOptions()) && count($this->type_id->lookupOptions()) > 0 ? $curVal : null;
             }
+            if ($this->type_id->ViewValue !== null) { // Load from cache
+                $this->type_id->EditValue = array_values($this->type_id->lookupOptions());
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = SearchFilter($this->type_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $this->type_id->CurrentValue, $this->type_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                }
+                $sqlWrk = $this->type_id->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->type_id->EditValue = $arwrk;
+            }
+            $this->type_id->PlaceHolder = RemoveHtml($this->type_id->caption());
 
             // telp1
             $this->telp1->setupEditAttributes();
@@ -1465,11 +1526,30 @@ class PersonEdit extends Person
 
             // klasifikasi_id
             $this->klasifikasi_id->setupEditAttributes();
-            $this->klasifikasi_id->EditValue = $this->klasifikasi_id->CurrentValue;
-            $this->klasifikasi_id->PlaceHolder = RemoveHtml($this->klasifikasi_id->caption());
-            if (strval($this->klasifikasi_id->EditValue) != "" && is_numeric($this->klasifikasi_id->EditValue)) {
-                $this->klasifikasi_id->EditValue = FormatNumber($this->klasifikasi_id->EditValue, null);
+            $curVal = trim(strval($this->klasifikasi_id->CurrentValue));
+            if ($curVal != "") {
+                $this->klasifikasi_id->ViewValue = $this->klasifikasi_id->lookupCacheOption($curVal);
+            } else {
+                $this->klasifikasi_id->ViewValue = $this->klasifikasi_id->Lookup !== null && is_array($this->klasifikasi_id->lookupOptions()) && count($this->klasifikasi_id->lookupOptions()) > 0 ? $curVal : null;
             }
+            if ($this->klasifikasi_id->ViewValue !== null) { // Load from cache
+                $this->klasifikasi_id->EditValue = array_values($this->klasifikasi_id->lookupOptions());
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = SearchFilter($this->klasifikasi_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $this->klasifikasi_id->CurrentValue, $this->klasifikasi_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                }
+                $sqlWrk = $this->klasifikasi_id->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->klasifikasi_id->EditValue = $arwrk;
+            }
+            $this->klasifikasi_id->PlaceHolder = RemoveHtml($this->klasifikasi_id->caption());
 
             // Edit refer script
 
@@ -1567,9 +1647,6 @@ class PersonEdit extends Person
                     $this->type_id->addErrorMessage(str_replace("%s", $this->type_id->caption(), $this->type_id->RequiredErrorMessage));
                 }
             }
-            if (!CheckInteger($this->type_id->FormValue)) {
-                $this->type_id->addErrorMessage($this->type_id->getErrorMessage(false));
-            }
             if ($this->telp1->Visible && $this->telp1->Required) {
                 if (!$this->telp1->IsDetailKey && EmptyValue($this->telp1->FormValue)) {
                     $this->telp1->addErrorMessage(str_replace("%s", $this->telp1->caption(), $this->telp1->RequiredErrorMessage));
@@ -1645,9 +1722,6 @@ class PersonEdit extends Person
                 if (!$this->klasifikasi_id->IsDetailKey && EmptyValue($this->klasifikasi_id->FormValue)) {
                     $this->klasifikasi_id->addErrorMessage(str_replace("%s", $this->klasifikasi_id->caption(), $this->klasifikasi_id->RequiredErrorMessage));
                 }
-            }
-            if (!CheckInteger($this->klasifikasi_id->FormValue)) {
-                $this->klasifikasi_id->addErrorMessage($this->klasifikasi_id->getErrorMessage(false));
             }
 
         // Return validate result
@@ -1882,6 +1956,10 @@ class PersonEdit extends Person
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_type_id":
+                    break;
+                case "x_klasifikasi_id":
+                    break;
                 default:
                     $lookupFilter = "";
                     break;

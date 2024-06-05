@@ -221,12 +221,16 @@ class Person extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'SELECT' // Edit Tag
         );
         $this->type_id->InputTextType = "text";
         $this->type_id->Raw = true;
+        $this->type_id->setSelectMultiple(false); // Select one
+        $this->type_id->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->type_id->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->type_id->Lookup = new Lookup($this->type_id, 'type', false, 'id', ["nama","","",""], '', '', [], [], [], [], [], [], false, '', '', "`nama`");
         $this->type_id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->type_id->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
+        $this->type_id->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
         $this->Fields['type_id'] = &$this->type_id;
 
         // telp1
@@ -533,12 +537,16 @@ class Person extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'SELECT' // Edit Tag
         );
         $this->klasifikasi_id->InputTextType = "text";
         $this->klasifikasi_id->Raw = true;
+        $this->klasifikasi_id->setSelectMultiple(false); // Select one
+        $this->klasifikasi_id->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->klasifikasi_id->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->klasifikasi_id->Lookup = new Lookup($this->klasifikasi_id, 'klasifikasi', false, 'id', ["nama","","",""], '', '', [], [], [], [], [], [], false, '', '', "`nama`");
         $this->klasifikasi_id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->klasifikasi_id->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
+        $this->klasifikasi_id->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
         $this->Fields['klasifikasi_id'] = &$this->klasifikasi_id;
 
         // id_FK
@@ -1568,8 +1576,27 @@ class Person extends DbTable
         $this->kontak->ViewValue = $this->kontak->CurrentValue;
 
         // type_id
-        $this->type_id->ViewValue = $this->type_id->CurrentValue;
-        $this->type_id->ViewValue = FormatNumber($this->type_id->ViewValue, $this->type_id->formatPattern());
+        $curVal = strval($this->type_id->CurrentValue);
+        if ($curVal != "") {
+            $this->type_id->ViewValue = $this->type_id->lookupCacheOption($curVal);
+            if ($this->type_id->ViewValue === null) { // Lookup from database
+                $filterWrk = SearchFilter($this->type_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->type_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                $sqlWrk = $this->type_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->type_id->Lookup->renderViewRow($rswrk[0]);
+                    $this->type_id->ViewValue = $this->type_id->displayValue($arwrk);
+                } else {
+                    $this->type_id->ViewValue = FormatNumber($this->type_id->CurrentValue, $this->type_id->formatPattern());
+                }
+            }
+        } else {
+            $this->type_id->ViewValue = null;
+        }
 
         // telp1
         $this->telp1->ViewValue = $this->telp1->CurrentValue;
@@ -1612,8 +1639,27 @@ class Person extends DbTable
         $this->zip->ViewValue = $this->zip->CurrentValue;
 
         // klasifikasi_id
-        $this->klasifikasi_id->ViewValue = $this->klasifikasi_id->CurrentValue;
-        $this->klasifikasi_id->ViewValue = FormatNumber($this->klasifikasi_id->ViewValue, $this->klasifikasi_id->formatPattern());
+        $curVal = strval($this->klasifikasi_id->CurrentValue);
+        if ($curVal != "") {
+            $this->klasifikasi_id->ViewValue = $this->klasifikasi_id->lookupCacheOption($curVal);
+            if ($this->klasifikasi_id->ViewValue === null) { // Lookup from database
+                $filterWrk = SearchFilter($this->klasifikasi_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->klasifikasi_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                $sqlWrk = $this->klasifikasi_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->klasifikasi_id->Lookup->renderViewRow($rswrk[0]);
+                    $this->klasifikasi_id->ViewValue = $this->klasifikasi_id->displayValue($arwrk);
+                } else {
+                    $this->klasifikasi_id->ViewValue = FormatNumber($this->klasifikasi_id->CurrentValue, $this->klasifikasi_id->formatPattern());
+                }
+            }
+        } else {
+            $this->klasifikasi_id->ViewValue = null;
+        }
 
         // id_FK
         $this->id_FK->ViewValue = $this->id_FK->CurrentValue;
@@ -1744,11 +1790,7 @@ class Person extends DbTable
 
         // type_id
         $this->type_id->setupEditAttributes();
-        $this->type_id->EditValue = $this->type_id->CurrentValue;
         $this->type_id->PlaceHolder = RemoveHtml($this->type_id->caption());
-        if (strval($this->type_id->EditValue) != "" && is_numeric($this->type_id->EditValue)) {
-            $this->type_id->EditValue = FormatNumber($this->type_id->EditValue, null);
-        }
 
         // telp1
         $this->telp1->setupEditAttributes();
@@ -1853,11 +1895,7 @@ class Person extends DbTable
 
         // klasifikasi_id
         $this->klasifikasi_id->setupEditAttributes();
-        $this->klasifikasi_id->EditValue = $this->klasifikasi_id->CurrentValue;
         $this->klasifikasi_id->PlaceHolder = RemoveHtml($this->klasifikasi_id->caption());
-        if (strval($this->klasifikasi_id->EditValue) != "" && is_numeric($this->klasifikasi_id->EditValue)) {
-            $this->klasifikasi_id->EditValue = FormatNumber($this->klasifikasi_id->EditValue, null);
-        }
 
         // id_FK
         $this->id_FK->setupEditAttributes();

@@ -702,6 +702,10 @@ class PersonList extends Person
         // Setup other options
         $this->setupOtherOptions();
 
+        // Set up lookup cache
+        $this->setupLookupOptions($this->type_id);
+        $this->setupLookupOptions($this->klasifikasi_id);
+
         // Update form name to avoid conflict
         if ($this->IsModal) {
             $this->FormName = "fpersongrid";
@@ -2284,8 +2288,27 @@ class PersonList extends Person
             $this->kontak->ViewValue = $this->kontak->CurrentValue;
 
             // type_id
-            $this->type_id->ViewValue = $this->type_id->CurrentValue;
-            $this->type_id->ViewValue = FormatNumber($this->type_id->ViewValue, $this->type_id->formatPattern());
+            $curVal = strval($this->type_id->CurrentValue);
+            if ($curVal != "") {
+                $this->type_id->ViewValue = $this->type_id->lookupCacheOption($curVal);
+                if ($this->type_id->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->type_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->type_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->type_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->type_id->Lookup->renderViewRow($rswrk[0]);
+                        $this->type_id->ViewValue = $this->type_id->displayValue($arwrk);
+                    } else {
+                        $this->type_id->ViewValue = FormatNumber($this->type_id->CurrentValue, $this->type_id->formatPattern());
+                    }
+                }
+            } else {
+                $this->type_id->ViewValue = null;
+            }
 
             // telp1
             $this->telp1->ViewValue = $this->telp1->CurrentValue;
@@ -2328,8 +2351,27 @@ class PersonList extends Person
             $this->zip->ViewValue = $this->zip->CurrentValue;
 
             // klasifikasi_id
-            $this->klasifikasi_id->ViewValue = $this->klasifikasi_id->CurrentValue;
-            $this->klasifikasi_id->ViewValue = FormatNumber($this->klasifikasi_id->ViewValue, $this->klasifikasi_id->formatPattern());
+            $curVal = strval($this->klasifikasi_id->CurrentValue);
+            if ($curVal != "") {
+                $this->klasifikasi_id->ViewValue = $this->klasifikasi_id->lookupCacheOption($curVal);
+                if ($this->klasifikasi_id->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->klasifikasi_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->klasifikasi_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->klasifikasi_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->klasifikasi_id->Lookup->renderViewRow($rswrk[0]);
+                        $this->klasifikasi_id->ViewValue = $this->klasifikasi_id->displayValue($arwrk);
+                    } else {
+                        $this->klasifikasi_id->ViewValue = FormatNumber($this->klasifikasi_id->CurrentValue, $this->klasifikasi_id->formatPattern());
+                    }
+                }
+            } else {
+                $this->klasifikasi_id->ViewValue = null;
+            }
 
             // id_FK
             $this->id_FK->ViewValue = $this->id_FK->CurrentValue;
@@ -2489,6 +2531,10 @@ class PersonList extends Person
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_type_id":
+                    break;
+                case "x_klasifikasi_id":
+                    break;
                 default:
                     $lookupFilter = "";
                     break;
