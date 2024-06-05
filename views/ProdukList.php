@@ -155,9 +155,6 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->id->Visible) { // id ?>
-        <th data-name="id" class="<?= $Page->id->headerCellClass() ?>"><div id="elh_produk_id" class="produk_id"><?= $Page->renderFieldHeader($Page->id) ?></div></th>
-<?php } ?>
 <?php if ($Page->kode->Visible) { // kode ?>
         <th data-name="kode" class="<?= $Page->kode->headerCellClass() ?>"><div id="elh_produk_kode" class="produk_kode"><?= $Page->renderFieldHeader($Page->kode) ?></div></th>
 <?php } ?>
@@ -218,9 +215,6 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->aktif->Visible) { // aktif ?>
         <th data-name="aktif" class="<?= $Page->aktif->headerCellClass() ?>"><div id="elh_produk_aktif" class="produk_aktif"><?= $Page->renderFieldHeader($Page->aktif) ?></div></th>
 <?php } ?>
-<?php if ($Page->id_FK->Visible) { // id_FK ?>
-        <th data-name="id_FK" class="<?= $Page->id_FK->headerCellClass() ?>"><div id="elh_produk_id_FK" class="produk_id_FK"><?= $Page->renderFieldHeader($Page->id_FK) ?></div></th>
-<?php } ?>
 <?php
 // Render list options (header, right)
 $Page->ListOptions->render("header", "right");
@@ -248,14 +242,6 @@ while ($Page->RecordCount < $Page->StopRecord || $Page->RowIndex === '$rowindex$
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->id->Visible) { // id ?>
-        <td data-name="id"<?= $Page->id->cellAttributes() ?>>
-<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_produk_id" class="el_produk_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
     <?php if ($Page->kode->Visible) { // kode ?>
         <td data-name="kode"<?= $Page->kode->cellAttributes() ?>>
 <span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_produk_kode" class="el_produk_kode">
@@ -413,14 +399,6 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_produk_aktif" class="el_produk_aktif">
 <span<?= $Page->aktif->viewAttributes() ?>>
 <?= $Page->aktif->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->id_FK->Visible) { // id_FK ?>
-        <td data-name="id_FK"<?= $Page->id_FK->cellAttributes() ?>>
-<span id="el<?= $Page->RowIndex == '$rowindex$' ? '$rowindex$' : $Page->RowCount ?>_produk_id_FK" class="el_produk_id_FK">
-<span<?= $Page->id_FK->viewAttributes() ?>>
-<?= $Page->id_FK->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

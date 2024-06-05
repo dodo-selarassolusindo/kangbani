@@ -31,19 +31,18 @@ loadjs.ready(["wrapper", "head"], function () {
 
         // Add fields
         .setFields([
-            ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null], fields.id.isInvalid],
             ["kode", [fields.kode.visible && fields.kode.required ? ew.Validators.required(fields.kode.caption) : null], fields.kode.isInvalid],
             ["nama", [fields.nama.visible && fields.nama.required ? ew.Validators.required(fields.nama.caption) : null], fields.nama.isInvalid],
-            ["kelompok_id", [fields.kelompok_id.visible && fields.kelompok_id.required ? ew.Validators.required(fields.kelompok_id.caption) : null, ew.Validators.integer], fields.kelompok_id.isInvalid],
-            ["satuan_id", [fields.satuan_id.visible && fields.satuan_id.required ? ew.Validators.required(fields.satuan_id.caption) : null, ew.Validators.integer], fields.satuan_id.isInvalid],
-            ["satuan_id2", [fields.satuan_id2.visible && fields.satuan_id2.required ? ew.Validators.required(fields.satuan_id2.caption) : null, ew.Validators.integer], fields.satuan_id2.isInvalid],
-            ["gudang_id", [fields.gudang_id.visible && fields.gudang_id.required ? ew.Validators.required(fields.gudang_id.caption) : null, ew.Validators.integer], fields.gudang_id.isInvalid],
+            ["kelompok_id", [fields.kelompok_id.visible && fields.kelompok_id.required ? ew.Validators.required(fields.kelompok_id.caption) : null], fields.kelompok_id.isInvalid],
+            ["satuan_id", [fields.satuan_id.visible && fields.satuan_id.required ? ew.Validators.required(fields.satuan_id.caption) : null], fields.satuan_id.isInvalid],
+            ["satuan_id2", [fields.satuan_id2.visible && fields.satuan_id2.required ? ew.Validators.required(fields.satuan_id2.caption) : null], fields.satuan_id2.isInvalid],
+            ["gudang_id", [fields.gudang_id.visible && fields.gudang_id.required ? ew.Validators.required(fields.gudang_id.caption) : null], fields.gudang_id.isInvalid],
             ["minstok", [fields.minstok.visible && fields.minstok.required ? ew.Validators.required(fields.minstok.caption) : null, ew.Validators.float], fields.minstok.isInvalid],
             ["minorder", [fields.minorder.visible && fields.minorder.required ? ew.Validators.required(fields.minorder.caption) : null, ew.Validators.float], fields.minorder.isInvalid],
-            ["akunhpp", [fields.akunhpp.visible && fields.akunhpp.required ? ew.Validators.required(fields.akunhpp.caption) : null, ew.Validators.integer], fields.akunhpp.isInvalid],
-            ["akunjual", [fields.akunjual.visible && fields.akunjual.required ? ew.Validators.required(fields.akunjual.caption) : null, ew.Validators.integer], fields.akunjual.isInvalid],
-            ["akunpersediaan", [fields.akunpersediaan.visible && fields.akunpersediaan.required ? ew.Validators.required(fields.akunpersediaan.caption) : null, ew.Validators.integer], fields.akunpersediaan.isInvalid],
-            ["akunreturjual", [fields.akunreturjual.visible && fields.akunreturjual.required ? ew.Validators.required(fields.akunreturjual.caption) : null, ew.Validators.integer], fields.akunreturjual.isInvalid],
+            ["akunhpp", [fields.akunhpp.visible && fields.akunhpp.required ? ew.Validators.required(fields.akunhpp.caption) : null], fields.akunhpp.isInvalid],
+            ["akunjual", [fields.akunjual.visible && fields.akunjual.required ? ew.Validators.required(fields.akunjual.caption) : null], fields.akunjual.isInvalid],
+            ["akunpersediaan", [fields.akunpersediaan.visible && fields.akunpersediaan.required ? ew.Validators.required(fields.akunpersediaan.caption) : null], fields.akunpersediaan.isInvalid],
+            ["akunreturjual", [fields.akunreturjual.visible && fields.akunreturjual.required ? ew.Validators.required(fields.akunreturjual.caption) : null], fields.akunreturjual.isInvalid],
             ["hargapokok", [fields.hargapokok.visible && fields.hargapokok.required ? ew.Validators.required(fields.hargapokok.caption) : null, ew.Validators.float], fields.hargapokok.isInvalid],
             ["p", [fields.p.visible && fields.p.required ? ew.Validators.required(fields.p.caption) : null, ew.Validators.float], fields.p.isInvalid],
             ["l", [fields.l.visible && fields.l.required ? ew.Validators.required(fields.l.caption) : null, ew.Validators.float], fields.l.isInvalid],
@@ -51,8 +50,7 @@ loadjs.ready(["wrapper", "head"], function () {
             ["berat", [fields.berat.visible && fields.berat.required ? ew.Validators.required(fields.berat.caption) : null, ew.Validators.float], fields.berat.isInvalid],
             ["supplier_id", [fields.supplier_id.visible && fields.supplier_id.required ? ew.Validators.required(fields.supplier_id.caption) : null, ew.Validators.integer], fields.supplier_id.isInvalid],
             ["waktukirim", [fields.waktukirim.visible && fields.waktukirim.required ? ew.Validators.required(fields.waktukirim.caption) : null, ew.Validators.integer], fields.waktukirim.isInvalid],
-            ["aktif", [fields.aktif.visible && fields.aktif.required ? ew.Validators.required(fields.aktif.caption) : null, ew.Validators.integer], fields.aktif.isInvalid],
-            ["id_FK", [fields.id_FK.visible && fields.id_FK.required ? ew.Validators.required(fields.id_FK.caption) : null, ew.Validators.integer], fields.id_FK.isInvalid]
+            ["aktif", [fields.aktif.visible && fields.aktif.required ? ew.Validators.required(fields.aktif.caption) : null], fields.aktif.isInvalid]
         ])
 
         // Form_CustomValidate
@@ -68,6 +66,15 @@ loadjs.ready(["wrapper", "head"], function () {
 
         // Dynamic selection lists
         .setLists({
+            "kelompok_id": <?= $Page->kelompok_id->toClientList($Page) ?>,
+            "satuan_id": <?= $Page->satuan_id->toClientList($Page) ?>,
+            "satuan_id2": <?= $Page->satuan_id2->toClientList($Page) ?>,
+            "gudang_id": <?= $Page->gudang_id->toClientList($Page) ?>,
+            "akunhpp": <?= $Page->akunhpp->toClientList($Page) ?>,
+            "akunjual": <?= $Page->akunjual->toClientList($Page) ?>,
+            "akunpersediaan": <?= $Page->akunpersediaan->toClientList($Page) ?>,
+            "akunreturjual": <?= $Page->akunreturjual->toClientList($Page) ?>,
+            "aktif": <?= $Page->aktif->toClientList($Page) ?>,
         })
         .build();
     window[form.id] = form;
@@ -92,18 +99,6 @@ loadjs.ready("head", function () {
 <?php } ?>
 <input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
 <div class="ew-edit-div"><!-- page* -->
-<?php if ($Page->id->Visible) { // id ?>
-    <div id="r_id"<?= $Page->id->rowAttributes() ?>>
-        <label id="elh_produk_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->id->caption() ?><?= $Page->id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->id->cellAttributes() ?>>
-<span id="el_produk_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->id->getDisplayValue($Page->id->EditValue))) ?>"></span>
-<input type="hidden" data-table="produk" data-field="x_id" data-hidden="1" name="x_id" id="x_id" value="<?= HtmlEncode($Page->id->CurrentValue) ?>">
-</span>
-</div></div>
-    </div>
-<?php } ?>
 <?php if ($Page->kode->Visible) { // kode ?>
     <div id="r_kode"<?= $Page->kode->rowAttributes() ?>>
         <label id="elh_produk_kode" for="x_kode" class="<?= $Page->LeftColumnClass ?>"><?= $Page->kode->caption() ?><?= $Page->kode->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -133,9 +128,43 @@ loadjs.ready("head", function () {
         <label id="elh_produk_kelompok_id" for="x_kelompok_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->kelompok_id->caption() ?><?= $Page->kelompok_id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->kelompok_id->cellAttributes() ?>>
 <span id="el_produk_kelompok_id">
-<input type="<?= $Page->kelompok_id->getInputTextType() ?>" name="x_kelompok_id" id="x_kelompok_id" data-table="produk" data-field="x_kelompok_id" value="<?= $Page->kelompok_id->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->kelompok_id->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->kelompok_id->formatPattern()) ?>"<?= $Page->kelompok_id->editAttributes() ?> aria-describedby="x_kelompok_id_help">
-<?= $Page->kelompok_id->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->kelompok_id->getErrorMessage() ?></div>
+    <select
+        id="x_kelompok_id"
+        name="x_kelompok_id"
+        class="form-select ew-select<?= $Page->kelompok_id->isInvalidClass() ?>"
+        <?php if (!$Page->kelompok_id->IsNativeSelect) { ?>
+        data-select2-id="fprodukedit_x_kelompok_id"
+        <?php } ?>
+        data-table="produk"
+        data-field="x_kelompok_id"
+        data-value-separator="<?= $Page->kelompok_id->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->kelompok_id->getPlaceHolder()) ?>"
+        <?= $Page->kelompok_id->editAttributes() ?>>
+        <?= $Page->kelompok_id->selectOptionListHtml("x_kelompok_id") ?>
+    </select>
+    <?= $Page->kelompok_id->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->kelompok_id->getErrorMessage() ?></div>
+<?= $Page->kelompok_id->Lookup->getParamTag($Page, "p_x_kelompok_id") ?>
+<?php if (!$Page->kelompok_id->IsNativeSelect) { ?>
+<script>
+loadjs.ready("fprodukedit", function() {
+    var options = { name: "x_kelompok_id", selectId: "fprodukedit_x_kelompok_id" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    if (!el)
+        return;
+    options.closeOnSelect = !options.multiple;
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fprodukedit.lists.kelompok_id?.lookupOptions.length) {
+        options.data = { id: "x_kelompok_id", form: "fprodukedit" };
+    } else {
+        options.ajax = { id: "x_kelompok_id", form: "fprodukedit", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.produk.fields.kelompok_id.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+<?php } ?>
 </span>
 </div></div>
     </div>
@@ -145,9 +174,43 @@ loadjs.ready("head", function () {
         <label id="elh_produk_satuan_id" for="x_satuan_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->satuan_id->caption() ?><?= $Page->satuan_id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->satuan_id->cellAttributes() ?>>
 <span id="el_produk_satuan_id">
-<input type="<?= $Page->satuan_id->getInputTextType() ?>" name="x_satuan_id" id="x_satuan_id" data-table="produk" data-field="x_satuan_id" value="<?= $Page->satuan_id->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->satuan_id->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->satuan_id->formatPattern()) ?>"<?= $Page->satuan_id->editAttributes() ?> aria-describedby="x_satuan_id_help">
-<?= $Page->satuan_id->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->satuan_id->getErrorMessage() ?></div>
+    <select
+        id="x_satuan_id"
+        name="x_satuan_id"
+        class="form-select ew-select<?= $Page->satuan_id->isInvalidClass() ?>"
+        <?php if (!$Page->satuan_id->IsNativeSelect) { ?>
+        data-select2-id="fprodukedit_x_satuan_id"
+        <?php } ?>
+        data-table="produk"
+        data-field="x_satuan_id"
+        data-value-separator="<?= $Page->satuan_id->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->satuan_id->getPlaceHolder()) ?>"
+        <?= $Page->satuan_id->editAttributes() ?>>
+        <?= $Page->satuan_id->selectOptionListHtml("x_satuan_id") ?>
+    </select>
+    <?= $Page->satuan_id->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->satuan_id->getErrorMessage() ?></div>
+<?= $Page->satuan_id->Lookup->getParamTag($Page, "p_x_satuan_id") ?>
+<?php if (!$Page->satuan_id->IsNativeSelect) { ?>
+<script>
+loadjs.ready("fprodukedit", function() {
+    var options = { name: "x_satuan_id", selectId: "fprodukedit_x_satuan_id" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    if (!el)
+        return;
+    options.closeOnSelect = !options.multiple;
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fprodukedit.lists.satuan_id?.lookupOptions.length) {
+        options.data = { id: "x_satuan_id", form: "fprodukedit" };
+    } else {
+        options.ajax = { id: "x_satuan_id", form: "fprodukedit", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.produk.fields.satuan_id.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+<?php } ?>
 </span>
 </div></div>
     </div>
@@ -157,9 +220,43 @@ loadjs.ready("head", function () {
         <label id="elh_produk_satuan_id2" for="x_satuan_id2" class="<?= $Page->LeftColumnClass ?>"><?= $Page->satuan_id2->caption() ?><?= $Page->satuan_id2->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->satuan_id2->cellAttributes() ?>>
 <span id="el_produk_satuan_id2">
-<input type="<?= $Page->satuan_id2->getInputTextType() ?>" name="x_satuan_id2" id="x_satuan_id2" data-table="produk" data-field="x_satuan_id2" value="<?= $Page->satuan_id2->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->satuan_id2->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->satuan_id2->formatPattern()) ?>"<?= $Page->satuan_id2->editAttributes() ?> aria-describedby="x_satuan_id2_help">
-<?= $Page->satuan_id2->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->satuan_id2->getErrorMessage() ?></div>
+    <select
+        id="x_satuan_id2"
+        name="x_satuan_id2"
+        class="form-select ew-select<?= $Page->satuan_id2->isInvalidClass() ?>"
+        <?php if (!$Page->satuan_id2->IsNativeSelect) { ?>
+        data-select2-id="fprodukedit_x_satuan_id2"
+        <?php } ?>
+        data-table="produk"
+        data-field="x_satuan_id2"
+        data-value-separator="<?= $Page->satuan_id2->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->satuan_id2->getPlaceHolder()) ?>"
+        <?= $Page->satuan_id2->editAttributes() ?>>
+        <?= $Page->satuan_id2->selectOptionListHtml("x_satuan_id2") ?>
+    </select>
+    <?= $Page->satuan_id2->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->satuan_id2->getErrorMessage() ?></div>
+<?= $Page->satuan_id2->Lookup->getParamTag($Page, "p_x_satuan_id2") ?>
+<?php if (!$Page->satuan_id2->IsNativeSelect) { ?>
+<script>
+loadjs.ready("fprodukedit", function() {
+    var options = { name: "x_satuan_id2", selectId: "fprodukedit_x_satuan_id2" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    if (!el)
+        return;
+    options.closeOnSelect = !options.multiple;
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fprodukedit.lists.satuan_id2?.lookupOptions.length) {
+        options.data = { id: "x_satuan_id2", form: "fprodukedit" };
+    } else {
+        options.ajax = { id: "x_satuan_id2", form: "fprodukedit", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.produk.fields.satuan_id2.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+<?php } ?>
 </span>
 </div></div>
     </div>
@@ -169,9 +266,43 @@ loadjs.ready("head", function () {
         <label id="elh_produk_gudang_id" for="x_gudang_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->gudang_id->caption() ?><?= $Page->gudang_id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->gudang_id->cellAttributes() ?>>
 <span id="el_produk_gudang_id">
-<input type="<?= $Page->gudang_id->getInputTextType() ?>" name="x_gudang_id" id="x_gudang_id" data-table="produk" data-field="x_gudang_id" value="<?= $Page->gudang_id->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->gudang_id->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->gudang_id->formatPattern()) ?>"<?= $Page->gudang_id->editAttributes() ?> aria-describedby="x_gudang_id_help">
-<?= $Page->gudang_id->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->gudang_id->getErrorMessage() ?></div>
+    <select
+        id="x_gudang_id"
+        name="x_gudang_id"
+        class="form-select ew-select<?= $Page->gudang_id->isInvalidClass() ?>"
+        <?php if (!$Page->gudang_id->IsNativeSelect) { ?>
+        data-select2-id="fprodukedit_x_gudang_id"
+        <?php } ?>
+        data-table="produk"
+        data-field="x_gudang_id"
+        data-value-separator="<?= $Page->gudang_id->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->gudang_id->getPlaceHolder()) ?>"
+        <?= $Page->gudang_id->editAttributes() ?>>
+        <?= $Page->gudang_id->selectOptionListHtml("x_gudang_id") ?>
+    </select>
+    <?= $Page->gudang_id->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->gudang_id->getErrorMessage() ?></div>
+<?= $Page->gudang_id->Lookup->getParamTag($Page, "p_x_gudang_id") ?>
+<?php if (!$Page->gudang_id->IsNativeSelect) { ?>
+<script>
+loadjs.ready("fprodukedit", function() {
+    var options = { name: "x_gudang_id", selectId: "fprodukedit_x_gudang_id" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    if (!el)
+        return;
+    options.closeOnSelect = !options.multiple;
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fprodukedit.lists.gudang_id?.lookupOptions.length) {
+        options.data = { id: "x_gudang_id", form: "fprodukedit" };
+    } else {
+        options.ajax = { id: "x_gudang_id", form: "fprodukedit", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.produk.fields.gudang_id.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+<?php } ?>
 </span>
 </div></div>
     </div>
@@ -205,9 +336,43 @@ loadjs.ready("head", function () {
         <label id="elh_produk_akunhpp" for="x_akunhpp" class="<?= $Page->LeftColumnClass ?>"><?= $Page->akunhpp->caption() ?><?= $Page->akunhpp->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->akunhpp->cellAttributes() ?>>
 <span id="el_produk_akunhpp">
-<input type="<?= $Page->akunhpp->getInputTextType() ?>" name="x_akunhpp" id="x_akunhpp" data-table="produk" data-field="x_akunhpp" value="<?= $Page->akunhpp->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->akunhpp->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->akunhpp->formatPattern()) ?>"<?= $Page->akunhpp->editAttributes() ?> aria-describedby="x_akunhpp_help">
-<?= $Page->akunhpp->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->akunhpp->getErrorMessage() ?></div>
+    <select
+        id="x_akunhpp"
+        name="x_akunhpp"
+        class="form-select ew-select<?= $Page->akunhpp->isInvalidClass() ?>"
+        <?php if (!$Page->akunhpp->IsNativeSelect) { ?>
+        data-select2-id="fprodukedit_x_akunhpp"
+        <?php } ?>
+        data-table="produk"
+        data-field="x_akunhpp"
+        data-value-separator="<?= $Page->akunhpp->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->akunhpp->getPlaceHolder()) ?>"
+        <?= $Page->akunhpp->editAttributes() ?>>
+        <?= $Page->akunhpp->selectOptionListHtml("x_akunhpp") ?>
+    </select>
+    <?= $Page->akunhpp->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->akunhpp->getErrorMessage() ?></div>
+<?= $Page->akunhpp->Lookup->getParamTag($Page, "p_x_akunhpp") ?>
+<?php if (!$Page->akunhpp->IsNativeSelect) { ?>
+<script>
+loadjs.ready("fprodukedit", function() {
+    var options = { name: "x_akunhpp", selectId: "fprodukedit_x_akunhpp" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    if (!el)
+        return;
+    options.closeOnSelect = !options.multiple;
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fprodukedit.lists.akunhpp?.lookupOptions.length) {
+        options.data = { id: "x_akunhpp", form: "fprodukedit" };
+    } else {
+        options.ajax = { id: "x_akunhpp", form: "fprodukedit", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.produk.fields.akunhpp.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+<?php } ?>
 </span>
 </div></div>
     </div>
@@ -217,9 +382,43 @@ loadjs.ready("head", function () {
         <label id="elh_produk_akunjual" for="x_akunjual" class="<?= $Page->LeftColumnClass ?>"><?= $Page->akunjual->caption() ?><?= $Page->akunjual->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->akunjual->cellAttributes() ?>>
 <span id="el_produk_akunjual">
-<input type="<?= $Page->akunjual->getInputTextType() ?>" name="x_akunjual" id="x_akunjual" data-table="produk" data-field="x_akunjual" value="<?= $Page->akunjual->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->akunjual->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->akunjual->formatPattern()) ?>"<?= $Page->akunjual->editAttributes() ?> aria-describedby="x_akunjual_help">
-<?= $Page->akunjual->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->akunjual->getErrorMessage() ?></div>
+    <select
+        id="x_akunjual"
+        name="x_akunjual"
+        class="form-select ew-select<?= $Page->akunjual->isInvalidClass() ?>"
+        <?php if (!$Page->akunjual->IsNativeSelect) { ?>
+        data-select2-id="fprodukedit_x_akunjual"
+        <?php } ?>
+        data-table="produk"
+        data-field="x_akunjual"
+        data-value-separator="<?= $Page->akunjual->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->akunjual->getPlaceHolder()) ?>"
+        <?= $Page->akunjual->editAttributes() ?>>
+        <?= $Page->akunjual->selectOptionListHtml("x_akunjual") ?>
+    </select>
+    <?= $Page->akunjual->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->akunjual->getErrorMessage() ?></div>
+<?= $Page->akunjual->Lookup->getParamTag($Page, "p_x_akunjual") ?>
+<?php if (!$Page->akunjual->IsNativeSelect) { ?>
+<script>
+loadjs.ready("fprodukedit", function() {
+    var options = { name: "x_akunjual", selectId: "fprodukedit_x_akunjual" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    if (!el)
+        return;
+    options.closeOnSelect = !options.multiple;
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fprodukedit.lists.akunjual?.lookupOptions.length) {
+        options.data = { id: "x_akunjual", form: "fprodukedit" };
+    } else {
+        options.ajax = { id: "x_akunjual", form: "fprodukedit", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.produk.fields.akunjual.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+<?php } ?>
 </span>
 </div></div>
     </div>
@@ -229,9 +428,43 @@ loadjs.ready("head", function () {
         <label id="elh_produk_akunpersediaan" for="x_akunpersediaan" class="<?= $Page->LeftColumnClass ?>"><?= $Page->akunpersediaan->caption() ?><?= $Page->akunpersediaan->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->akunpersediaan->cellAttributes() ?>>
 <span id="el_produk_akunpersediaan">
-<input type="<?= $Page->akunpersediaan->getInputTextType() ?>" name="x_akunpersediaan" id="x_akunpersediaan" data-table="produk" data-field="x_akunpersediaan" value="<?= $Page->akunpersediaan->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->akunpersediaan->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->akunpersediaan->formatPattern()) ?>"<?= $Page->akunpersediaan->editAttributes() ?> aria-describedby="x_akunpersediaan_help">
-<?= $Page->akunpersediaan->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->akunpersediaan->getErrorMessage() ?></div>
+    <select
+        id="x_akunpersediaan"
+        name="x_akunpersediaan"
+        class="form-select ew-select<?= $Page->akunpersediaan->isInvalidClass() ?>"
+        <?php if (!$Page->akunpersediaan->IsNativeSelect) { ?>
+        data-select2-id="fprodukedit_x_akunpersediaan"
+        <?php } ?>
+        data-table="produk"
+        data-field="x_akunpersediaan"
+        data-value-separator="<?= $Page->akunpersediaan->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->akunpersediaan->getPlaceHolder()) ?>"
+        <?= $Page->akunpersediaan->editAttributes() ?>>
+        <?= $Page->akunpersediaan->selectOptionListHtml("x_akunpersediaan") ?>
+    </select>
+    <?= $Page->akunpersediaan->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->akunpersediaan->getErrorMessage() ?></div>
+<?= $Page->akunpersediaan->Lookup->getParamTag($Page, "p_x_akunpersediaan") ?>
+<?php if (!$Page->akunpersediaan->IsNativeSelect) { ?>
+<script>
+loadjs.ready("fprodukedit", function() {
+    var options = { name: "x_akunpersediaan", selectId: "fprodukedit_x_akunpersediaan" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    if (!el)
+        return;
+    options.closeOnSelect = !options.multiple;
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fprodukedit.lists.akunpersediaan?.lookupOptions.length) {
+        options.data = { id: "x_akunpersediaan", form: "fprodukedit" };
+    } else {
+        options.ajax = { id: "x_akunpersediaan", form: "fprodukedit", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.produk.fields.akunpersediaan.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+<?php } ?>
 </span>
 </div></div>
     </div>
@@ -241,9 +474,43 @@ loadjs.ready("head", function () {
         <label id="elh_produk_akunreturjual" for="x_akunreturjual" class="<?= $Page->LeftColumnClass ?>"><?= $Page->akunreturjual->caption() ?><?= $Page->akunreturjual->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->akunreturjual->cellAttributes() ?>>
 <span id="el_produk_akunreturjual">
-<input type="<?= $Page->akunreturjual->getInputTextType() ?>" name="x_akunreturjual" id="x_akunreturjual" data-table="produk" data-field="x_akunreturjual" value="<?= $Page->akunreturjual->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->akunreturjual->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->akunreturjual->formatPattern()) ?>"<?= $Page->akunreturjual->editAttributes() ?> aria-describedby="x_akunreturjual_help">
-<?= $Page->akunreturjual->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->akunreturjual->getErrorMessage() ?></div>
+    <select
+        id="x_akunreturjual"
+        name="x_akunreturjual"
+        class="form-select ew-select<?= $Page->akunreturjual->isInvalidClass() ?>"
+        <?php if (!$Page->akunreturjual->IsNativeSelect) { ?>
+        data-select2-id="fprodukedit_x_akunreturjual"
+        <?php } ?>
+        data-table="produk"
+        data-field="x_akunreturjual"
+        data-value-separator="<?= $Page->akunreturjual->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->akunreturjual->getPlaceHolder()) ?>"
+        <?= $Page->akunreturjual->editAttributes() ?>>
+        <?= $Page->akunreturjual->selectOptionListHtml("x_akunreturjual") ?>
+    </select>
+    <?= $Page->akunreturjual->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->akunreturjual->getErrorMessage() ?></div>
+<?= $Page->akunreturjual->Lookup->getParamTag($Page, "p_x_akunreturjual") ?>
+<?php if (!$Page->akunreturjual->IsNativeSelect) { ?>
+<script>
+loadjs.ready("fprodukedit", function() {
+    var options = { name: "x_akunreturjual", selectId: "fprodukedit_x_akunreturjual" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    if (!el)
+        return;
+    options.closeOnSelect = !options.multiple;
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fprodukedit.lists.akunreturjual?.lookupOptions.length) {
+        options.data = { id: "x_akunreturjual", form: "fprodukedit" };
+    } else {
+        options.ajax = { id: "x_akunreturjual", form: "fprodukedit", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.produk.fields.akunreturjual.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+<?php } ?>
 </span>
 </div></div>
     </div>
@@ -334,29 +601,37 @@ loadjs.ready("head", function () {
 <?php } ?>
 <?php if ($Page->aktif->Visible) { // aktif ?>
     <div id="r_aktif"<?= $Page->aktif->rowAttributes() ?>>
-        <label id="elh_produk_aktif" for="x_aktif" class="<?= $Page->LeftColumnClass ?>"><?= $Page->aktif->caption() ?><?= $Page->aktif->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_produk_aktif" class="<?= $Page->LeftColumnClass ?>"><?= $Page->aktif->caption() ?><?= $Page->aktif->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->aktif->cellAttributes() ?>>
 <span id="el_produk_aktif">
-<input type="<?= $Page->aktif->getInputTextType() ?>" name="x_aktif" id="x_aktif" data-table="produk" data-field="x_aktif" value="<?= $Page->aktif->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->aktif->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->aktif->formatPattern()) ?>"<?= $Page->aktif->editAttributes() ?> aria-describedby="x_aktif_help">
+<template id="tp_x_aktif">
+    <div class="form-check">
+        <input type="radio" class="form-check-input" data-table="produk" data-field="x_aktif" name="x_aktif" id="x_aktif"<?= $Page->aktif->editAttributes() ?>>
+        <label class="form-check-label"></label>
+    </div>
+</template>
+<div id="dsl_x_aktif" class="ew-item-list"></div>
+<selection-list hidden
+    id="x_aktif"
+    name="x_aktif"
+    value="<?= HtmlEncode($Page->aktif->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x_aktif"
+    data-target="dsl_x_aktif"
+    data-repeatcolumn="5"
+    class="form-control<?= $Page->aktif->isInvalidClass() ?>"
+    data-table="produk"
+    data-field="x_aktif"
+    data-value-separator="<?= $Page->aktif->displayValueSeparatorAttribute() ?>"
+    <?= $Page->aktif->editAttributes() ?>></selection-list>
 <?= $Page->aktif->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->aktif->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->id_FK->Visible) { // id_FK ?>
-    <div id="r_id_FK"<?= $Page->id_FK->rowAttributes() ?>>
-        <label id="elh_produk_id_FK" for="x_id_FK" class="<?= $Page->LeftColumnClass ?>"><?= $Page->id_FK->caption() ?><?= $Page->id_FK->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->id_FK->cellAttributes() ?>>
-<span id="el_produk_id_FK">
-<input type="<?= $Page->id_FK->getInputTextType() ?>" name="x_id_FK" id="x_id_FK" data-table="produk" data-field="x_id_FK" value="<?= $Page->id_FK->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->id_FK->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->id_FK->formatPattern()) ?>"<?= $Page->id_FK->editAttributes() ?> aria-describedby="x_id_FK_help">
-<?= $Page->id_FK->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->id_FK->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
 </div><!-- /page* -->
+    <input type="hidden" data-table="produk" data-field="x_id" data-hidden="1" name="x_id" id="x_id" value="<?= HtmlEncode($Page->id->CurrentValue) ?>">
 <?= $Page->IsModal ? '<template class="ew-modal-buttons">' : '<div class="row ew-buttons">' ?><!-- buttons .row -->
     <div class="<?= $Page->OffsetColumnClass ?>"><!-- buttons offset -->
 <button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit" form="fprodukedit"><?= $Language->phrase("SaveBtn") ?></button>

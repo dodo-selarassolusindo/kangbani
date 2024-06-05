@@ -201,12 +201,16 @@ class Produk extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'SELECT' // Edit Tag
         );
         $this->kelompok_id->InputTextType = "text";
         $this->kelompok_id->Raw = true;
+        $this->kelompok_id->setSelectMultiple(false); // Select one
+        $this->kelompok_id->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->kelompok_id->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->kelompok_id->Lookup = new Lookup($this->kelompok_id, 'kelompok', false, 'id', ["kode","nama","",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(`kode`, ''),'" . ValueSeparator(1, $this->kelompok_id) . "',COALESCE(`nama`,''))");
         $this->kelompok_id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->kelompok_id->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
+        $this->kelompok_id->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
         $this->Fields['kelompok_id'] = &$this->kelompok_id;
 
         // satuan_id
@@ -225,12 +229,16 @@ class Produk extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'SELECT' // Edit Tag
         );
         $this->satuan_id->InputTextType = "text";
         $this->satuan_id->Raw = true;
+        $this->satuan_id->setSelectMultiple(false); // Select one
+        $this->satuan_id->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->satuan_id->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->satuan_id->Lookup = new Lookup($this->satuan_id, 'satuan', false, 'id', ["kode","nama","unitdasar",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(`kode`, ''),'" . ValueSeparator(1, $this->satuan_id) . "',COALESCE(`nama`,''),'" . ValueSeparator(2, $this->satuan_id) . "',COALESCE(`unitdasar`,''))");
         $this->satuan_id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->satuan_id->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
+        $this->satuan_id->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
         $this->Fields['satuan_id'] = &$this->satuan_id;
 
         // satuan_id2
@@ -249,12 +257,16 @@ class Produk extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'SELECT' // Edit Tag
         );
         $this->satuan_id2->InputTextType = "text";
         $this->satuan_id2->Raw = true;
+        $this->satuan_id2->setSelectMultiple(false); // Select one
+        $this->satuan_id2->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->satuan_id2->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->satuan_id2->Lookup = new Lookup($this->satuan_id2, 'satuan', false, 'id', ["kode","nama","unitdasar",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(`kode`, ''),'" . ValueSeparator(1, $this->satuan_id2) . "',COALESCE(`nama`,''),'" . ValueSeparator(2, $this->satuan_id2) . "',COALESCE(`unitdasar`,''))");
         $this->satuan_id2->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->satuan_id2->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
+        $this->satuan_id2->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
         $this->Fields['satuan_id2'] = &$this->satuan_id2;
 
         // gudang_id
@@ -273,12 +285,16 @@ class Produk extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'SELECT' // Edit Tag
         );
         $this->gudang_id->InputTextType = "text";
         $this->gudang_id->Raw = true;
+        $this->gudang_id->setSelectMultiple(false); // Select one
+        $this->gudang_id->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->gudang_id->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->gudang_id->Lookup = new Lookup($this->gudang_id, 'gudang', false, 'id', ["kode","nama","lokasi",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(`kode`, ''),'" . ValueSeparator(1, $this->gudang_id) . "',COALESCE(`nama`,''),'" . ValueSeparator(2, $this->gudang_id) . "',COALESCE(`lokasi`,''))");
         $this->gudang_id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->gudang_id->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
+        $this->gudang_id->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
         $this->Fields['gudang_id'] = &$this->gudang_id;
 
         // minstok
@@ -345,12 +361,16 @@ class Produk extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'SELECT' // Edit Tag
         );
         $this->akunhpp->InputTextType = "text";
         $this->akunhpp->Raw = true;
+        $this->akunhpp->setSelectMultiple(false); // Select one
+        $this->akunhpp->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->akunhpp->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->akunhpp->Lookup = new Lookup($this->akunhpp, 'akun', false, 'id', ["kode","nama","",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(`kode`, ''),'" . ValueSeparator(1, $this->akunhpp) . "',COALESCE(`nama`,''))");
         $this->akunhpp->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->akunhpp->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
+        $this->akunhpp->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
         $this->Fields['akunhpp'] = &$this->akunhpp;
 
         // akunjual
@@ -369,12 +389,16 @@ class Produk extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'SELECT' // Edit Tag
         );
         $this->akunjual->InputTextType = "text";
         $this->akunjual->Raw = true;
+        $this->akunjual->setSelectMultiple(false); // Select one
+        $this->akunjual->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->akunjual->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->akunjual->Lookup = new Lookup($this->akunjual, 'akun', false, 'id', ["kode","nama","",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(`kode`, ''),'" . ValueSeparator(1, $this->akunjual) . "',COALESCE(`nama`,''))");
         $this->akunjual->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->akunjual->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
+        $this->akunjual->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
         $this->Fields['akunjual'] = &$this->akunjual;
 
         // akunpersediaan
@@ -393,12 +417,16 @@ class Produk extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'SELECT' // Edit Tag
         );
         $this->akunpersediaan->InputTextType = "text";
         $this->akunpersediaan->Raw = true;
+        $this->akunpersediaan->setSelectMultiple(false); // Select one
+        $this->akunpersediaan->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->akunpersediaan->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->akunpersediaan->Lookup = new Lookup($this->akunpersediaan, 'akun', false, 'id', ["kode","nama","",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(`kode`, ''),'" . ValueSeparator(1, $this->akunpersediaan) . "',COALESCE(`nama`,''))");
         $this->akunpersediaan->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->akunpersediaan->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
+        $this->akunpersediaan->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
         $this->Fields['akunpersediaan'] = &$this->akunpersediaan;
 
         // akunreturjual
@@ -417,12 +445,16 @@ class Produk extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'SELECT' // Edit Tag
         );
         $this->akunreturjual->InputTextType = "text";
         $this->akunreturjual->Raw = true;
+        $this->akunreturjual->setSelectMultiple(false); // Select one
+        $this->akunreturjual->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->akunreturjual->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->akunreturjual->Lookup = new Lookup($this->akunreturjual, 'akun', false, 'id', ["kode","nama","",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(`kode`, ''),'" . ValueSeparator(1, $this->akunreturjual) . "',COALESCE(`nama`,''))");
         $this->akunreturjual->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->akunreturjual->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
+        $this->akunreturjual->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
         $this->Fields['akunreturjual'] = &$this->akunreturjual;
 
         // hargapokok
@@ -609,12 +641,14 @@ class Produk extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'RADIO' // Edit Tag
         );
         $this->aktif->InputTextType = "text";
         $this->aktif->Raw = true;
+        $this->aktif->Lookup = new Lookup($this->aktif, 'produk', false, '', ["","","",""], '', '', [], [], [], [], [], [], false, '', '', "");
+        $this->aktif->OptionCount = 2;
         $this->aktif->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->aktif->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
+        $this->aktif->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
         $this->Fields['aktif'] = &$this->aktif;
 
         // id_FK
@@ -1649,20 +1683,96 @@ class Produk extends DbTable
         $this->nama->ViewValue = $this->nama->CurrentValue;
 
         // kelompok_id
-        $this->kelompok_id->ViewValue = $this->kelompok_id->CurrentValue;
-        $this->kelompok_id->ViewValue = FormatNumber($this->kelompok_id->ViewValue, $this->kelompok_id->formatPattern());
+        $curVal = strval($this->kelompok_id->CurrentValue);
+        if ($curVal != "") {
+            $this->kelompok_id->ViewValue = $this->kelompok_id->lookupCacheOption($curVal);
+            if ($this->kelompok_id->ViewValue === null) { // Lookup from database
+                $filterWrk = SearchFilter($this->kelompok_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->kelompok_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                $sqlWrk = $this->kelompok_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->kelompok_id->Lookup->renderViewRow($rswrk[0]);
+                    $this->kelompok_id->ViewValue = $this->kelompok_id->displayValue($arwrk);
+                } else {
+                    $this->kelompok_id->ViewValue = FormatNumber($this->kelompok_id->CurrentValue, $this->kelompok_id->formatPattern());
+                }
+            }
+        } else {
+            $this->kelompok_id->ViewValue = null;
+        }
 
         // satuan_id
-        $this->satuan_id->ViewValue = $this->satuan_id->CurrentValue;
-        $this->satuan_id->ViewValue = FormatNumber($this->satuan_id->ViewValue, $this->satuan_id->formatPattern());
+        $curVal = strval($this->satuan_id->CurrentValue);
+        if ($curVal != "") {
+            $this->satuan_id->ViewValue = $this->satuan_id->lookupCacheOption($curVal);
+            if ($this->satuan_id->ViewValue === null) { // Lookup from database
+                $filterWrk = SearchFilter($this->satuan_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->satuan_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                $sqlWrk = $this->satuan_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->satuan_id->Lookup->renderViewRow($rswrk[0]);
+                    $this->satuan_id->ViewValue = $this->satuan_id->displayValue($arwrk);
+                } else {
+                    $this->satuan_id->ViewValue = FormatNumber($this->satuan_id->CurrentValue, $this->satuan_id->formatPattern());
+                }
+            }
+        } else {
+            $this->satuan_id->ViewValue = null;
+        }
 
         // satuan_id2
-        $this->satuan_id2->ViewValue = $this->satuan_id2->CurrentValue;
-        $this->satuan_id2->ViewValue = FormatNumber($this->satuan_id2->ViewValue, $this->satuan_id2->formatPattern());
+        $curVal = strval($this->satuan_id2->CurrentValue);
+        if ($curVal != "") {
+            $this->satuan_id2->ViewValue = $this->satuan_id2->lookupCacheOption($curVal);
+            if ($this->satuan_id2->ViewValue === null) { // Lookup from database
+                $filterWrk = SearchFilter($this->satuan_id2->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->satuan_id2->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                $sqlWrk = $this->satuan_id2->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->satuan_id2->Lookup->renderViewRow($rswrk[0]);
+                    $this->satuan_id2->ViewValue = $this->satuan_id2->displayValue($arwrk);
+                } else {
+                    $this->satuan_id2->ViewValue = FormatNumber($this->satuan_id2->CurrentValue, $this->satuan_id2->formatPattern());
+                }
+            }
+        } else {
+            $this->satuan_id2->ViewValue = null;
+        }
 
         // gudang_id
-        $this->gudang_id->ViewValue = $this->gudang_id->CurrentValue;
-        $this->gudang_id->ViewValue = FormatNumber($this->gudang_id->ViewValue, $this->gudang_id->formatPattern());
+        $curVal = strval($this->gudang_id->CurrentValue);
+        if ($curVal != "") {
+            $this->gudang_id->ViewValue = $this->gudang_id->lookupCacheOption($curVal);
+            if ($this->gudang_id->ViewValue === null) { // Lookup from database
+                $filterWrk = SearchFilter($this->gudang_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->gudang_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                $sqlWrk = $this->gudang_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->gudang_id->Lookup->renderViewRow($rswrk[0]);
+                    $this->gudang_id->ViewValue = $this->gudang_id->displayValue($arwrk);
+                } else {
+                    $this->gudang_id->ViewValue = FormatNumber($this->gudang_id->CurrentValue, $this->gudang_id->formatPattern());
+                }
+            }
+        } else {
+            $this->gudang_id->ViewValue = null;
+        }
 
         // minstok
         $this->minstok->ViewValue = $this->minstok->CurrentValue;
@@ -1673,20 +1783,96 @@ class Produk extends DbTable
         $this->minorder->ViewValue = FormatNumber($this->minorder->ViewValue, $this->minorder->formatPattern());
 
         // akunhpp
-        $this->akunhpp->ViewValue = $this->akunhpp->CurrentValue;
-        $this->akunhpp->ViewValue = FormatNumber($this->akunhpp->ViewValue, $this->akunhpp->formatPattern());
+        $curVal = strval($this->akunhpp->CurrentValue);
+        if ($curVal != "") {
+            $this->akunhpp->ViewValue = $this->akunhpp->lookupCacheOption($curVal);
+            if ($this->akunhpp->ViewValue === null) { // Lookup from database
+                $filterWrk = SearchFilter($this->akunhpp->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->akunhpp->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                $sqlWrk = $this->akunhpp->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->akunhpp->Lookup->renderViewRow($rswrk[0]);
+                    $this->akunhpp->ViewValue = $this->akunhpp->displayValue($arwrk);
+                } else {
+                    $this->akunhpp->ViewValue = FormatNumber($this->akunhpp->CurrentValue, $this->akunhpp->formatPattern());
+                }
+            }
+        } else {
+            $this->akunhpp->ViewValue = null;
+        }
 
         // akunjual
-        $this->akunjual->ViewValue = $this->akunjual->CurrentValue;
-        $this->akunjual->ViewValue = FormatNumber($this->akunjual->ViewValue, $this->akunjual->formatPattern());
+        $curVal = strval($this->akunjual->CurrentValue);
+        if ($curVal != "") {
+            $this->akunjual->ViewValue = $this->akunjual->lookupCacheOption($curVal);
+            if ($this->akunjual->ViewValue === null) { // Lookup from database
+                $filterWrk = SearchFilter($this->akunjual->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->akunjual->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                $sqlWrk = $this->akunjual->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->akunjual->Lookup->renderViewRow($rswrk[0]);
+                    $this->akunjual->ViewValue = $this->akunjual->displayValue($arwrk);
+                } else {
+                    $this->akunjual->ViewValue = FormatNumber($this->akunjual->CurrentValue, $this->akunjual->formatPattern());
+                }
+            }
+        } else {
+            $this->akunjual->ViewValue = null;
+        }
 
         // akunpersediaan
-        $this->akunpersediaan->ViewValue = $this->akunpersediaan->CurrentValue;
-        $this->akunpersediaan->ViewValue = FormatNumber($this->akunpersediaan->ViewValue, $this->akunpersediaan->formatPattern());
+        $curVal = strval($this->akunpersediaan->CurrentValue);
+        if ($curVal != "") {
+            $this->akunpersediaan->ViewValue = $this->akunpersediaan->lookupCacheOption($curVal);
+            if ($this->akunpersediaan->ViewValue === null) { // Lookup from database
+                $filterWrk = SearchFilter($this->akunpersediaan->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->akunpersediaan->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                $sqlWrk = $this->akunpersediaan->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->akunpersediaan->Lookup->renderViewRow($rswrk[0]);
+                    $this->akunpersediaan->ViewValue = $this->akunpersediaan->displayValue($arwrk);
+                } else {
+                    $this->akunpersediaan->ViewValue = FormatNumber($this->akunpersediaan->CurrentValue, $this->akunpersediaan->formatPattern());
+                }
+            }
+        } else {
+            $this->akunpersediaan->ViewValue = null;
+        }
 
         // akunreturjual
-        $this->akunreturjual->ViewValue = $this->akunreturjual->CurrentValue;
-        $this->akunreturjual->ViewValue = FormatNumber($this->akunreturjual->ViewValue, $this->akunreturjual->formatPattern());
+        $curVal = strval($this->akunreturjual->CurrentValue);
+        if ($curVal != "") {
+            $this->akunreturjual->ViewValue = $this->akunreturjual->lookupCacheOption($curVal);
+            if ($this->akunreturjual->ViewValue === null) { // Lookup from database
+                $filterWrk = SearchFilter($this->akunreturjual->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->akunreturjual->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                $sqlWrk = $this->akunreturjual->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->akunreturjual->Lookup->renderViewRow($rswrk[0]);
+                    $this->akunreturjual->ViewValue = $this->akunreturjual->displayValue($arwrk);
+                } else {
+                    $this->akunreturjual->ViewValue = FormatNumber($this->akunreturjual->CurrentValue, $this->akunreturjual->formatPattern());
+                }
+            }
+        } else {
+            $this->akunreturjual->ViewValue = null;
+        }
 
         // hargapokok
         $this->hargapokok->ViewValue = $this->hargapokok->CurrentValue;
@@ -1717,8 +1903,11 @@ class Produk extends DbTable
         $this->waktukirim->ViewValue = FormatNumber($this->waktukirim->ViewValue, $this->waktukirim->formatPattern());
 
         // aktif
-        $this->aktif->ViewValue = $this->aktif->CurrentValue;
-        $this->aktif->ViewValue = FormatNumber($this->aktif->ViewValue, $this->aktif->formatPattern());
+        if (strval($this->aktif->CurrentValue) != "") {
+            $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
+        } else {
+            $this->aktif->ViewValue = null;
+        }
 
         // id_FK
         $this->id_FK->ViewValue = $this->id_FK->CurrentValue;
@@ -1849,35 +2038,19 @@ class Produk extends DbTable
 
         // kelompok_id
         $this->kelompok_id->setupEditAttributes();
-        $this->kelompok_id->EditValue = $this->kelompok_id->CurrentValue;
         $this->kelompok_id->PlaceHolder = RemoveHtml($this->kelompok_id->caption());
-        if (strval($this->kelompok_id->EditValue) != "" && is_numeric($this->kelompok_id->EditValue)) {
-            $this->kelompok_id->EditValue = FormatNumber($this->kelompok_id->EditValue, null);
-        }
 
         // satuan_id
         $this->satuan_id->setupEditAttributes();
-        $this->satuan_id->EditValue = $this->satuan_id->CurrentValue;
         $this->satuan_id->PlaceHolder = RemoveHtml($this->satuan_id->caption());
-        if (strval($this->satuan_id->EditValue) != "" && is_numeric($this->satuan_id->EditValue)) {
-            $this->satuan_id->EditValue = FormatNumber($this->satuan_id->EditValue, null);
-        }
 
         // satuan_id2
         $this->satuan_id2->setupEditAttributes();
-        $this->satuan_id2->EditValue = $this->satuan_id2->CurrentValue;
         $this->satuan_id2->PlaceHolder = RemoveHtml($this->satuan_id2->caption());
-        if (strval($this->satuan_id2->EditValue) != "" && is_numeric($this->satuan_id2->EditValue)) {
-            $this->satuan_id2->EditValue = FormatNumber($this->satuan_id2->EditValue, null);
-        }
 
         // gudang_id
         $this->gudang_id->setupEditAttributes();
-        $this->gudang_id->EditValue = $this->gudang_id->CurrentValue;
         $this->gudang_id->PlaceHolder = RemoveHtml($this->gudang_id->caption());
-        if (strval($this->gudang_id->EditValue) != "" && is_numeric($this->gudang_id->EditValue)) {
-            $this->gudang_id->EditValue = FormatNumber($this->gudang_id->EditValue, null);
-        }
 
         // minstok
         $this->minstok->setupEditAttributes();
@@ -1897,35 +2070,19 @@ class Produk extends DbTable
 
         // akunhpp
         $this->akunhpp->setupEditAttributes();
-        $this->akunhpp->EditValue = $this->akunhpp->CurrentValue;
         $this->akunhpp->PlaceHolder = RemoveHtml($this->akunhpp->caption());
-        if (strval($this->akunhpp->EditValue) != "" && is_numeric($this->akunhpp->EditValue)) {
-            $this->akunhpp->EditValue = FormatNumber($this->akunhpp->EditValue, null);
-        }
 
         // akunjual
         $this->akunjual->setupEditAttributes();
-        $this->akunjual->EditValue = $this->akunjual->CurrentValue;
         $this->akunjual->PlaceHolder = RemoveHtml($this->akunjual->caption());
-        if (strval($this->akunjual->EditValue) != "" && is_numeric($this->akunjual->EditValue)) {
-            $this->akunjual->EditValue = FormatNumber($this->akunjual->EditValue, null);
-        }
 
         // akunpersediaan
         $this->akunpersediaan->setupEditAttributes();
-        $this->akunpersediaan->EditValue = $this->akunpersediaan->CurrentValue;
         $this->akunpersediaan->PlaceHolder = RemoveHtml($this->akunpersediaan->caption());
-        if (strval($this->akunpersediaan->EditValue) != "" && is_numeric($this->akunpersediaan->EditValue)) {
-            $this->akunpersediaan->EditValue = FormatNumber($this->akunpersediaan->EditValue, null);
-        }
 
         // akunreturjual
         $this->akunreturjual->setupEditAttributes();
-        $this->akunreturjual->EditValue = $this->akunreturjual->CurrentValue;
         $this->akunreturjual->PlaceHolder = RemoveHtml($this->akunreturjual->caption());
-        if (strval($this->akunreturjual->EditValue) != "" && is_numeric($this->akunreturjual->EditValue)) {
-            $this->akunreturjual->EditValue = FormatNumber($this->akunreturjual->EditValue, null);
-        }
 
         // hargapokok
         $this->hargapokok->setupEditAttributes();
@@ -1984,12 +2141,8 @@ class Produk extends DbTable
         }
 
         // aktif
-        $this->aktif->setupEditAttributes();
-        $this->aktif->EditValue = $this->aktif->CurrentValue;
+        $this->aktif->EditValue = $this->aktif->options(false);
         $this->aktif->PlaceHolder = RemoveHtml($this->aktif->caption());
-        if (strval($this->aktif->EditValue) != "" && is_numeric($this->aktif->EditValue)) {
-            $this->aktif->EditValue = FormatNumber($this->aktif->EditValue, null);
-        }
 
         // id_FK
         $this->id_FK->setupEditAttributes();
@@ -2027,7 +2180,6 @@ class Produk extends DbTable
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->id);
                     $doc->exportCaption($this->kode);
                     $doc->exportCaption($this->nama);
                     $doc->exportCaption($this->kelompok_id);
@@ -2048,7 +2200,6 @@ class Produk extends DbTable
                     $doc->exportCaption($this->supplier_id);
                     $doc->exportCaption($this->waktukirim);
                     $doc->exportCaption($this->aktif);
-                    $doc->exportCaption($this->id_FK);
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->kode);
@@ -2098,7 +2249,6 @@ class Produk extends DbTable
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->id);
                         $doc->exportField($this->kode);
                         $doc->exportField($this->nama);
                         $doc->exportField($this->kelompok_id);
@@ -2119,7 +2269,6 @@ class Produk extends DbTable
                         $doc->exportField($this->supplier_id);
                         $doc->exportField($this->waktukirim);
                         $doc->exportField($this->aktif);
-                        $doc->exportField($this->id_FK);
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->kode);

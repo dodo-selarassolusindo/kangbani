@@ -121,7 +121,7 @@ class SatuanDelete extends Satuan
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->kode->setVisibility();
         $this->nama->setVisibility();
         $this->keterangan->setVisibility();
@@ -636,10 +636,6 @@ class SatuanDelete extends Satuan
             // unitdasar
             $this->unitdasar->ViewValue = $this->unitdasar->CurrentValue;
             $this->unitdasar->ViewValue = FormatNumber($this->unitdasar->ViewValue, $this->unitdasar->formatPattern());
-
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // kode
             $this->kode->HrefValue = "";

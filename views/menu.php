@@ -18,10 +18,11 @@ $topMenu->addMenuItem(6, "mi_kelompok", $Language->menuPhrase("6", "MenuText"), 
 $topMenu->addMenuItem(17, "mi_satuan", $Language->menuPhrase("17", "MenuText"), "satuanlist", 83, "", true, false, false, "", "", true, false);
 $topMenu->addMenuItem(3, "mi_gudang", $Language->menuPhrase("3", "MenuText"), "gudanglist", 83, "", true, false, false, "", "", true, false);
 $topMenu->addMenuItem(15, "mi_produk", $Language->menuPhrase("15", "MenuText"), "produklist", 83, "", true, false, false, "", "", true, false);
-$topMenu->addMenuItem(22, "mi_type", $Language->menuPhrase("22", "MenuText"), "typelist", 23, "", true, false, false, "", "", true, false);
+$topMenu->addMenuItem(101, "mci_User", $Language->menuPhrase("101", "MenuText"), "", 23, "", true, false, true, "", "", true, false);
+$topMenu->addMenuItem(22, "mi_type", $Language->menuPhrase("22", "MenuText"), "typelist", 101, "", true, false, false, "", "", true, false);
+$topMenu->addMenuItem(14, "mi_person", $Language->menuPhrase("14", "MenuText"), "personlist", 101, "", true, false, false, "", "", true, false);
 $topMenu->addMenuItem(7, "mi_klasifikasi", $Language->menuPhrase("7", "MenuText"), "klasifikasilist", 23, "", true, false, false, "", "", true, false);
 $topMenu->addMenuItem(12, "mi_pengiriman", $Language->menuPhrase("12", "MenuText"), "pengirimanlist", 23, "", true, false, false, "", "", true, false);
-$topMenu->addMenuItem(14, "mi_person", $Language->menuPhrase("14", "MenuText"), "personlist", 23, "", true, false, false, "", "", true, false);
 $topMenu->addMenuItem(74, "mci_Setting", $Language->menuPhrase("74", "MenuText"), "", -1, "", true, false, true, "", "", true, false);
 $topMenu->addMenuItem(21, "mi_tos", $Language->menuPhrase("21", "MenuText"), "toslist", 74, "", true, false, false, "", "", true, false);
 $topMenu->addMenuItem(20, "mi_top", $Language->menuPhrase("20", "MenuText"), "toplist", 74, "", true, false, false, "", "", true, false);
@@ -48,10 +49,11 @@ $sideMenu->addMenuItem(6, "mi_kelompok", $Language->menuPhrase("6", "MenuText"),
 $sideMenu->addMenuItem(17, "mi_satuan", $Language->menuPhrase("17", "MenuText"), "satuanlist", 83, "", true, false, false, "", "", true, true);
 $sideMenu->addMenuItem(3, "mi_gudang", $Language->menuPhrase("3", "MenuText"), "gudanglist", 83, "", true, false, false, "", "", true, true);
 $sideMenu->addMenuItem(15, "mi_produk", $Language->menuPhrase("15", "MenuText"), "produklist", 83, "", true, false, false, "", "", true, true);
-$sideMenu->addMenuItem(22, "mi_type", $Language->menuPhrase("22", "MenuText"), "typelist", 23, "", true, false, false, "", "", true, true);
+$sideMenu->addMenuItem(101, "mci_User", $Language->menuPhrase("101", "MenuText"), "", 23, "", true, false, true, "", "", true, true);
+$sideMenu->addMenuItem(22, "mi_type", $Language->menuPhrase("22", "MenuText"), "typelist", 101, "", true, false, false, "", "", true, true);
+$sideMenu->addMenuItem(14, "mi_person", $Language->menuPhrase("14", "MenuText"), "personlist", 101, "", true, false, false, "", "", true, true);
 $sideMenu->addMenuItem(7, "mi_klasifikasi", $Language->menuPhrase("7", "MenuText"), "klasifikasilist", 23, "", true, false, false, "", "", true, true);
 $sideMenu->addMenuItem(12, "mi_pengiriman", $Language->menuPhrase("12", "MenuText"), "pengirimanlist", 23, "", true, false, false, "", "", true, true);
-$sideMenu->addMenuItem(14, "mi_person", $Language->menuPhrase("14", "MenuText"), "personlist", 23, "", true, false, false, "", "", true, true);
 $sideMenu->addMenuItem(74, "mci_Setting", $Language->menuPhrase("74", "MenuText"), "", -1, "", true, false, true, "", "", true, true);
 $sideMenu->addMenuItem(21, "mi_tos", $Language->menuPhrase("21", "MenuText"), "toslist", 74, "", true, false, false, "", "", true, true);
 $sideMenu->addMenuItem(20, "mi_top", $Language->menuPhrase("20", "MenuText"), "toplist", 74, "", true, false, false, "", "", true, true);

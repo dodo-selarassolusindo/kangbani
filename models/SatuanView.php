@@ -895,10 +895,6 @@ class SatuanView extends Satuan
             $this->unitdasar->ViewValue = $this->unitdasar->CurrentValue;
             $this->unitdasar->ViewValue = FormatNumber($this->unitdasar->ViewValue, $this->unitdasar->formatPattern());
 
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
             // kode
             $this->kode->HrefValue = "";
             $this->kode->TooltipValue = "";

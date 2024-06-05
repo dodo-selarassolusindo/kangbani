@@ -145,7 +145,7 @@ class SatuanList extends Satuan
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->kode->setVisibility();
         $this->nama->setVisibility();
         $this->keterangan->setVisibility();
@@ -1214,7 +1214,6 @@ class SatuanList extends Satuan
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id); // id
             $this->updateSort($this->kode); // kode
             $this->updateSort($this->nama); // nama
             $this->updateSort($this->keterangan); // keterangan
@@ -1310,6 +1309,14 @@ class SatuanList extends Satuan
         $item->ShowInDropDown = false;
         $item->ShowInButtonGroup = false;
 
+        // "sequence"
+        $item = &$this->ListOptions->add("sequence");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = true;
+        $item->OnLeft = true; // Always on left
+        $item->ShowInDropDown = false;
+        $item->ShowInButtonGroup = false;
+
         // Drop down button for ListOptions
         $this->ListOptions->UseDropDownButton = false;
         $this->ListOptions->DropDownButtonPhrase = $Language->phrase("ButtonListOptions");
@@ -1347,6 +1354,10 @@ class SatuanList extends Satuan
 
         // Call ListOptions_Rendering event
         $this->listOptionsRendering();
+
+        // "sequence"
+        $opt = $this->ListOptions["sequence"];
+        $opt->Body = FormatSequenceNumber($this->RecordCount);
         $pageUrl = $this->pageUrl(false);
         if ($this->CurrentMode == "view") {
             // "view"
@@ -1485,7 +1496,6 @@ class SatuanList extends Satuan
             $item = &$option->addGroupOption();
             $item->Body = "";
             $item->Visible = $this->UseColumnVisibility;
-            $this->createColumnOption($option, "id");
             $this->createColumnOption($option, "kode");
             $this->createColumnOption($option, "nama");
             $this->createColumnOption($option, "keterangan");
@@ -2011,10 +2021,6 @@ class SatuanList extends Satuan
             // unitdasar
             $this->unitdasar->ViewValue = $this->unitdasar->CurrentValue;
             $this->unitdasar->ViewValue = FormatNumber($this->unitdasar->ViewValue, $this->unitdasar->formatPattern());
-
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // kode
             $this->kode->HrefValue = "";

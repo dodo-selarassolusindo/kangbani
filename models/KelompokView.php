@@ -878,10 +878,6 @@ class KelompokView extends Kelompok
             // nama
             $this->nama->ViewValue = $this->nama->CurrentValue;
 
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
             // kode
             $this->kode->HrefValue = "";
             $this->kode->TooltipValue = "";

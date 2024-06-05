@@ -886,10 +886,6 @@ class GudangView extends Gudang
             // lokasi
             $this->lokasi->ViewValue = $this->lokasi->CurrentValue;
 
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
             // kode
             $this->kode->HrefValue = "";
             $this->kode->TooltipValue = "";

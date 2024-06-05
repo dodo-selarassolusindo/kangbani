@@ -121,7 +121,7 @@ class SatuanEdit extends Satuan
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->kode->setVisibility();
         $this->nama->setVisibility();
         $this->keterangan->setVisibility();
@@ -750,12 +750,6 @@ class SatuanEdit extends Satuan
         global $CurrentForm;
         $validate = !Config("SERVER_VALIDATE");
 
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            $this->id->setFormValue($val);
-        }
-
         // Check field name 'kode' first before field var 'x_kode'
         $val = $CurrentForm->hasValue("kode") ? $CurrentForm->getValue("kode") : $CurrentForm->getValue("x_kode");
         if (!$this->kode->IsDetailKey) {
@@ -794,6 +788,12 @@ class SatuanEdit extends Satuan
             } else {
                 $this->unitdasar->setFormValue($val, true, $validate);
             }
+        }
+
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        if (!$this->id->IsDetailKey) {
+            $this->id->setFormValue($val);
         }
     }
 
@@ -984,9 +984,6 @@ class SatuanEdit extends Satuan
             $this->unitdasar->ViewValue = $this->unitdasar->CurrentValue;
             $this->unitdasar->ViewValue = FormatNumber($this->unitdasar->ViewValue, $this->unitdasar->formatPattern());
 
-            // id
-            $this->id->HrefValue = "";
-
             // kode
             $this->kode->HrefValue = "";
 
@@ -999,10 +996,6 @@ class SatuanEdit extends Satuan
             // unitdasar
             $this->unitdasar->HrefValue = "";
         } elseif ($this->RowType == RowType::EDIT) {
-            // id
-            $this->id->setupEditAttributes();
-            $this->id->EditValue = $this->id->CurrentValue;
-
             // kode
             $this->kode->setupEditAttributes();
             if (!$this->kode->Raw) {
@@ -1037,9 +1030,6 @@ class SatuanEdit extends Satuan
 
             // Edit refer script
 
-            // id
-            $this->id->HrefValue = "";
-
             // kode
             $this->kode->HrefValue = "";
 
@@ -1072,11 +1062,6 @@ class SatuanEdit extends Satuan
             return true;
         }
         $validateForm = true;
-            if ($this->id->Visible && $this->id->Required) {
-                if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
-                    $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
-                }
-            }
             if ($this->kode->Visible && $this->kode->Required) {
                 if (!$this->kode->IsDetailKey && EmptyValue($this->kode->FormValue)) {
                     $this->kode->addErrorMessage(str_replace("%s", $this->kode->caption(), $this->kode->RequiredErrorMessage));

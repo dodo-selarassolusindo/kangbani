@@ -121,7 +121,7 @@ class ProdukDelete extends Produk
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->kode->setVisibility();
         $this->nama->setVisibility();
         $this->kelompok_id->setVisibility();
@@ -142,7 +142,7 @@ class ProdukDelete extends Produk
         $this->supplier_id->setVisibility();
         $this->waktukirim->setVisibility();
         $this->aktif->setVisibility();
-        $this->id_FK->setVisibility();
+        $this->id_FK->Visible = false;
     }
 
     // Constructor
@@ -415,6 +415,17 @@ class ProdukDelete extends Produk
         if ($this->UseAjaxActions) {
             $this->InlineDelete = true;
         }
+
+        // Set up lookup cache
+        $this->setupLookupOptions($this->kelompok_id);
+        $this->setupLookupOptions($this->satuan_id);
+        $this->setupLookupOptions($this->satuan_id2);
+        $this->setupLookupOptions($this->gudang_id);
+        $this->setupLookupOptions($this->akunhpp);
+        $this->setupLookupOptions($this->akunjual);
+        $this->setupLookupOptions($this->akunpersediaan);
+        $this->setupLookupOptions($this->akunreturjual);
+        $this->setupLookupOptions($this->aktif);
 
         // Set up Breadcrumb
         $this->setupBreadcrumb();
@@ -716,20 +727,96 @@ class ProdukDelete extends Produk
             $this->nama->ViewValue = $this->nama->CurrentValue;
 
             // kelompok_id
-            $this->kelompok_id->ViewValue = $this->kelompok_id->CurrentValue;
-            $this->kelompok_id->ViewValue = FormatNumber($this->kelompok_id->ViewValue, $this->kelompok_id->formatPattern());
+            $curVal = strval($this->kelompok_id->CurrentValue);
+            if ($curVal != "") {
+                $this->kelompok_id->ViewValue = $this->kelompok_id->lookupCacheOption($curVal);
+                if ($this->kelompok_id->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->kelompok_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->kelompok_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->kelompok_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->kelompok_id->Lookup->renderViewRow($rswrk[0]);
+                        $this->kelompok_id->ViewValue = $this->kelompok_id->displayValue($arwrk);
+                    } else {
+                        $this->kelompok_id->ViewValue = FormatNumber($this->kelompok_id->CurrentValue, $this->kelompok_id->formatPattern());
+                    }
+                }
+            } else {
+                $this->kelompok_id->ViewValue = null;
+            }
 
             // satuan_id
-            $this->satuan_id->ViewValue = $this->satuan_id->CurrentValue;
-            $this->satuan_id->ViewValue = FormatNumber($this->satuan_id->ViewValue, $this->satuan_id->formatPattern());
+            $curVal = strval($this->satuan_id->CurrentValue);
+            if ($curVal != "") {
+                $this->satuan_id->ViewValue = $this->satuan_id->lookupCacheOption($curVal);
+                if ($this->satuan_id->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->satuan_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->satuan_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->satuan_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->satuan_id->Lookup->renderViewRow($rswrk[0]);
+                        $this->satuan_id->ViewValue = $this->satuan_id->displayValue($arwrk);
+                    } else {
+                        $this->satuan_id->ViewValue = FormatNumber($this->satuan_id->CurrentValue, $this->satuan_id->formatPattern());
+                    }
+                }
+            } else {
+                $this->satuan_id->ViewValue = null;
+            }
 
             // satuan_id2
-            $this->satuan_id2->ViewValue = $this->satuan_id2->CurrentValue;
-            $this->satuan_id2->ViewValue = FormatNumber($this->satuan_id2->ViewValue, $this->satuan_id2->formatPattern());
+            $curVal = strval($this->satuan_id2->CurrentValue);
+            if ($curVal != "") {
+                $this->satuan_id2->ViewValue = $this->satuan_id2->lookupCacheOption($curVal);
+                if ($this->satuan_id2->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->satuan_id2->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->satuan_id2->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->satuan_id2->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->satuan_id2->Lookup->renderViewRow($rswrk[0]);
+                        $this->satuan_id2->ViewValue = $this->satuan_id2->displayValue($arwrk);
+                    } else {
+                        $this->satuan_id2->ViewValue = FormatNumber($this->satuan_id2->CurrentValue, $this->satuan_id2->formatPattern());
+                    }
+                }
+            } else {
+                $this->satuan_id2->ViewValue = null;
+            }
 
             // gudang_id
-            $this->gudang_id->ViewValue = $this->gudang_id->CurrentValue;
-            $this->gudang_id->ViewValue = FormatNumber($this->gudang_id->ViewValue, $this->gudang_id->formatPattern());
+            $curVal = strval($this->gudang_id->CurrentValue);
+            if ($curVal != "") {
+                $this->gudang_id->ViewValue = $this->gudang_id->lookupCacheOption($curVal);
+                if ($this->gudang_id->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->gudang_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->gudang_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->gudang_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->gudang_id->Lookup->renderViewRow($rswrk[0]);
+                        $this->gudang_id->ViewValue = $this->gudang_id->displayValue($arwrk);
+                    } else {
+                        $this->gudang_id->ViewValue = FormatNumber($this->gudang_id->CurrentValue, $this->gudang_id->formatPattern());
+                    }
+                }
+            } else {
+                $this->gudang_id->ViewValue = null;
+            }
 
             // minstok
             $this->minstok->ViewValue = $this->minstok->CurrentValue;
@@ -740,20 +827,96 @@ class ProdukDelete extends Produk
             $this->minorder->ViewValue = FormatNumber($this->minorder->ViewValue, $this->minorder->formatPattern());
 
             // akunhpp
-            $this->akunhpp->ViewValue = $this->akunhpp->CurrentValue;
-            $this->akunhpp->ViewValue = FormatNumber($this->akunhpp->ViewValue, $this->akunhpp->formatPattern());
+            $curVal = strval($this->akunhpp->CurrentValue);
+            if ($curVal != "") {
+                $this->akunhpp->ViewValue = $this->akunhpp->lookupCacheOption($curVal);
+                if ($this->akunhpp->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->akunhpp->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->akunhpp->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->akunhpp->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->akunhpp->Lookup->renderViewRow($rswrk[0]);
+                        $this->akunhpp->ViewValue = $this->akunhpp->displayValue($arwrk);
+                    } else {
+                        $this->akunhpp->ViewValue = FormatNumber($this->akunhpp->CurrentValue, $this->akunhpp->formatPattern());
+                    }
+                }
+            } else {
+                $this->akunhpp->ViewValue = null;
+            }
 
             // akunjual
-            $this->akunjual->ViewValue = $this->akunjual->CurrentValue;
-            $this->akunjual->ViewValue = FormatNumber($this->akunjual->ViewValue, $this->akunjual->formatPattern());
+            $curVal = strval($this->akunjual->CurrentValue);
+            if ($curVal != "") {
+                $this->akunjual->ViewValue = $this->akunjual->lookupCacheOption($curVal);
+                if ($this->akunjual->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->akunjual->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->akunjual->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->akunjual->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->akunjual->Lookup->renderViewRow($rswrk[0]);
+                        $this->akunjual->ViewValue = $this->akunjual->displayValue($arwrk);
+                    } else {
+                        $this->akunjual->ViewValue = FormatNumber($this->akunjual->CurrentValue, $this->akunjual->formatPattern());
+                    }
+                }
+            } else {
+                $this->akunjual->ViewValue = null;
+            }
 
             // akunpersediaan
-            $this->akunpersediaan->ViewValue = $this->akunpersediaan->CurrentValue;
-            $this->akunpersediaan->ViewValue = FormatNumber($this->akunpersediaan->ViewValue, $this->akunpersediaan->formatPattern());
+            $curVal = strval($this->akunpersediaan->CurrentValue);
+            if ($curVal != "") {
+                $this->akunpersediaan->ViewValue = $this->akunpersediaan->lookupCacheOption($curVal);
+                if ($this->akunpersediaan->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->akunpersediaan->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->akunpersediaan->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->akunpersediaan->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->akunpersediaan->Lookup->renderViewRow($rswrk[0]);
+                        $this->akunpersediaan->ViewValue = $this->akunpersediaan->displayValue($arwrk);
+                    } else {
+                        $this->akunpersediaan->ViewValue = FormatNumber($this->akunpersediaan->CurrentValue, $this->akunpersediaan->formatPattern());
+                    }
+                }
+            } else {
+                $this->akunpersediaan->ViewValue = null;
+            }
 
             // akunreturjual
-            $this->akunreturjual->ViewValue = $this->akunreturjual->CurrentValue;
-            $this->akunreturjual->ViewValue = FormatNumber($this->akunreturjual->ViewValue, $this->akunreturjual->formatPattern());
+            $curVal = strval($this->akunreturjual->CurrentValue);
+            if ($curVal != "") {
+                $this->akunreturjual->ViewValue = $this->akunreturjual->lookupCacheOption($curVal);
+                if ($this->akunreturjual->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->akunreturjual->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->akunreturjual->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->akunreturjual->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->akunreturjual->Lookup->renderViewRow($rswrk[0]);
+                        $this->akunreturjual->ViewValue = $this->akunreturjual->displayValue($arwrk);
+                    } else {
+                        $this->akunreturjual->ViewValue = FormatNumber($this->akunreturjual->CurrentValue, $this->akunreturjual->formatPattern());
+                    }
+                }
+            } else {
+                $this->akunreturjual->ViewValue = null;
+            }
 
             // hargapokok
             $this->hargapokok->ViewValue = $this->hargapokok->CurrentValue;
@@ -784,16 +947,15 @@ class ProdukDelete extends Produk
             $this->waktukirim->ViewValue = FormatNumber($this->waktukirim->ViewValue, $this->waktukirim->formatPattern());
 
             // aktif
-            $this->aktif->ViewValue = $this->aktif->CurrentValue;
-            $this->aktif->ViewValue = FormatNumber($this->aktif->ViewValue, $this->aktif->formatPattern());
+            if (strval($this->aktif->CurrentValue) != "") {
+                $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
+            } else {
+                $this->aktif->ViewValue = null;
+            }
 
             // id_FK
             $this->id_FK->ViewValue = $this->id_FK->CurrentValue;
             $this->id_FK->ViewValue = FormatNumber($this->id_FK->ViewValue, $this->id_FK->formatPattern());
-
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // kode
             $this->kode->HrefValue = "";
@@ -874,10 +1036,6 @@ class ProdukDelete extends Produk
             // aktif
             $this->aktif->HrefValue = "";
             $this->aktif->TooltipValue = "";
-
-            // id_FK
-            $this->id_FK->HrefValue = "";
-            $this->id_FK->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -1005,6 +1163,24 @@ class ProdukDelete extends Produk
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_kelompok_id":
+                    break;
+                case "x_satuan_id":
+                    break;
+                case "x_satuan_id2":
+                    break;
+                case "x_gudang_id":
+                    break;
+                case "x_akunhpp":
+                    break;
+                case "x_akunjual":
+                    break;
+                case "x_akunpersediaan":
+                    break;
+                case "x_akunreturjual":
+                    break;
+                case "x_aktif":
+                    break;
                 default:
                     $lookupFilter = "";
                     break;

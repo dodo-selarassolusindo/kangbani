@@ -121,7 +121,7 @@ class GudangDelete extends Gudang
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->kode->setVisibility();
         $this->nama->setVisibility();
         $this->lokasi->setVisibility();
@@ -627,10 +627,6 @@ class GudangDelete extends Gudang
 
             // lokasi
             $this->lokasi->ViewValue = $this->lokasi->CurrentValue;
-
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // kode
             $this->kode->HrefValue = "";
