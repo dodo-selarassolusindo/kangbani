@@ -1,20 +1,32 @@
 <ew-language date="2024/6/5" id="en-US" author="e.World Technology Limited">
   <project>
     <phrase id="footertext" value="&amp;copy;2023 e.World Technology Limited. All rights reserved." />
-    <menu id="1">
-      <phrase id="menutext" value="akun" />
+    <menu id="23">
+      <phrase id="menutext" value="Master" />
     </menu>
     <menu id="2">
       <phrase id="menutext" value="grup" />
     </menu>
-    <menu id="3">
-      <phrase id="menutext" value="gudang" />
+    <menu id="18">
+      <phrase id="menutext" value="subgrup" />
+    </menu>
+    <menu id="1">
+      <phrase id="menutext" value="akun" />
+    </menu>
+    <menu id="16">
+      <phrase id="menutext" value="saldoawal" />
+    </menu>
+    <menu id="24">
+      <phrase id="menutext" value="Transaksi" />
     </menu>
     <menu id="4">
       <phrase id="menutext" value="jurnal" />
     </menu>
     <menu id="5">
       <phrase id="menutext" value="jurnald" />
+    </menu>
+    <menu id="3">
+      <phrase id="menutext" value="gudang" />
     </menu>
     <menu id="6">
       <phrase id="menutext" value="kelompok" />
@@ -46,14 +58,8 @@
     <menu id="15">
       <phrase id="menutext" value="produk" />
     </menu>
-    <menu id="16">
-      <phrase id="menutext" value="saldoawal" />
-    </menu>
     <menu id="17">
       <phrase id="menutext" value="satuan" />
-    </menu>
-    <menu id="18">
-      <phrase id="menutext" value="subgrup" />
     </menu>
     <menu id="19">
       <phrase id="menutext" value="tipejurnal" />
