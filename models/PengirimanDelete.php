@@ -121,7 +121,7 @@ class PengirimanDelete extends Pengiriman
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->kode->setVisibility();
         $this->nama->setVisibility();
         $this->akunjual->setVisibility();
@@ -401,6 +401,10 @@ class PengirimanDelete extends Pengiriman
             $this->InlineDelete = true;
         }
 
+        // Set up lookup cache
+        $this->setupLookupOptions($this->akunjual);
+        $this->setupLookupOptions($this->akunbeli);
+
         // Set up Breadcrumb
         $this->setupBreadcrumb();
 
@@ -641,12 +645,50 @@ class PengirimanDelete extends Pengiriman
             $this->nama->ViewValue = $this->nama->CurrentValue;
 
             // akunjual
-            $this->akunjual->ViewValue = $this->akunjual->CurrentValue;
-            $this->akunjual->ViewValue = FormatNumber($this->akunjual->ViewValue, $this->akunjual->formatPattern());
+            $curVal = strval($this->akunjual->CurrentValue);
+            if ($curVal != "") {
+                $this->akunjual->ViewValue = $this->akunjual->lookupCacheOption($curVal);
+                if ($this->akunjual->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->akunjual->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->akunjual->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->akunjual->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->akunjual->Lookup->renderViewRow($rswrk[0]);
+                        $this->akunjual->ViewValue = $this->akunjual->displayValue($arwrk);
+                    } else {
+                        $this->akunjual->ViewValue = FormatNumber($this->akunjual->CurrentValue, $this->akunjual->formatPattern());
+                    }
+                }
+            } else {
+                $this->akunjual->ViewValue = null;
+            }
 
             // akunbeli
-            $this->akunbeli->ViewValue = $this->akunbeli->CurrentValue;
-            $this->akunbeli->ViewValue = FormatNumber($this->akunbeli->ViewValue, $this->akunbeli->formatPattern());
+            $curVal = strval($this->akunbeli->CurrentValue);
+            if ($curVal != "") {
+                $this->akunbeli->ViewValue = $this->akunbeli->lookupCacheOption($curVal);
+                if ($this->akunbeli->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->akunbeli->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->akunbeli->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->akunbeli->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->akunbeli->Lookup->renderViewRow($rswrk[0]);
+                        $this->akunbeli->ViewValue = $this->akunbeli->displayValue($arwrk);
+                    } else {
+                        $this->akunbeli->ViewValue = FormatNumber($this->akunbeli->CurrentValue, $this->akunbeli->formatPattern());
+                    }
+                }
+            } else {
+                $this->akunbeli->ViewValue = null;
+            }
 
             // keterangan
             $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
@@ -654,10 +696,6 @@ class PengirimanDelete extends Pengiriman
             // tipe
             $this->tipe->ViewValue = $this->tipe->CurrentValue;
             $this->tipe->ViewValue = FormatNumber($this->tipe->ViewValue, $this->tipe->formatPattern());
-
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // kode
             $this->kode->HrefValue = "";
@@ -809,6 +847,10 @@ class PengirimanDelete extends Pengiriman
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_akunjual":
+                    break;
+                case "x_akunbeli":
+                    break;
                 default:
                     $lookupFilter = "";
                     break;

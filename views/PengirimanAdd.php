@@ -24,8 +24,8 @@ loadjs.ready(["wrapper", "head"], function () {
         .setFields([
             ["kode", [fields.kode.visible && fields.kode.required ? ew.Validators.required(fields.kode.caption) : null], fields.kode.isInvalid],
             ["nama", [fields.nama.visible && fields.nama.required ? ew.Validators.required(fields.nama.caption) : null], fields.nama.isInvalid],
-            ["akunjual", [fields.akunjual.visible && fields.akunjual.required ? ew.Validators.required(fields.akunjual.caption) : null, ew.Validators.integer], fields.akunjual.isInvalid],
-            ["akunbeli", [fields.akunbeli.visible && fields.akunbeli.required ? ew.Validators.required(fields.akunbeli.caption) : null, ew.Validators.integer], fields.akunbeli.isInvalid],
+            ["akunjual", [fields.akunjual.visible && fields.akunjual.required ? ew.Validators.required(fields.akunjual.caption) : null], fields.akunjual.isInvalid],
+            ["akunbeli", [fields.akunbeli.visible && fields.akunbeli.required ? ew.Validators.required(fields.akunbeli.caption) : null], fields.akunbeli.isInvalid],
             ["keterangan", [fields.keterangan.visible && fields.keterangan.required ? ew.Validators.required(fields.keterangan.caption) : null], fields.keterangan.isInvalid],
             ["tipe", [fields.tipe.visible && fields.tipe.required ? ew.Validators.required(fields.tipe.caption) : null, ew.Validators.integer], fields.tipe.isInvalid]
         ])
@@ -43,6 +43,8 @@ loadjs.ready(["wrapper", "head"], function () {
 
         // Dynamic selection lists
         .setLists({
+            "akunjual": <?= $Page->akunjual->toClientList($Page) ?>,
+            "akunbeli": <?= $Page->akunbeli->toClientList($Page) ?>,
         })
         .build();
     window[form.id] = form;
@@ -101,9 +103,43 @@ $Page->showMessage();
         <label id="elh_pengiriman_akunjual" for="x_akunjual" class="<?= $Page->LeftColumnClass ?>"><?= $Page->akunjual->caption() ?><?= $Page->akunjual->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->akunjual->cellAttributes() ?>>
 <span id="el_pengiriman_akunjual">
-<input type="<?= $Page->akunjual->getInputTextType() ?>" name="x_akunjual" id="x_akunjual" data-table="pengiriman" data-field="x_akunjual" value="<?= $Page->akunjual->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->akunjual->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->akunjual->formatPattern()) ?>"<?= $Page->akunjual->editAttributes() ?> aria-describedby="x_akunjual_help">
-<?= $Page->akunjual->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->akunjual->getErrorMessage() ?></div>
+    <select
+        id="x_akunjual"
+        name="x_akunjual"
+        class="form-select ew-select<?= $Page->akunjual->isInvalidClass() ?>"
+        <?php if (!$Page->akunjual->IsNativeSelect) { ?>
+        data-select2-id="fpengirimanadd_x_akunjual"
+        <?php } ?>
+        data-table="pengiriman"
+        data-field="x_akunjual"
+        data-value-separator="<?= $Page->akunjual->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->akunjual->getPlaceHolder()) ?>"
+        <?= $Page->akunjual->editAttributes() ?>>
+        <?= $Page->akunjual->selectOptionListHtml("x_akunjual") ?>
+    </select>
+    <?= $Page->akunjual->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->akunjual->getErrorMessage() ?></div>
+<?= $Page->akunjual->Lookup->getParamTag($Page, "p_x_akunjual") ?>
+<?php if (!$Page->akunjual->IsNativeSelect) { ?>
+<script>
+loadjs.ready("fpengirimanadd", function() {
+    var options = { name: "x_akunjual", selectId: "fpengirimanadd_x_akunjual" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    if (!el)
+        return;
+    options.closeOnSelect = !options.multiple;
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fpengirimanadd.lists.akunjual?.lookupOptions.length) {
+        options.data = { id: "x_akunjual", form: "fpengirimanadd" };
+    } else {
+        options.ajax = { id: "x_akunjual", form: "fpengirimanadd", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.pengiriman.fields.akunjual.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+<?php } ?>
 </span>
 </div></div>
     </div>
@@ -113,9 +149,43 @@ $Page->showMessage();
         <label id="elh_pengiriman_akunbeli" for="x_akunbeli" class="<?= $Page->LeftColumnClass ?>"><?= $Page->akunbeli->caption() ?><?= $Page->akunbeli->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->akunbeli->cellAttributes() ?>>
 <span id="el_pengiriman_akunbeli">
-<input type="<?= $Page->akunbeli->getInputTextType() ?>" name="x_akunbeli" id="x_akunbeli" data-table="pengiriman" data-field="x_akunbeli" value="<?= $Page->akunbeli->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->akunbeli->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->akunbeli->formatPattern()) ?>"<?= $Page->akunbeli->editAttributes() ?> aria-describedby="x_akunbeli_help">
-<?= $Page->akunbeli->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->akunbeli->getErrorMessage() ?></div>
+    <select
+        id="x_akunbeli"
+        name="x_akunbeli"
+        class="form-select ew-select<?= $Page->akunbeli->isInvalidClass() ?>"
+        <?php if (!$Page->akunbeli->IsNativeSelect) { ?>
+        data-select2-id="fpengirimanadd_x_akunbeli"
+        <?php } ?>
+        data-table="pengiriman"
+        data-field="x_akunbeli"
+        data-value-separator="<?= $Page->akunbeli->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->akunbeli->getPlaceHolder()) ?>"
+        <?= $Page->akunbeli->editAttributes() ?>>
+        <?= $Page->akunbeli->selectOptionListHtml("x_akunbeli") ?>
+    </select>
+    <?= $Page->akunbeli->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->akunbeli->getErrorMessage() ?></div>
+<?= $Page->akunbeli->Lookup->getParamTag($Page, "p_x_akunbeli") ?>
+<?php if (!$Page->akunbeli->IsNativeSelect) { ?>
+<script>
+loadjs.ready("fpengirimanadd", function() {
+    var options = { name: "x_akunbeli", selectId: "fpengirimanadd_x_akunbeli" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    if (!el)
+        return;
+    options.closeOnSelect = !options.multiple;
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fpengirimanadd.lists.akunbeli?.lookupOptions.length) {
+        options.data = { id: "x_akunbeli", form: "fpengirimanadd" };
+    } else {
+        options.ajax = { id: "x_akunbeli", form: "fpengirimanadd", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.pengiriman.fields.akunbeli.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+<?php } ?>
 </span>
 </div></div>
     </div>

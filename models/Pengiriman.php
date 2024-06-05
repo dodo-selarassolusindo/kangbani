@@ -186,12 +186,16 @@ class Pengiriman extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'SELECT' // Edit Tag
         );
         $this->akunjual->InputTextType = "text";
         $this->akunjual->Raw = true;
+        $this->akunjual->setSelectMultiple(false); // Select one
+        $this->akunjual->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->akunjual->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->akunjual->Lookup = new Lookup($this->akunjual, 'akun', false, 'id', ["kode","nama","",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(`kode`, ''),'" . ValueSeparator(1, $this->akunjual) . "',COALESCE(`nama`,''))");
         $this->akunjual->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->akunjual->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
+        $this->akunjual->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
         $this->Fields['akunjual'] = &$this->akunjual;
 
         // akunbeli
@@ -210,12 +214,16 @@ class Pengiriman extends DbTable
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
-            'TEXT' // Edit Tag
+            'SELECT' // Edit Tag
         );
         $this->akunbeli->InputTextType = "text";
         $this->akunbeli->Raw = true;
+        $this->akunbeli->setSelectMultiple(false); // Select one
+        $this->akunbeli->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->akunbeli->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->akunbeli->Lookup = new Lookup($this->akunbeli, 'akun', false, 'id', ["kode","nama","",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(`kode`, ''),'" . ValueSeparator(1, $this->akunbeli) . "',COALESCE(`nama`,''))");
         $this->akunbeli->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->akunbeli->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
+        $this->akunbeli->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
         $this->Fields['akunbeli'] = &$this->akunbeli;
 
         // keterangan
@@ -1209,12 +1217,50 @@ class Pengiriman extends DbTable
         $this->nama->ViewValue = $this->nama->CurrentValue;
 
         // akunjual
-        $this->akunjual->ViewValue = $this->akunjual->CurrentValue;
-        $this->akunjual->ViewValue = FormatNumber($this->akunjual->ViewValue, $this->akunjual->formatPattern());
+        $curVal = strval($this->akunjual->CurrentValue);
+        if ($curVal != "") {
+            $this->akunjual->ViewValue = $this->akunjual->lookupCacheOption($curVal);
+            if ($this->akunjual->ViewValue === null) { // Lookup from database
+                $filterWrk = SearchFilter($this->akunjual->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->akunjual->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                $sqlWrk = $this->akunjual->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->akunjual->Lookup->renderViewRow($rswrk[0]);
+                    $this->akunjual->ViewValue = $this->akunjual->displayValue($arwrk);
+                } else {
+                    $this->akunjual->ViewValue = FormatNumber($this->akunjual->CurrentValue, $this->akunjual->formatPattern());
+                }
+            }
+        } else {
+            $this->akunjual->ViewValue = null;
+        }
 
         // akunbeli
-        $this->akunbeli->ViewValue = $this->akunbeli->CurrentValue;
-        $this->akunbeli->ViewValue = FormatNumber($this->akunbeli->ViewValue, $this->akunbeli->formatPattern());
+        $curVal = strval($this->akunbeli->CurrentValue);
+        if ($curVal != "") {
+            $this->akunbeli->ViewValue = $this->akunbeli->lookupCacheOption($curVal);
+            if ($this->akunbeli->ViewValue === null) { // Lookup from database
+                $filterWrk = SearchFilter($this->akunbeli->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->akunbeli->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                $sqlWrk = $this->akunbeli->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->akunbeli->Lookup->renderViewRow($rswrk[0]);
+                    $this->akunbeli->ViewValue = $this->akunbeli->displayValue($arwrk);
+                } else {
+                    $this->akunbeli->ViewValue = FormatNumber($this->akunbeli->CurrentValue, $this->akunbeli->formatPattern());
+                }
+            }
+        } else {
+            $this->akunbeli->ViewValue = null;
+        }
 
         // keterangan
         $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
@@ -1288,19 +1334,11 @@ class Pengiriman extends DbTable
 
         // akunjual
         $this->akunjual->setupEditAttributes();
-        $this->akunjual->EditValue = $this->akunjual->CurrentValue;
         $this->akunjual->PlaceHolder = RemoveHtml($this->akunjual->caption());
-        if (strval($this->akunjual->EditValue) != "" && is_numeric($this->akunjual->EditValue)) {
-            $this->akunjual->EditValue = FormatNumber($this->akunjual->EditValue, null);
-        }
 
         // akunbeli
         $this->akunbeli->setupEditAttributes();
-        $this->akunbeli->EditValue = $this->akunbeli->CurrentValue;
         $this->akunbeli->PlaceHolder = RemoveHtml($this->akunbeli->caption());
-        if (strval($this->akunbeli->EditValue) != "" && is_numeric($this->akunbeli->EditValue)) {
-            $this->akunbeli->EditValue = FormatNumber($this->akunbeli->EditValue, null);
-        }
 
         // keterangan
         $this->keterangan->setupEditAttributes();
@@ -1346,7 +1384,6 @@ class Pengiriman extends DbTable
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->id);
                     $doc->exportCaption($this->kode);
                     $doc->exportCaption($this->nama);
                     $doc->exportCaption($this->akunjual);
@@ -1387,7 +1424,6 @@ class Pengiriman extends DbTable
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->id);
                         $doc->exportField($this->kode);
                         $doc->exportField($this->nama);
                         $doc->exportField($this->akunjual);

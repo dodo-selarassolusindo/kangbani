@@ -121,7 +121,7 @@ class PengirimanEdit extends Pengiriman
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->kode->setVisibility();
         $this->nama->setVisibility();
         $this->akunjual->setVisibility();
@@ -512,6 +512,10 @@ class PengirimanEdit extends Pengiriman
             $this->InlineDelete = true;
         }
 
+        // Set up lookup cache
+        $this->setupLookupOptions($this->akunjual);
+        $this->setupLookupOptions($this->akunbeli);
+
         // Check modal
         if ($this->IsModal) {
             $SkipHeaderFooter = true;
@@ -752,12 +756,6 @@ class PengirimanEdit extends Pengiriman
         global $CurrentForm;
         $validate = !Config("SERVER_VALIDATE");
 
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            $this->id->setFormValue($val);
-        }
-
         // Check field name 'kode' first before field var 'x_kode'
         $val = $CurrentForm->hasValue("kode") ? $CurrentForm->getValue("kode") : $CurrentForm->getValue("x_kode");
         if (!$this->kode->IsDetailKey) {
@@ -784,7 +782,7 @@ class PengirimanEdit extends Pengiriman
             if (IsApi() && $val === null) {
                 $this->akunjual->Visible = false; // Disable update for API request
             } else {
-                $this->akunjual->setFormValue($val, true, $validate);
+                $this->akunjual->setFormValue($val);
             }
         }
 
@@ -794,7 +792,7 @@ class PengirimanEdit extends Pengiriman
             if (IsApi() && $val === null) {
                 $this->akunbeli->Visible = false; // Disable update for API request
             } else {
-                $this->akunbeli->setFormValue($val, true, $validate);
+                $this->akunbeli->setFormValue($val);
             }
         }
 
@@ -816,6 +814,12 @@ class PengirimanEdit extends Pengiriman
             } else {
                 $this->tipe->setFormValue($val, true, $validate);
             }
+        }
+
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        if (!$this->id->IsDetailKey) {
+            $this->id->setFormValue($val);
         }
     }
 
@@ -1012,12 +1016,50 @@ class PengirimanEdit extends Pengiriman
             $this->nama->ViewValue = $this->nama->CurrentValue;
 
             // akunjual
-            $this->akunjual->ViewValue = $this->akunjual->CurrentValue;
-            $this->akunjual->ViewValue = FormatNumber($this->akunjual->ViewValue, $this->akunjual->formatPattern());
+            $curVal = strval($this->akunjual->CurrentValue);
+            if ($curVal != "") {
+                $this->akunjual->ViewValue = $this->akunjual->lookupCacheOption($curVal);
+                if ($this->akunjual->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->akunjual->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->akunjual->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->akunjual->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->akunjual->Lookup->renderViewRow($rswrk[0]);
+                        $this->akunjual->ViewValue = $this->akunjual->displayValue($arwrk);
+                    } else {
+                        $this->akunjual->ViewValue = FormatNumber($this->akunjual->CurrentValue, $this->akunjual->formatPattern());
+                    }
+                }
+            } else {
+                $this->akunjual->ViewValue = null;
+            }
 
             // akunbeli
-            $this->akunbeli->ViewValue = $this->akunbeli->CurrentValue;
-            $this->akunbeli->ViewValue = FormatNumber($this->akunbeli->ViewValue, $this->akunbeli->formatPattern());
+            $curVal = strval($this->akunbeli->CurrentValue);
+            if ($curVal != "") {
+                $this->akunbeli->ViewValue = $this->akunbeli->lookupCacheOption($curVal);
+                if ($this->akunbeli->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->akunbeli->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->akunbeli->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->akunbeli->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->akunbeli->Lookup->renderViewRow($rswrk[0]);
+                        $this->akunbeli->ViewValue = $this->akunbeli->displayValue($arwrk);
+                    } else {
+                        $this->akunbeli->ViewValue = FormatNumber($this->akunbeli->CurrentValue, $this->akunbeli->formatPattern());
+                    }
+                }
+            } else {
+                $this->akunbeli->ViewValue = null;
+            }
 
             // keterangan
             $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
@@ -1025,9 +1067,6 @@ class PengirimanEdit extends Pengiriman
             // tipe
             $this->tipe->ViewValue = $this->tipe->CurrentValue;
             $this->tipe->ViewValue = FormatNumber($this->tipe->ViewValue, $this->tipe->formatPattern());
-
-            // id
-            $this->id->HrefValue = "";
 
             // kode
             $this->kode->HrefValue = "";
@@ -1047,10 +1086,6 @@ class PengirimanEdit extends Pengiriman
             // tipe
             $this->tipe->HrefValue = "";
         } elseif ($this->RowType == RowType::EDIT) {
-            // id
-            $this->id->setupEditAttributes();
-            $this->id->EditValue = $this->id->CurrentValue;
-
             // kode
             $this->kode->setupEditAttributes();
             if (!$this->kode->Raw) {
@@ -1069,19 +1104,57 @@ class PengirimanEdit extends Pengiriman
 
             // akunjual
             $this->akunjual->setupEditAttributes();
-            $this->akunjual->EditValue = $this->akunjual->CurrentValue;
-            $this->akunjual->PlaceHolder = RemoveHtml($this->akunjual->caption());
-            if (strval($this->akunjual->EditValue) != "" && is_numeric($this->akunjual->EditValue)) {
-                $this->akunjual->EditValue = FormatNumber($this->akunjual->EditValue, null);
+            $curVal = trim(strval($this->akunjual->CurrentValue));
+            if ($curVal != "") {
+                $this->akunjual->ViewValue = $this->akunjual->lookupCacheOption($curVal);
+            } else {
+                $this->akunjual->ViewValue = $this->akunjual->Lookup !== null && is_array($this->akunjual->lookupOptions()) && count($this->akunjual->lookupOptions()) > 0 ? $curVal : null;
             }
+            if ($this->akunjual->ViewValue !== null) { // Load from cache
+                $this->akunjual->EditValue = array_values($this->akunjual->lookupOptions());
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = SearchFilter($this->akunjual->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $this->akunjual->CurrentValue, $this->akunjual->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                }
+                $sqlWrk = $this->akunjual->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->akunjual->EditValue = $arwrk;
+            }
+            $this->akunjual->PlaceHolder = RemoveHtml($this->akunjual->caption());
 
             // akunbeli
             $this->akunbeli->setupEditAttributes();
-            $this->akunbeli->EditValue = $this->akunbeli->CurrentValue;
-            $this->akunbeli->PlaceHolder = RemoveHtml($this->akunbeli->caption());
-            if (strval($this->akunbeli->EditValue) != "" && is_numeric($this->akunbeli->EditValue)) {
-                $this->akunbeli->EditValue = FormatNumber($this->akunbeli->EditValue, null);
+            $curVal = trim(strval($this->akunbeli->CurrentValue));
+            if ($curVal != "") {
+                $this->akunbeli->ViewValue = $this->akunbeli->lookupCacheOption($curVal);
+            } else {
+                $this->akunbeli->ViewValue = $this->akunbeli->Lookup !== null && is_array($this->akunbeli->lookupOptions()) && count($this->akunbeli->lookupOptions()) > 0 ? $curVal : null;
             }
+            if ($this->akunbeli->ViewValue !== null) { // Load from cache
+                $this->akunbeli->EditValue = array_values($this->akunbeli->lookupOptions());
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = SearchFilter($this->akunbeli->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $this->akunbeli->CurrentValue, $this->akunbeli->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                }
+                $sqlWrk = $this->akunbeli->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $conn = Conn();
+                $config = $conn->getConfiguration();
+                $config->setResultCache($this->Cache);
+                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->akunbeli->EditValue = $arwrk;
+            }
+            $this->akunbeli->PlaceHolder = RemoveHtml($this->akunbeli->caption());
 
             // keterangan
             $this->keterangan->setupEditAttributes();
@@ -1100,9 +1173,6 @@ class PengirimanEdit extends Pengiriman
             }
 
             // Edit refer script
-
-            // id
-            $this->id->HrefValue = "";
 
             // kode
             $this->kode->HrefValue = "";
@@ -1142,11 +1212,6 @@ class PengirimanEdit extends Pengiriman
             return true;
         }
         $validateForm = true;
-            if ($this->id->Visible && $this->id->Required) {
-                if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
-                    $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
-                }
-            }
             if ($this->kode->Visible && $this->kode->Required) {
                 if (!$this->kode->IsDetailKey && EmptyValue($this->kode->FormValue)) {
                     $this->kode->addErrorMessage(str_replace("%s", $this->kode->caption(), $this->kode->RequiredErrorMessage));
@@ -1162,16 +1227,10 @@ class PengirimanEdit extends Pengiriman
                     $this->akunjual->addErrorMessage(str_replace("%s", $this->akunjual->caption(), $this->akunjual->RequiredErrorMessage));
                 }
             }
-            if (!CheckInteger($this->akunjual->FormValue)) {
-                $this->akunjual->addErrorMessage($this->akunjual->getErrorMessage(false));
-            }
             if ($this->akunbeli->Visible && $this->akunbeli->Required) {
                 if (!$this->akunbeli->IsDetailKey && EmptyValue($this->akunbeli->FormValue)) {
                     $this->akunbeli->addErrorMessage(str_replace("%s", $this->akunbeli->caption(), $this->akunbeli->RequiredErrorMessage));
                 }
-            }
-            if (!CheckInteger($this->akunbeli->FormValue)) {
-                $this->akunbeli->addErrorMessage($this->akunbeli->getErrorMessage(false));
             }
             if ($this->keterangan->Visible && $this->keterangan->Required) {
                 if (!$this->keterangan->IsDetailKey && EmptyValue($this->keterangan->FormValue)) {
@@ -1345,6 +1404,10 @@ class PengirimanEdit extends Pengiriman
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_akunjual":
+                    break;
+                case "x_akunbeli":
+                    break;
                 default:
                     $lookupFilter = "";
                     break;

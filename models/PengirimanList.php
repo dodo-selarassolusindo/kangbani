@@ -145,7 +145,7 @@ class PengirimanList extends Pengiriman
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->kode->setVisibility();
         $this->nama->setVisibility();
         $this->akunjual->setVisibility();
@@ -688,6 +688,10 @@ class PengirimanList extends Pengiriman
 
         // Setup other options
         $this->setupOtherOptions();
+
+        // Set up lookup cache
+        $this->setupLookupOptions($this->akunjual);
+        $this->setupLookupOptions($this->akunbeli);
 
         // Update form name to avoid conflict
         if ($this->IsModal) {
@@ -1234,7 +1238,6 @@ class PengirimanList extends Pengiriman
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id); // id
             $this->updateSort($this->kode); // kode
             $this->updateSort($this->nama); // nama
             $this->updateSort($this->akunjual); // akunjual
@@ -1334,6 +1337,14 @@ class PengirimanList extends Pengiriman
         $item->ShowInDropDown = false;
         $item->ShowInButtonGroup = false;
 
+        // "sequence"
+        $item = &$this->ListOptions->add("sequence");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = true;
+        $item->OnLeft = true; // Always on left
+        $item->ShowInDropDown = false;
+        $item->ShowInButtonGroup = false;
+
         // Drop down button for ListOptions
         $this->ListOptions->UseDropDownButton = false;
         $this->ListOptions->DropDownButtonPhrase = $Language->phrase("ButtonListOptions");
@@ -1371,6 +1382,10 @@ class PengirimanList extends Pengiriman
 
         // Call ListOptions_Rendering event
         $this->listOptionsRendering();
+
+        // "sequence"
+        $opt = $this->ListOptions["sequence"];
+        $opt->Body = FormatSequenceNumber($this->RecordCount);
         $pageUrl = $this->pageUrl(false);
         if ($this->CurrentMode == "view") {
             // "view"
@@ -1509,7 +1524,6 @@ class PengirimanList extends Pengiriman
             $item = &$option->addGroupOption();
             $item->Body = "";
             $item->Visible = $this->UseColumnVisibility;
-            $this->createColumnOption($option, "id");
             $this->createColumnOption($option, "kode");
             $this->createColumnOption($option, "nama");
             $this->createColumnOption($option, "akunjual");
@@ -2040,12 +2054,50 @@ class PengirimanList extends Pengiriman
             $this->nama->ViewValue = $this->nama->CurrentValue;
 
             // akunjual
-            $this->akunjual->ViewValue = $this->akunjual->CurrentValue;
-            $this->akunjual->ViewValue = FormatNumber($this->akunjual->ViewValue, $this->akunjual->formatPattern());
+            $curVal = strval($this->akunjual->CurrentValue);
+            if ($curVal != "") {
+                $this->akunjual->ViewValue = $this->akunjual->lookupCacheOption($curVal);
+                if ($this->akunjual->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->akunjual->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->akunjual->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->akunjual->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->akunjual->Lookup->renderViewRow($rswrk[0]);
+                        $this->akunjual->ViewValue = $this->akunjual->displayValue($arwrk);
+                    } else {
+                        $this->akunjual->ViewValue = FormatNumber($this->akunjual->CurrentValue, $this->akunjual->formatPattern());
+                    }
+                }
+            } else {
+                $this->akunjual->ViewValue = null;
+            }
 
             // akunbeli
-            $this->akunbeli->ViewValue = $this->akunbeli->CurrentValue;
-            $this->akunbeli->ViewValue = FormatNumber($this->akunbeli->ViewValue, $this->akunbeli->formatPattern());
+            $curVal = strval($this->akunbeli->CurrentValue);
+            if ($curVal != "") {
+                $this->akunbeli->ViewValue = $this->akunbeli->lookupCacheOption($curVal);
+                if ($this->akunbeli->ViewValue === null) { // Lookup from database
+                    $filterWrk = SearchFilter($this->akunbeli->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->akunbeli->Lookup->getTable()->Fields["id"]->searchDataType(), "");
+                    $sqlWrk = $this->akunbeli->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $conn = Conn();
+                    $config = $conn->getConfiguration();
+                    $config->setResultCache($this->Cache);
+                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->akunbeli->Lookup->renderViewRow($rswrk[0]);
+                        $this->akunbeli->ViewValue = $this->akunbeli->displayValue($arwrk);
+                    } else {
+                        $this->akunbeli->ViewValue = FormatNumber($this->akunbeli->CurrentValue, $this->akunbeli->formatPattern());
+                    }
+                }
+            } else {
+                $this->akunbeli->ViewValue = null;
+            }
 
             // keterangan
             $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
@@ -2053,10 +2105,6 @@ class PengirimanList extends Pengiriman
             // tipe
             $this->tipe->ViewValue = $this->tipe->CurrentValue;
             $this->tipe->ViewValue = FormatNumber($this->tipe->ViewValue, $this->tipe->formatPattern());
-
-            // id
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // kode
             $this->kode->HrefValue = "";
@@ -2164,6 +2212,10 @@ class PengirimanList extends Pengiriman
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_akunjual":
+                    break;
+                case "x_akunbeli":
+                    break;
                 default:
                     $lookupFilter = "";
                     break;

@@ -31,11 +31,10 @@ loadjs.ready(["wrapper", "head"], function () {
 
         // Add fields
         .setFields([
-            ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null], fields.id.isInvalid],
             ["kode", [fields.kode.visible && fields.kode.required ? ew.Validators.required(fields.kode.caption) : null], fields.kode.isInvalid],
             ["nama", [fields.nama.visible && fields.nama.required ? ew.Validators.required(fields.nama.caption) : null], fields.nama.isInvalid],
-            ["akunjual", [fields.akunjual.visible && fields.akunjual.required ? ew.Validators.required(fields.akunjual.caption) : null, ew.Validators.integer], fields.akunjual.isInvalid],
-            ["akunbeli", [fields.akunbeli.visible && fields.akunbeli.required ? ew.Validators.required(fields.akunbeli.caption) : null, ew.Validators.integer], fields.akunbeli.isInvalid],
+            ["akunjual", [fields.akunjual.visible && fields.akunjual.required ? ew.Validators.required(fields.akunjual.caption) : null], fields.akunjual.isInvalid],
+            ["akunbeli", [fields.akunbeli.visible && fields.akunbeli.required ? ew.Validators.required(fields.akunbeli.caption) : null], fields.akunbeli.isInvalid],
             ["keterangan", [fields.keterangan.visible && fields.keterangan.required ? ew.Validators.required(fields.keterangan.caption) : null], fields.keterangan.isInvalid],
             ["tipe", [fields.tipe.visible && fields.tipe.required ? ew.Validators.required(fields.tipe.caption) : null, ew.Validators.integer], fields.tipe.isInvalid]
         ])
@@ -53,6 +52,8 @@ loadjs.ready(["wrapper", "head"], function () {
 
         // Dynamic selection lists
         .setLists({
+            "akunjual": <?= $Page->akunjual->toClientList($Page) ?>,
+            "akunbeli": <?= $Page->akunbeli->toClientList($Page) ?>,
         })
         .build();
     window[form.id] = form;
@@ -77,18 +78,6 @@ loadjs.ready("head", function () {
 <?php } ?>
 <input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
 <div class="ew-edit-div"><!-- page* -->
-<?php if ($Page->id->Visible) { // id ?>
-    <div id="r_id"<?= $Page->id->rowAttributes() ?>>
-        <label id="elh_pengiriman_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->id->caption() ?><?= $Page->id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->id->cellAttributes() ?>>
-<span id="el_pengiriman_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->id->getDisplayValue($Page->id->EditValue))) ?>"></span>
-<input type="hidden" data-table="pengiriman" data-field="x_id" data-hidden="1" name="x_id" id="x_id" value="<?= HtmlEncode($Page->id->CurrentValue) ?>">
-</span>
-</div></div>
-    </div>
-<?php } ?>
 <?php if ($Page->kode->Visible) { // kode ?>
     <div id="r_kode"<?= $Page->kode->rowAttributes() ?>>
         <label id="elh_pengiriman_kode" for="x_kode" class="<?= $Page->LeftColumnClass ?>"><?= $Page->kode->caption() ?><?= $Page->kode->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -118,9 +107,43 @@ loadjs.ready("head", function () {
         <label id="elh_pengiriman_akunjual" for="x_akunjual" class="<?= $Page->LeftColumnClass ?>"><?= $Page->akunjual->caption() ?><?= $Page->akunjual->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->akunjual->cellAttributes() ?>>
 <span id="el_pengiriman_akunjual">
-<input type="<?= $Page->akunjual->getInputTextType() ?>" name="x_akunjual" id="x_akunjual" data-table="pengiriman" data-field="x_akunjual" value="<?= $Page->akunjual->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->akunjual->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->akunjual->formatPattern()) ?>"<?= $Page->akunjual->editAttributes() ?> aria-describedby="x_akunjual_help">
-<?= $Page->akunjual->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->akunjual->getErrorMessage() ?></div>
+    <select
+        id="x_akunjual"
+        name="x_akunjual"
+        class="form-select ew-select<?= $Page->akunjual->isInvalidClass() ?>"
+        <?php if (!$Page->akunjual->IsNativeSelect) { ?>
+        data-select2-id="fpengirimanedit_x_akunjual"
+        <?php } ?>
+        data-table="pengiriman"
+        data-field="x_akunjual"
+        data-value-separator="<?= $Page->akunjual->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->akunjual->getPlaceHolder()) ?>"
+        <?= $Page->akunjual->editAttributes() ?>>
+        <?= $Page->akunjual->selectOptionListHtml("x_akunjual") ?>
+    </select>
+    <?= $Page->akunjual->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->akunjual->getErrorMessage() ?></div>
+<?= $Page->akunjual->Lookup->getParamTag($Page, "p_x_akunjual") ?>
+<?php if (!$Page->akunjual->IsNativeSelect) { ?>
+<script>
+loadjs.ready("fpengirimanedit", function() {
+    var options = { name: "x_akunjual", selectId: "fpengirimanedit_x_akunjual" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    if (!el)
+        return;
+    options.closeOnSelect = !options.multiple;
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fpengirimanedit.lists.akunjual?.lookupOptions.length) {
+        options.data = { id: "x_akunjual", form: "fpengirimanedit" };
+    } else {
+        options.ajax = { id: "x_akunjual", form: "fpengirimanedit", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.pengiriman.fields.akunjual.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+<?php } ?>
 </span>
 </div></div>
     </div>
@@ -130,9 +153,43 @@ loadjs.ready("head", function () {
         <label id="elh_pengiriman_akunbeli" for="x_akunbeli" class="<?= $Page->LeftColumnClass ?>"><?= $Page->akunbeli->caption() ?><?= $Page->akunbeli->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->akunbeli->cellAttributes() ?>>
 <span id="el_pengiriman_akunbeli">
-<input type="<?= $Page->akunbeli->getInputTextType() ?>" name="x_akunbeli" id="x_akunbeli" data-table="pengiriman" data-field="x_akunbeli" value="<?= $Page->akunbeli->EditValue ?>" size="30" placeholder="<?= HtmlEncode($Page->akunbeli->getPlaceHolder()) ?>" data-format-pattern="<?= HtmlEncode($Page->akunbeli->formatPattern()) ?>"<?= $Page->akunbeli->editAttributes() ?> aria-describedby="x_akunbeli_help">
-<?= $Page->akunbeli->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->akunbeli->getErrorMessage() ?></div>
+    <select
+        id="x_akunbeli"
+        name="x_akunbeli"
+        class="form-select ew-select<?= $Page->akunbeli->isInvalidClass() ?>"
+        <?php if (!$Page->akunbeli->IsNativeSelect) { ?>
+        data-select2-id="fpengirimanedit_x_akunbeli"
+        <?php } ?>
+        data-table="pengiriman"
+        data-field="x_akunbeli"
+        data-value-separator="<?= $Page->akunbeli->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->akunbeli->getPlaceHolder()) ?>"
+        <?= $Page->akunbeli->editAttributes() ?>>
+        <?= $Page->akunbeli->selectOptionListHtml("x_akunbeli") ?>
+    </select>
+    <?= $Page->akunbeli->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->akunbeli->getErrorMessage() ?></div>
+<?= $Page->akunbeli->Lookup->getParamTag($Page, "p_x_akunbeli") ?>
+<?php if (!$Page->akunbeli->IsNativeSelect) { ?>
+<script>
+loadjs.ready("fpengirimanedit", function() {
+    var options = { name: "x_akunbeli", selectId: "fpengirimanedit_x_akunbeli" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    if (!el)
+        return;
+    options.closeOnSelect = !options.multiple;
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fpengirimanedit.lists.akunbeli?.lookupOptions.length) {
+        options.data = { id: "x_akunbeli", form: "fpengirimanedit" };
+    } else {
+        options.ajax = { id: "x_akunbeli", form: "fpengirimanedit", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.pengiriman.fields.akunbeli.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+<?php } ?>
 </span>
 </div></div>
     </div>
@@ -162,6 +219,7 @@ loadjs.ready("head", function () {
     </div>
 <?php } ?>
 </div><!-- /page* -->
+    <input type="hidden" data-table="pengiriman" data-field="x_id" data-hidden="1" name="x_id" id="x_id" value="<?= HtmlEncode($Page->id->CurrentValue) ?>">
 <?= $Page->IsModal ? '<template class="ew-modal-buttons">' : '<div class="row ew-buttons">' ?><!-- buttons .row -->
     <div class="<?= $Page->OffsetColumnClass ?>"><!-- buttons offset -->
 <button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit" form="fpengirimanedit"><?= $Language->phrase("SaveBtn") ?></button>
