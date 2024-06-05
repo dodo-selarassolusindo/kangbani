@@ -26,17 +26,8 @@
     <menu id="16">
       <phrase id="menutext" value="Saldo Awal" />
     </menu>
-    <menu id="8">
-      <phrase id="menutext" value="Konversi" />
-    </menu>
-    <menu id="9">
-      <phrase id="menutext" value="Kurs" />
-    </menu>
     <menu id="10">
       <phrase id="menutext" value="Mata Uang" />
-    </menu>
-    <menu id="11">
-      <phrase id="menutext" value="Pajak" />
     </menu>
     <menu id="19">
       <phrase id="menutext" value="Tipe Jurnal" />
@@ -73,6 +64,15 @@
     </menu>
     <menu id="20">
       <phrase id="menutext" value="Term of Payment" />
+    </menu>
+    <menu id="8">
+      <phrase id="menutext" value="Konversi" />
+    </menu>
+    <menu id="9">
+      <phrase id="menutext" value="Kurs" />
+    </menu>
+    <menu id="11">
+      <phrase id="menutext" value="Pajak" />
     </menu>
     <menu id="24">
       <phrase id="menutext" value="Transaksi" />

@@ -945,9 +945,11 @@ class SaldoawalView extends Saldoawal
             // debet
             $this->debet->ViewValue = $this->debet->CurrentValue;
             $this->debet->ViewValue = FormatNumber($this->debet->ViewValue, $this->debet->formatPattern());
+            $this->debet->CellCssStyle .= "text-align: right;";
 
             // kredit
             $this->kredit->ViewValue = $this->kredit->CurrentValue;
+            $this->kredit->CellCssStyle .= "text-align: right;";
 
             // user_id
             $this->user_id->ViewValue = $this->user_id->CurrentValue;
@@ -956,6 +958,7 @@ class SaldoawalView extends Saldoawal
             // saldo
             $this->saldo->ViewValue = $this->saldo->CurrentValue;
             $this->saldo->ViewValue = FormatNumber($this->saldo->ViewValue, $this->saldo->formatPattern());
+            $this->saldo->CellCssStyle .= "text-align: right;";
 
             // id
             $this->id->HrefValue = "";
