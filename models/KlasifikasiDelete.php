@@ -40,6 +40,14 @@ class KlasifikasiDelete extends Klasifikasi
     // CSS class/style
     public $CurrentPageName = "klasifikasidelete";
 
+    // Audit Trail
+    public $AuditTrailOnAdd = true;
+    public $AuditTrailOnEdit = true;
+    public $AuditTrailOnDelete = true;
+    public $AuditTrailOnView = false;
+    public $AuditTrailOnViewData = false;
+    public $AuditTrailOnSearch = false;
+
     // Page headings
     public $Heading = "";
     public $Subheading = "";
@@ -647,6 +655,9 @@ class KlasifikasiDelete extends Klasifikasi
         if ($this->UseTransaction) {
             $conn->beginTransaction();
         }
+        if ($this->AuditTrailOnDelete) {
+            $this->writeAuditTrailDummy($Language->phrase("BatchDeleteBegin")); // Batch delete begin
+        }
 
         // Clone old rows
         $rsold = $rows;
@@ -706,9 +717,15 @@ class KlasifikasiDelete extends Klasifikasi
             if (count($failKeys) > 0) {
                 $this->setWarningMessage(str_replace("%k", explode(", ", $failKeys), $Language->phrase("DeleteRecordsFailed")));
             }
+            if ($this->AuditTrailOnDelete) {
+                $this->writeAuditTrailDummy($Language->phrase("BatchDeleteSuccess")); // Batch delete success
+            }
         } else {
             if ($this->UseTransaction) { // Rollback transaction
                 $conn->rollback();
+            }
+            if ($this->AuditTrailOnDelete) {
+                $this->writeAuditTrailDummy($Language->phrase("BatchDeleteRollback")); // Batch delete rollback
             }
         }
 

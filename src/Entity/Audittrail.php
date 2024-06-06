@@ -28,6 +28,19 @@ use function PHPMaker2024\prj_accounting\EncryptPassword;
 #[Table(name: "audittrail")]
 class Audittrail extends AbstractEntity
 {
+    public static array $propertyNames = [
+        'Id' => 'id',
+        'DateTime' => 'dateTime',
+        'Script' => 'script',
+        'User' => 'user',
+        'Action' => 'action',
+        'Table' => 'table',
+        'Field' => 'field',
+        'KeyValue' => 'keyValue',
+        'OldValue' => 'oldValue',
+        'NewValue' => 'newValue',
+    ];
+
     #[Id]
     #[Column(name: "Id", type: "integer", unique: true)]
     #[GeneratedValue]
@@ -45,7 +58,7 @@ class Audittrail extends AbstractEntity
     #[Column(name: "Action", type: "string", nullable: true)]
     private ?string $action;
 
-    #[Column(name: "`Table`", options: ["name" => "Table"], type: "string", nullable: true)]
+    #[Column(name: "`Table`", type: "string", nullable: true)]
     private ?string $table;
 
     #[Column(name: "Field", type: "string", nullable: true)]

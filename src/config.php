@@ -367,19 +367,19 @@ $CONFIG = [
     "LOG_USER_ID" => true, // Write to database
 
     // Audit Trail
-    "AUDIT_TRAIL_TO_DATABASE" => false, // Write to database
+    "AUDIT_TRAIL_TO_DATABASE" => true, // Write to database
     "AUDIT_TRAIL_DBID" => "DB", // DB ID
-    "AUDIT_TRAIL_TABLE_NAME" => "", // Table name
-    "AUDIT_TRAIL_TABLE_VAR" => "", // Table var
-    "AUDIT_TRAIL_FIELD_NAME_DATETIME" => "", // DateTime field name
-    "AUDIT_TRAIL_FIELD_NAME_SCRIPT" => "", // Script field name
-    "AUDIT_TRAIL_FIELD_NAME_USER" => "", // User field name
-    "AUDIT_TRAIL_FIELD_NAME_ACTION" => "", // Action field name
-    "AUDIT_TRAIL_FIELD_NAME_TABLE" => "", // Table field name
-    "AUDIT_TRAIL_FIELD_NAME_FIELD" => "", // Field field name
-    "AUDIT_TRAIL_FIELD_NAME_KEYVALUE" => "", // Key Value field name
-    "AUDIT_TRAIL_FIELD_NAME_OLDVALUE" => "", // Old Value field name
-    "AUDIT_TRAIL_FIELD_NAME_NEWVALUE" => "", // New Value field name
+    "AUDIT_TRAIL_TABLE_NAME" => "audittrail", // Table name
+    "AUDIT_TRAIL_TABLE_VAR" => "audittrail", // Table var
+    "AUDIT_TRAIL_FIELD_NAME_DATETIME" => "DateTime", // DateTime field name
+    "AUDIT_TRAIL_FIELD_NAME_SCRIPT" => "Script", // Script field name
+    "AUDIT_TRAIL_FIELD_NAME_USER" => "User", // User field name
+    "AUDIT_TRAIL_FIELD_NAME_ACTION" => "Action", // Action field name
+    "AUDIT_TRAIL_FIELD_NAME_TABLE" => "Table", // Table field name
+    "AUDIT_TRAIL_FIELD_NAME_FIELD" => "Field", // Field field name
+    "AUDIT_TRAIL_FIELD_NAME_KEYVALUE" => "KeyValue", // Key Value field name
+    "AUDIT_TRAIL_FIELD_NAME_OLDVALUE" => "OldValue", // Old Value field name
+    "AUDIT_TRAIL_FIELD_NAME_NEWVALUE" => "NewValue", // New Value field name
 
     // Export Log
     "EXPORT_PATH" => "export-6e044eb4-6227-43e6-89f6-e9f0a73b0333", // Export folder
