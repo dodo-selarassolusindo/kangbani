@@ -40,14 +40,6 @@ class JurnalAdd extends Jurnal
     // CSS class/style
     public $CurrentPageName = "jurnaladd";
 
-    // Audit Trail
-    public $AuditTrailOnAdd = true;
-    public $AuditTrailOnEdit = true;
-    public $AuditTrailOnDelete = true;
-    public $AuditTrailOnView = false;
-    public $AuditTrailOnViewData = false;
-    public $AuditTrailOnSearch = false;
-
     // Page headings
     public $Heading = "";
     public $Subheading = "";
@@ -607,7 +599,7 @@ class JurnalAdd extends Jurnal
                         $returnUrl = $this->getViewUrl(); // View page, return to View page with keyurl directly
                     }
 
-                    // Handle UseAjaxActions with return page
+                    // Handle UseAjaxActions
                     if ($this->IsModal && $this->UseAjaxActions) {
                         $this->IsModal = false;
                         if (GetPageName($returnUrl) != "jurnallist") {
@@ -1136,15 +1128,11 @@ class JurnalAdd extends Jurnal
         if ($this->getCurrentDetailTable() != "") {
             if ($addRow) {
                 if ($this->UseTransaction) { // Commit transaction
-                    if ($conn->isTransactionActive()) {
-                        $conn->commit();
-                    }
+                    $conn->commit();
                 }
             } else {
                 if ($this->UseTransaction) { // Rollback transaction
-                    if ($conn->isTransactionActive()) {
-                        $conn->rollback();
-                    }
+                    $conn->rollback();
                 }
             }
         }

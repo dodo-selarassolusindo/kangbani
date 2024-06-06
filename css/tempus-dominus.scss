@@ -74,7 +74,6 @@ $td-dark-dow-color: rgba(232, 230, 227, .50);
   --td-dark-dow-color: #{$td-dark-dow-color};
 
   --td-popover-border-color: #{$popover-border-color}; //***
-  --td-widget-z-index: 9999;
 }
 
 .visually-hidden {
@@ -98,7 +97,7 @@ $td-dark-dow-color: rgba(232, 230, 227, .50);
   display: none;
   background-color: var(--td-widget-background);
   border: 1px solid var(--td-popover-border-color); //***
-  z-index: var(--td-widget-z-index);
+  z-index: 9999;
   box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14),
     0 1px 10px 0 rgba(0, 0, 0, 0.12);
 

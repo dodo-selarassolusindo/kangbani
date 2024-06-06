@@ -40,14 +40,6 @@ class JurnaldAdd extends Jurnald
     // CSS class/style
     public $CurrentPageName = "jurnaldadd";
 
-    // Audit Trail
-    public $AuditTrailOnAdd = true;
-    public $AuditTrailOnEdit = true;
-    public $AuditTrailOnDelete = true;
-    public $AuditTrailOnView = false;
-    public $AuditTrailOnViewData = false;
-    public $AuditTrailOnSearch = false;
-
     // Page headings
     public $Heading = "";
     public $Subheading = "";
@@ -598,8 +590,8 @@ class JurnaldAdd extends Jurnald
                         $returnUrl = $this->getViewUrl(); // View page, return to View page with keyurl directly
                     }
 
-                    // Handle UseAjaxActions with return page
-                    if ($this->IsModal && $this->UseAjaxActions && !$this->getCurrentMasterTable()) {
+                    // Handle UseAjaxActions
+                    if ($this->IsModal && $this->UseAjaxActions) {
                         $this->IsModal = false;
                         if (GetPageName($returnUrl) != "jurnaldlist") {
                             Container("app.flash")->addMessage("Return-Url", $returnUrl); // Save return URL

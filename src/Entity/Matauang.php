@@ -28,6 +28,12 @@ use function PHPMaker2024\prj_accounting\EncryptPassword;
 #[Table(name: "matauang")]
 class Matauang extends AbstractEntity
 {
+    public static array $propertyNames = [
+        'id' => 'id',
+        'nama' => 'nama',
+        'kode' => 'kode',
+    ];
+
     #[Id]
     #[Column(type: "integer", unique: true)]
     #[GeneratedValue]

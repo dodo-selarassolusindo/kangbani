@@ -40,14 +40,6 @@ class KursEdit extends Kurs
     // CSS class/style
     public $CurrentPageName = "kursedit";
 
-    // Audit Trail
-    public $AuditTrailOnAdd = true;
-    public $AuditTrailOnEdit = true;
-    public $AuditTrailOnDelete = true;
-    public $AuditTrailOnView = false;
-    public $AuditTrailOnViewData = false;
-    public $AuditTrailOnSearch = false;
-
     // Page headings
     public $Heading = "";
     public $Subheading = "";

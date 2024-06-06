@@ -36,7 +36,8 @@ use Dflydev\FigCookies\FigRequestCookies;
 use Dflydev\FigCookies\FigResponseCookies;
 use Hautelook\Phpass\PasswordHash;
 use PHPMailer\PHPMailer\PHPMailer;
-
+use libphonenumber\PhoneNumberFormat;
+use libphonenumber\PhoneNumberUtil;
 use Detection\MobileDetect;
 
 // Custom types
@@ -1811,28 +1812,6 @@ function GetUserRepository()
 }
 
 /**
- * Get entity class name by table name
- *
- * @param string $tablename Table name
- * @return string Entity class name
- */
-function GetEntityClass($tablename)
-{
-    $finder = Finder::create()->files()->in(__DIR__ . "/Entity");
-    foreach ($finder as $file) { // Delete files
-        $name = $file->getBaseName(".php");
-        $class = new \ReflectionClass(PROJECT_NAMESPACE . "Entity\\" . $name);
-        $attributes = $class->getAttributes();
-        foreach ($attributes as $attribute) {
-            if ($attribute->getName() == "Doctrine\\ORM\\Mapping\\Table" && $attribute->newInstance()->name == $tablename) {
-                return PROJECT_NAMESPACE . "Entity\\" . $name;
-            }
-        }
-    }
-    return null;
-}
-
-/**
  * Get an user entity by user name
  *
  * @param string $username User name
@@ -1947,17 +1926,10 @@ function ConnectDb($info)
         $info["driverOptions"] ??= []; // See https://docs.microsoft.com/en-us/sql/connect/php/connection-options?view=sql-server-ver16
         // Use TransactionIsolation = SQLSRV_TXN_READ_UNCOMMITTED to avoid record locking
         // https://docs.microsoft.com/en-us/sql/t-sql/statements/set-transaction-isolation-level-transact-sql?view=sql-server-ver15
+        $info["driverOptions"]["TransactionIsolation"] = 1; // SQLSRV_TXN_READ_UNCOMMITTED
         $info["driverOptions"]["TrustServerCertificate"] = 1;
-        if ($info["driver"] == "sqlsrv") {
-            $info["driverOptions"]["TransactionIsolation"] = 1; // SQLSRV_TXN_READ_UNCOMMITTED
-            if (IS_UTF8) {
-                $info["driverOptions"]["CharacterSet"] = "UTF-8";
-            }
-        } elseif ($info["driver"] == "pdo_sqlsrv") {
-            $info["driverOptions"]["TransactionIsolation"] = "READ_UNCOMMITTED"; // PDO::SQLSRV_TXN_READ_UNCOMMITTED
-            //if (IS_UTF8) { // Not supported for pdo_sqlsrv
-                //$info["driverOptions"]["CharacterSet"] = "UTF-8";
-            //}
+        if (IS_UTF8) {
+            $info["driverOptions"]["CharacterSet"] = "UTF-8";
         }
     } elseif ($dbtype == "SQLITE") {
         $info["driver"] = "pdo_sqlite";
@@ -1984,9 +1956,9 @@ function ConnectDb($info)
     }
 
     // Connect
-    $evm = new EventManager();
     if ($dbtype == "MYSQL" || $dbtype == "POSTGRESQL" || $dbtype == "ORACLE") {
         $dbtimezone = @$info["timezone"] ?: Config("DB_TIME_ZONE");
+        $evm = new EventManager();
         if ($dbtype == "ORACLE") {
             $oraVars = ["CURRENT_SCHEMA" => QuotedName(@$info["schema"], $dbid)];
             if ($dbtimezone != "") {
@@ -2021,9 +1993,9 @@ function ConnectDb($info)
         } else { // Relative to app root
             $info["path"] = ServerMapPath($relpath) . $dbname;
         }
-        $conn = DriverManager::getConnection($info, $config, $evm);
+        $conn = DriverManager::getConnection($info, $config);
     } elseif ($dbtype == "MSSQL") {
-        $conn = DriverManager::getConnection($info, $config, $evm);
+        $conn = DriverManager::getConnection($info, $config);
         // $conn->executeStatement("SET DATEFORMAT ymd"); // Set date format
     }
     $platform = $conn->getDatabasePlatform();
@@ -3161,12 +3133,23 @@ function FormatSequenceNumber($seq)
  *
  * @param string $phoneNumber Phone number (e.g. US mobile: "(415)555-2671")
  * @param bool|string $region Region code (e.g. "US" / "GB" / "FR"), if false, skip formatting
- * @param string $format Phone number format (PhoneNumberFormat::E164/INTERNATIONAL/NATIONAL/RFC3966) (0/1/2/3)
+ * @param string $format Phone number format (PhoneNumberFormat::E164/INTERNATIONAL/NATIONAL/RFC3966)
  * @return string
  */
-function FormatPhoneNumber($phoneNumber, $region = null, $format = 0)
+function FormatPhoneNumber($phoneNumber, $region = null, $format = PhoneNumberFormat::E164)
 {
-    return $phoneNumber;
+    global $CurrentLanguage;
+    $region ??= Config("SMS_REGION_CODE");
+    if ($region === false) { // Skip formatting
+        return $phoneNumber;
+    }
+    if ($region === null) { // Get region from locale
+        $ar = explode("-", str_replace("_", "-", $CurrentLanguage));
+        $region = count($ar) >= 2 ? $ar[1] : "US";
+    }
+    $phoneNumberUtil = PhoneNumberUtil::getInstance();
+    $phoneNumberObj = $phoneNumberUtil->parse($phoneNumber, $region);
+    return $phoneNumberUtil->format($phoneNumberObj, $format);
 }
 
 /**
@@ -3538,10 +3521,10 @@ function RemoveHtml($str)
  * @param string $phoneNumber Phone Number (e.g. US mobile: "(415)555-2671")
  * @param string $content SMS content
  * @param bool|string $region Region code (e.g. "US" / "GB" / "FR"), if false, skip formatting
- * @param string $format Phone number format (PhoneNumberFormat::E164/INTERNATIONAL/NATIONAL/RFC3966) (0/1/2/3)
+ * @param string $format Phone number format (PhoneNumberFormat::E164/INTERNATIONAL/NATIONAL/RFC3966)
  * @return bool|string success or error description
  */
-function SendSms($phoneNumber, $content, $region = null, $format = 0)
+function SendSms($phoneNumber, $content, $region = null, $format = PhoneNumberFormat::E164)
 {
     $smsClass = Config("SMS_CLASS");
     $rc = new \ReflectionClass($smsClass);
@@ -4668,7 +4651,7 @@ function CurrentUserPrimaryKey()
 // Get current user identifier (user ID or user name)
 function CurrentUserIdentifier()
 {
-    global $Language;
+    global $Profile;
     if (Config("LOG_USER_ID")) { // User ID
         $usr = CurrentUserID();
         if (!isset($usr) || EmptyValue($usr)) { // Assume Administrator or Anonymous user
@@ -5560,7 +5543,7 @@ function ArrayToJson(array $ar)
 function JsonEncode(mixed $val, int $flags = 0, int $depth = 512)
 {
     if ($val === null) {
-        return "null";
+        return $val;
     }
     if (!IS_UTF8) {
         $val = ConvertToUtf8($val); // Convert to UTF-8
@@ -6949,18 +6932,6 @@ function SetupLoginStatus()
 
     // Dispatch login status event and return the event
     return DispatchEvent($LoginStatus, LoginStatusEvent::NAME);
-}
-
-// Is absolute path (from symfony/filesystem)
-function IsAbsolutePath(string $file): bool
-{
-    return "" !== $file && (strspn($file, "/\\", 0, 1)
-        || (\strlen($file) > 3 && ctype_alpha($file[0])
-            && ":" === $file[1]
-            && strspn($file, "/\\", 2, 1)
-        )
-        || null !== parse_url($file, \PHP_URL_SCHEME)
-    );
 }
 
 // Is remote path

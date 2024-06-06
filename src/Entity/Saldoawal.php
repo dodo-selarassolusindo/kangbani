@@ -28,6 +28,16 @@ use function PHPMaker2024\prj_accounting\EncryptPassword;
 #[Table(name: "saldoawal")]
 class Saldoawal extends AbstractEntity
 {
+    public static array $propertyNames = [
+        'id' => 'id',
+        'periode_id' => 'periodeId',
+        'akun_id' => 'akunId',
+        'debet' => 'debet',
+        'kredit' => 'kredit',
+        'user_id' => 'userId',
+        'saldo' => 'saldo',
+    ];
+
     #[Id]
     #[Column(type: "integer", unique: true)]
     #[GeneratedValue]
@@ -49,12 +59,7 @@ class Saldoawal extends AbstractEntity
     private ?int $userId;
 
     #[Column(type: "float", nullable: true)]
-    private ?float $saldo;
-
-    public function __construct()
-    {
-        $this->saldo = 0.000;
-    }
+    private ?float $saldo = 0.000;
 
     public function getId(): int
     {

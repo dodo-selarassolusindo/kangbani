@@ -23,7 +23,7 @@
         "nyholm/psr7-server": "^1.0.2",
         "php-di/php-di": "^7.0.0",
         "doctrine/dbal": "^3.6.0",
-        "doctrine/orm": "^2.18.0",
+        "doctrine/orm": "^2.14.1",
         "monolog/monolog": "^3.4.0",
         "firebase/php-jwt": "^6.3.0",
         "phpmailer/phpmailer": "^6.6.4",
@@ -50,6 +50,7 @@
         "spatie/color": "^1.5.3",
         "nikic/php-parser": "^4.13.0",
         "symfony/polyfill-php83": "^1.27.0",
+        "giggsey/libphonenumber-for-php": "^8.13.8",
         "hkvstore/dompdf": "~2.0.0"
     },
     "autoload": {

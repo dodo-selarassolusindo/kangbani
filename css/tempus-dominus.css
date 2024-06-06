@@ -32,7 +32,6 @@
   --td-dark-text-shadow: 0 -1px 0 rgba(232, 230, 227, 0.25);
   --td-dark-dow-color: rgba(232, 230, 227, 0.5);
   --td-popover-border-color: var(--bs-border-color-translucent);
-  --td-widget-z-index: 9999;
 }
 
 .visually-hidden, .tempus-dominus-widget [data-action]::after {
@@ -56,7 +55,7 @@
   display: none;
   background-color: var(--td-widget-background);
   border: 1px solid var(--td-popover-border-color);
-  z-index: var(--td-widget-z-index);
+  z-index: 9999;
   box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12);
 }
 .tempus-dominus-widget.calendarWeeks {

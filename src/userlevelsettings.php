@@ -22,8 +22,6 @@ $USER_LEVELS = [["-2","Anonymous"]];
  * [2] int Permissions
  */
 $USER_LEVEL_PRIVS = [["{6E044EB4-6227-43E6-89F6-E9F0A73B0333}akun","-2","0"],
-    ["{6E044EB4-6227-43E6-89F6-E9F0A73B0333}audittrail","-2","0"],
-    ["{6E044EB4-6227-43E6-89F6-E9F0A73B0333}beranda.php","-2","72"],
     ["{6E044EB4-6227-43E6-89F6-E9F0A73B0333}grup","-2","0"],
     ["{6E044EB4-6227-43E6-89F6-E9F0A73B0333}gudang","-2","0"],
     ["{6E044EB4-6227-43E6-89F6-E9F0A73B0333}jurnal","-2","0"],
@@ -44,7 +42,8 @@ $USER_LEVEL_PRIVS = [["{6E044EB4-6227-43E6-89F6-E9F0A73B0333}akun","-2","0"],
     ["{6E044EB4-6227-43E6-89F6-E9F0A73B0333}tipejurnal","-2","0"],
     ["{6E044EB4-6227-43E6-89F6-E9F0A73B0333}top","-2","0"],
     ["{6E044EB4-6227-43E6-89F6-E9F0A73B0333}tos","-2","0"],
-    ["{6E044EB4-6227-43E6-89F6-E9F0A73B0333}type","-2","0"]];
+    ["{6E044EB4-6227-43E6-89F6-E9F0A73B0333}type","-2","0"],
+    ["{6E044EB4-6227-43E6-89F6-E9F0A73B0333}beranda.php","-2","72"]];
 
 /**
  * Tables
@@ -58,8 +57,6 @@ $USER_LEVEL_PRIVS = [["{6E044EB4-6227-43E6-89F6-E9F0A73B0333}akun","-2","0"],
  * [5] string URL (for OthersController::index)
  */
 $USER_LEVEL_TABLES = [["akun","akun","Akun",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","akunlist"],
-    ["audittrail","audittrail","Log Activity",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","audittraillist"],
-    ["beranda.php","beranda","Beranda",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","beranda"],
     ["grup","grup","Grup",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","gruplist"],
     ["gudang","gudang","Gudang",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","gudanglist"],
     ["jurnal","jurnal","Jurnal",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","jurnallist"],
@@ -80,4 +77,5 @@ $USER_LEVEL_TABLES = [["akun","akun","Akun",true,"{6E044EB4-6227-43E6-89F6-E9F0A
     ["tipejurnal","tipejurnal","Tipe Jurnal",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","tipejurnallist"],
     ["top","top","Term of Payment",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","toplist"],
     ["tos","tos","Term of Sale",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","toslist"],
-    ["type","type","Type",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","typelist"]];
+    ["type","type","Type",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","typelist"],
+    ["beranda.php","beranda","Beranda",true,"{6E044EB4-6227-43E6-89F6-E9F0A73B0333}","beranda"]];

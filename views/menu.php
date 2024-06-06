@@ -28,7 +28,6 @@ $topMenu->addMenuItem(101, "mci_User", $Language->menuPhrase("101", "MenuText"),
 $topMenu->addMenuItem(22, "mi_type", $Language->menuPhrase("22", "MenuText"), "typelist", 101, "", true, false, false, "", "", true, false);
 $topMenu->addMenuItem(7, "mi_klasifikasi", $Language->menuPhrase("7", "MenuText"), "klasifikasilist", 101, "", true, false, false, "", "", true, false);
 $topMenu->addMenuItem(14, "mi_person", $Language->menuPhrase("14", "MenuText"), "personlist", 101, "", true, false, false, "", "", true, false);
-$topMenu->addMenuItem(102, "mi_audittrail", $Language->menuPhrase("102", "MenuText"), "audittraillist", 101, "", true, false, false, "", "", true, false);
 echo $topMenu->toScript();
 
 // Sidebar menu
@@ -57,5 +56,4 @@ $sideMenu->addMenuItem(101, "mci_User", $Language->menuPhrase("101", "MenuText")
 $sideMenu->addMenuItem(22, "mi_type", $Language->menuPhrase("22", "MenuText"), "typelist", 101, "", true, false, false, "", "", true, true);
 $sideMenu->addMenuItem(7, "mi_klasifikasi", $Language->menuPhrase("7", "MenuText"), "klasifikasilist", 101, "", true, false, false, "", "", true, true);
 $sideMenu->addMenuItem(14, "mi_person", $Language->menuPhrase("14", "MenuText"), "personlist", 101, "", true, false, false, "", "", true, true);
-$sideMenu->addMenuItem(102, "mi_audittrail", $Language->menuPhrase("102", "MenuText"), "audittraillist", 101, "", true, false, false, "", "", true, true);
 echo $sideMenu->toScript();

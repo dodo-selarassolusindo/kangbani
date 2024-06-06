@@ -2,55 +2,12 @@
 
 namespace PHPMaker2024\prj_accounting;
 
-use Doctrine\ORM\Mapping\Column;
-use ReflectionClass;
-use ReflectionProperty;
-use ReflectionAttribute;
-
 /**
  * Abstract entity class
  */
 abstract class AbstractEntity
 {
-    private array $propertyNames;
-
-    /**
-     * Initiate property names
-     */
-    public function initiate()
-    {
-        if (isset($this->propertyNames)) {
-            return;
-        }
-        $reflect = new ReflectionClass($this);
-        $props = $reflect->getProperties(ReflectionProperty::IS_PRIVATE);
-        foreach ($props as $prop) {
-            $attributes = $prop->getAttributes(Column::class, ReflectionAttribute::IS_INSTANCEOF);
-            foreach ($attributes as $attribute) {
-                $instance = $attribute->newInstance();
-                $fldname = $instance->options["name"] ?? $instance->name ?? $prop->getName();
-                $this->propertyNames[$fldname] = $prop->getName();
-            }
-        }
-    }
-
-    /**
-     * Check if column is initialized
-     *
-     * @param string $name Column name
-     * @return bool
-     */
-    public function isInitialized($name)
-    {
-        $this->initiate();
-        $propName = $this->propertyNames[$name] ?? null;
-        if ($propName) {
-            $rp = new ReflectionProperty($this, $propName);
-            $rp->setAccessible(true); // For PHP 8.0 only
-            return $rp->isInitialized($this);
-        }
-        return false;
-    }
+    public static array $propertyNames;
 
     /**
      * Get value by column name
@@ -60,8 +17,7 @@ abstract class AbstractEntity
      */
     public function get($name)
     {
-        $this->initiate();
-        $method = "get" . ($this->propertyNames[$name] ?? $name); // Method name is case-insensitive
+        $method = "get" . (static::$propertyNames[$name] ?? $name); // Method name is case-insensitive
         if (method_exists($this, $method)) {
             return $this->$method();
         }
@@ -77,8 +33,7 @@ abstract class AbstractEntity
      */
     public function set($name, $value): static
     {
-        $this->initiate();
-        $method = "set" . ($this->propertyNames[$name] ?? $name); // Method name is case-insensitive
+        $method = "set" . (static::$propertyNames[$name] ?? $name); // Method name is case-insensitive
         if (method_exists($this, $method)) {
             $this->$method($value);
         }
@@ -92,8 +47,7 @@ abstract class AbstractEntity
      */
     public function toArray()
     {
-        $this->initiate();
-        $names = array_keys($this->propertyNames);
-        return array_combine($names, array_map(fn ($name) => $this->isInitialized($name) ? $this->get($name) : null, $names));
+        $names = array_keys(static::$propertyNames);
+        return array_combine($names, array_map(fn ($name) => $this->get($name), $names));
     }
 }

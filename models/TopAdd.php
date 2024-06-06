@@ -40,14 +40,6 @@ class TopAdd extends Top
     // CSS class/style
     public $CurrentPageName = "topadd";
 
-    // Audit Trail
-    public $AuditTrailOnAdd = true;
-    public $AuditTrailOnEdit = true;
-    public $AuditTrailOnDelete = true;
-    public $AuditTrailOnView = false;
-    public $AuditTrailOnViewData = false;
-    public $AuditTrailOnSearch = false;
-
     // Page headings
     public $Heading = "";
     public $Subheading = "";
@@ -590,7 +582,7 @@ class TopAdd extends Top
                         $returnUrl = $this->getViewUrl(); // View page, return to View page with keyurl directly
                     }
 
-                    // Handle UseAjaxActions with return page
+                    // Handle UseAjaxActions
                     if ($this->IsModal && $this->UseAjaxActions) {
                         $this->IsModal = false;
                         if (GetPageName($returnUrl) != "toplist") {

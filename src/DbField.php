@@ -148,7 +148,6 @@ class DbField
         $this->BasicSearchExpression = $fldbsexp;
         $this->Type = $fldtype;
         $this->Size = $fldsize;
-        $this->Raw = !Config("REMOVE_XSS");
         $this->setDataType(FieldDataType($fldtype));
         $this->DateTimeFormat = $flddtfmt;
         $this->Upload = $upload ? new HttpUpload($this) : null;
@@ -575,18 +574,16 @@ class DbField
     {
         global $Language;
         $empty = true;
-        $isSearch = CurrentPage()->RowType == RowType::SEARCH;
-        $curValue = $isSearch ? (StartsString("y", $name) ? $this->AdvancedSearch->SearchValue2 : $this->AdvancedSearch->SearchValue) : $this->CurrentValue;
-        $useFilter = $this->UseFilter && $isSearch;
+        $curValue = (CurrentPage()->RowType == RowType::SEARCH) ? (StartsString("y", $name) ? $this->AdvancedSearch->SearchValue2 : $this->AdvancedSearch->SearchValue) : $this->CurrentValue;
         $str = "";
         $multiple ??= $this->isMultiSelect();
         if ($multiple) {
             $armulti = (strval($curValue) != "")
-                ? explode($useFilter ? Config("FILTER_OPTION_SEPARATOR") : Config("MULTIPLE_OPTION_SEPARATOR"), strval($curValue))
+                ? explode($this->UseFilter ? Config("FILTER_OPTION_SEPARATOR") : Config("MULTIPLE_OPTION_SEPARATOR"), strval($curValue))
                 : [];
             $cnt = count($armulti);
         }
-        if (is_array($this->EditValue) && !$useFilter) { // Skip checking for filter fields
+        if (is_array($this->EditValue) && !$this->UseFilter) { // Skip checking for filter fields
             $ar = $this->EditValue;
             if ($multiple) {
                 $rowcnt = count($ar);

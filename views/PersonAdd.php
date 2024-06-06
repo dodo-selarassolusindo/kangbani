@@ -210,7 +210,7 @@ loadjs.ready("fpersonadd", function() {
         <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->_password->cellAttributes() ?>>
 <span id="el_person__password">
 <div class="input-group">
-    <input type="password" name="x__password" id="x__password" autocomplete="new-password" data-table="person" data-field="x__password" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->_password->getPlaceHolder()) ?>"<?= $Page->_password->editAttributes() ?> aria-describedby="x__password_help">
+    <input type="password" name="x__password" id="x__password" autocomplete="new-password" data-field="x__password" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->_password->getPlaceHolder()) ?>"<?= $Page->_password->editAttributes() ?> aria-describedby="x__password_help">
     <button type="button" class="btn btn-default ew-toggle-password rounded-end" data-ew-action="password"><i class="fa-solid fa-eye"></i></button>
 </div>
 <?= $Page->_password->getCustomMessage() ?>

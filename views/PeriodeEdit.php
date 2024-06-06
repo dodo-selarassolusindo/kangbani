@@ -99,7 +99,6 @@ loadjs.ready(["fperiodeedit", "datetimepicker"], function () {
                     next: ew.IS_RTL ? "fa-solid fa-chevron-left" : "fa-solid fa-chevron-right"
                 },
                 components: {
-                    clock: !!format.match(/h/i) || !!format.match(/m/) || !!format.match(/s/i),
                     hours: !!format.match(/h/i),
                     minutes: !!format.match(/m/),
                     seconds: !!format.match(/s/i)
@@ -140,7 +139,6 @@ loadjs.ready(["fperiodeedit", "datetimepicker"], function () {
                     next: ew.IS_RTL ? "fa-solid fa-chevron-left" : "fa-solid fa-chevron-right"
                 },
                 components: {
-                    clock: !!format.match(/h/i) || !!format.match(/m/) || !!format.match(/s/i),
                     hours: !!format.match(/h/i),
                     minutes: !!format.match(/m/),
                     seconds: !!format.match(/s/i)

@@ -28,6 +28,15 @@ use function PHPMaker2024\prj_accounting\EncryptPassword;
 #[Table(name: "konversi")]
 class Konversi extends AbstractEntity
 {
+    public static array $propertyNames = [
+        'id' => 'id',
+        'satuan_id' => 'satuanId',
+        'nilai' => 'nilai',
+        'satuan_id2' => 'satuanId2',
+        'operasi' => 'operasi',
+        'id_FK' => 'idFk',
+    ];
+
     #[Id]
     #[Column(type: "integer", unique: true)]
     #[GeneratedValue]
@@ -46,12 +55,7 @@ class Konversi extends AbstractEntity
     private ?int $operasi;
 
     #[Column(name: "id_FK", type: "integer")]
-    private int $idFk;
-
-    public function __construct()
-    {
-        $this->idFk = 0;
-    }
+    private int $idFk = 0;
 
     public function getId(): int
     {

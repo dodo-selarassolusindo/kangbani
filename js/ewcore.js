@@ -1,5 +1,5 @@
 /*!
- * Core JavaScript for PHPMaker v2024.11.0
+ * Core JavaScript for PHPMaker v2024.6.0
  * Copyright (c) e.World Technology Limited. All rights reserved.
  */
 var ew = (function () {
@@ -1577,13 +1577,6 @@ var ew = (function () {
    * Bundle IDs for applying client side template
    */
   ew$1.applyTemplateId = ["jsrender", "makerjs"];
-
-  /**
-   * Register 'ew' as global helper
-   */
-  loadjs.ready("jsrender", () => $.views.helpers({
-    ew: ew$1
-  }));
 
   /**
    * Render client side template, use the HTML in DOM and return the HTML

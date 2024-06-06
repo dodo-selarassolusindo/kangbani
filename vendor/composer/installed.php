@@ -181,6 +181,30 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'giggsey/libphonenumber-for-php' => array(
+            'pretty_version' => '8.13.37',
+            'version' => '8.13.37.0',
+            'reference' => '536c747ff1af433dddc615b26b9674047e013076',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../giggsey/libphonenumber-for-php',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'giggsey/libphonenumber-for-php-lite' => array(
+            'dev_requirement' => false,
+            'replaced' => array(
+                0 => '8.13.37',
+            ),
+        ),
+        'giggsey/locale' => array(
+            'pretty_version' => '2.6',
+            'version' => '2.6.0.0',
+            'reference' => '37874fa473131247c348059fb7b8985efc18b5ea',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../giggsey/locale',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'hkvstore/dompdf' => array(
             'pretty_version' => '2.0.8',
             'version' => '2.0.8.0',

@@ -115,7 +115,7 @@ $app->addRoutingMiddleware();
 // Set route cache file
 if (Config("USE_ROUTE_CACHE") && !IsRemote(Config("LOG_PATH"))) {
     $routeCollector = $app->getRouteCollector();
-    $cacheFolder = $RELATIVE_PATH . Config("CACHE_FOLDER");
+    $cacheFolder = Config("CACHE_FOLDER");
     if (CreateFolder($cacheFolder)) {
         $routeCollector->setCacheFile($cacheFolder . "/" . Config("ROUTE_CACHE_FILE"));
     }

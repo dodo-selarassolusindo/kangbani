@@ -226,7 +226,7 @@ class UserProfile implements \Stringable
     }
 
     // Assign properties to profile
-    public function assign(object|array $input)
+    public function assign(object|array $input, bool $save = true)
     {
         if (is_object($input)) {
             $vars = get_object_vars($input);
@@ -235,7 +235,7 @@ class UserProfile implements \Stringable
                 unset($vars["data"]);
                 $vars = array_merge($vars, $data);
             }
-            $this->assign($vars);
+            $this->assign($vars, $save);
         } elseif (is_array($input)) {
             $input = array_filter($input, fn ($v, $k) => !is_int($k) && (is_bool($v) || is_float($v) || is_int($v) || $v === null || is_string($v)), ARRAY_FILTER_USE_BOTH);
             foreach ($input as $key => $value) {
@@ -376,8 +376,7 @@ class UserProfile implements \Stringable
             }
             $user = $this->getUser();
             if ($user) { // Database user
-                $user->set(Config("USER_PROFILE_FIELD_NAME"), (string)$this);
-                GetUserEntityManager()->flush();
+                $user->set(Config("USER_PROFILE_FIELD_NAME"), (string)$this)->flush();
             } else { // No database user
                 $this->saveToSession();
             }
@@ -995,7 +994,7 @@ class UserProfile implements \Stringable
                         } elseif (SameText(Config("TWO_FACTOR_AUTHENTICATION_TYPE"), "sms")) {
                             $user->set(Config("USER_PHONE_FIELD_NAME"), $account);
                         }
-                        GetUserEntityManager()->flush();
+                        $user->flush();
                     }
                 }
                 return $valid;

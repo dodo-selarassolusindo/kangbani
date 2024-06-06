@@ -28,6 +28,31 @@ use function PHPMaker2024\prj_accounting\EncryptPassword;
 #[Table(name: "produk")]
 class Produk extends AbstractEntity
 {
+    public static array $propertyNames = [
+        'id' => 'id',
+        'kode' => 'kode',
+        'nama' => 'nama',
+        'kelompok_id' => 'kelompokId',
+        'satuan_id' => 'satuanId',
+        'satuan_id2' => 'satuanId2',
+        'gudang_id' => 'gudangId',
+        'minstok' => 'minstok',
+        'minorder' => 'minorder',
+        'akunhpp' => 'akunhpp',
+        'akunjual' => 'akunjual',
+        'akunpersediaan' => 'akunpersediaan',
+        'akunreturjual' => 'akunreturjual',
+        'hargapokok' => 'hargapokok',
+        'p' => 'p',
+        'l' => 'l',
+        't' => 't',
+        'berat' => 'berat',
+        'supplier_id' => 'supplierId',
+        'waktukirim' => 'waktukirim',
+        'aktif' => 'aktif',
+        'id_FK' => 'idFk',
+    ];
+
     #[Id]
     #[Column(type: "integer", unique: true)]
     #[GeneratedValue]
@@ -94,12 +119,7 @@ class Produk extends AbstractEntity
     private ?int $aktif;
 
     #[Column(name: "id_FK", type: "integer")]
-    private int $idFk;
-
-    public function __construct()
-    {
-        $this->idFk = 0;
-    }
+    private int $idFk = 0;
 
     public function getId(): int
     {

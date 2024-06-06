@@ -54,14 +54,6 @@ class JurnaldGrid extends Jurnald
     public $CopyUrl;
     public $ListUrl;
 
-    // Audit Trail
-    public $AuditTrailOnAdd = true;
-    public $AuditTrailOnEdit = true;
-    public $AuditTrailOnDelete = true;
-    public $AuditTrailOnView = false;
-    public $AuditTrailOnViewData = false;
-    public $AuditTrailOnSearch = false;
-
     // Page headings
     public $Heading = "";
     public $Subheading = "";
@@ -889,9 +881,6 @@ class JurnaldGrid extends Jurnald
             return false;
         }
         $this->loadDefaultValues();
-        if ($this->AuditTrailOnEdit) {
-            $this->writeAuditTrailDummy($Language->phrase("BatchUpdateBegin")); // Batch update begin
-        }
         $wrkfilter = "";
         $key = "";
 
@@ -957,14 +946,8 @@ class JurnaldGrid extends Jurnald
 
             // Call Grid_Updated event
             $this->gridUpdated($rsold, $rsnew);
-            if ($this->AuditTrailOnEdit) {
-                $this->writeAuditTrailDummy($Language->phrase("BatchUpdateSuccess")); // Batch update success
-            }
             $this->clearInlineMode(); // Clear inline edit mode
         } else {
-            if ($this->AuditTrailOnEdit) {
-                $this->writeAuditTrailDummy($Language->phrase("BatchUpdateRollback")); // Batch update rollback
-            }
             if ($this->getFailureMessage() == "") {
                 $this->setFailureMessage($Language->phrase("UpdateFailed")); // Set update failed message
             }
@@ -1024,9 +1007,6 @@ class JurnaldGrid extends Jurnald
         // Init key filter
         $wrkfilter = "";
         $addcnt = 0;
-        if ($this->AuditTrailOnAdd) {
-            $this->writeAuditTrailDummy($Language->phrase("BatchInsertBegin")); // Batch insert begin
-        }
         $key = "";
 
         // Get row count
@@ -1081,14 +1061,8 @@ class JurnaldGrid extends Jurnald
 
             // Call Grid_Inserted event
             $this->gridInserted($rsnew);
-            if ($this->AuditTrailOnAdd) {
-                $this->writeAuditTrailDummy($Language->phrase("BatchInsertSuccess")); // Batch insert success
-            }
             $this->clearInlineMode(); // Clear grid add mode
         } else {
-            if ($this->AuditTrailOnAdd) {
-                $this->writeAuditTrailDummy($Language->phrase("BatchInsertRollback")); // Batch insert rollback
-            }
             if ($this->getFailureMessage() == "") {
                 $this->setFailureMessage($Language->phrase("InsertFailed")); // Set insert failed message
             }
@@ -1100,28 +1074,13 @@ class JurnaldGrid extends Jurnald
     public function emptyRow()
     {
         global $CurrentForm;
-        if (
-            $CurrentForm->hasValue("x_akun_id") &&
-            $CurrentForm->hasValue("o_akun_id") &&
-            $this->akun_id->CurrentValue != $this->akun_id->DefaultValue &&
-            !($this->akun_id->IsForeignKey && $this->getCurrentMasterTable() != "" && $this->akun_id->CurrentValue == $this->akun_id->getSessionValue())
-        ) {
+        if ($CurrentForm->hasValue("x_akun_id") && $CurrentForm->hasValue("o_akun_id") && $this->akun_id->CurrentValue != $this->akun_id->DefaultValue) {
             return false;
         }
-        if (
-            $CurrentForm->hasValue("x_debet") &&
-            $CurrentForm->hasValue("o_debet") &&
-            $this->debet->CurrentValue != $this->debet->DefaultValue &&
-            !($this->debet->IsForeignKey && $this->getCurrentMasterTable() != "" && $this->debet->CurrentValue == $this->debet->getSessionValue())
-        ) {
+        if ($CurrentForm->hasValue("x_debet") && $CurrentForm->hasValue("o_debet") && $this->debet->CurrentValue != $this->debet->DefaultValue) {
             return false;
         }
-        if (
-            $CurrentForm->hasValue("x_kredit") &&
-            $CurrentForm->hasValue("o_kredit") &&
-            $this->kredit->CurrentValue != $this->kredit->DefaultValue &&
-            !($this->kredit->IsForeignKey && $this->getCurrentMasterTable() != "" && $this->kredit->CurrentValue == $this->kredit->getSessionValue())
-        ) {
+        if ($CurrentForm->hasValue("x_kredit") && $CurrentForm->hasValue("o_kredit") && $this->kredit->CurrentValue != $this->kredit->DefaultValue) {
             return false;
         }
         return true;
@@ -2134,9 +2093,6 @@ class JurnaldGrid extends Jurnald
         if (count($rows) == 0) {
             $this->setFailureMessage($Language->phrase("NoRecord")); // No record found
             return false;
-        }
-        if ($this->AuditTrailOnDelete) {
-            $this->writeAuditTrailDummy($Language->phrase("BatchDeleteBegin")); // Batch delete begin
         }
 
         // Clone old rows

@@ -80,8 +80,6 @@ return [
 
     // Tables
     "akun" => \DI\create(Akun::class),
-    "audittrail" => \DI\create(Audittrail::class),
-    "beranda" => \DI\create(Beranda::class),
     "grup" => \DI\create(Grup::class),
     "gudang" => \DI\create(Gudang::class),
     "jurnal" => \DI\create(Jurnal::class),
@@ -103,4 +101,5 @@ return [
     "top" => \DI\create(Top::class),
     "tos" => \DI\create(Tos::class),
     "type" => \DI\create(Type::class),
+    "beranda" => \DI\create(Beranda::class),
 ] + $definitions;

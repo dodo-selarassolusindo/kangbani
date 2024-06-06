@@ -1,5 +1,5 @@
 /*!
- * JavaScript for PHPMaker v2024.11.0
+ * JavaScript for PHPMaker v2024.6.0
  * Copyright (c) e.World Technology Limited. All rights reserved.
  */
 (function (ew$1, $$1, luxon) {
@@ -526,7 +526,7 @@
       let value = ew.getValue(el);
       if (!ew.checkByRegEx(value, pattern)) {
         return {
-          regex: ew.language.phrase("IncorrectRegExp")
+          regex: ew.language.phrase("IncorrectField")
         };
       }
       return false;
@@ -1915,7 +1915,6 @@
           });
         }, delay); // Focus after tab transition
         this._focused = true;
-        this.trigger("focused");
       }
     }
 
@@ -1987,7 +1986,6 @@
           preventScroll: Form.autoFocusPreventScroll && this.autoFocusPreventScroll
         }); // Focus the Quick Search input
         this._focused = true;
-        this.trigger("focused");
       }
     }
 
@@ -4341,10 +4339,7 @@
   function initExportLinks(e) {
     var _e$target3;
     let $el = $$1((_e$target3 = e == null ? void 0 : e.target) != null ? _e$target3 : document);
-    if (e != null && e.target && !$el.find("a.ew-export-link[href]")[0])
-      // Export links not found
-      $el = $el.closest(".content"); // For refresh
-    $el.find("a.ew-export-link[href]:not(.ew-email):not(.ew-print):not(.ew-xml)").off("click").on("click", function (e) {
+    $el.find("a.ew-export-link[href]:not(.ew-email):not(.ew-print):not(.ew-xml)").on("click", function (e) {
       let href = this.href;
       if (href && href != "#") fileDownload(href, getchartParams());
       e.preventDefault();
@@ -6433,6 +6428,32 @@
       let sep = i > 0 ? valueSeparator(i, obj) : "";
       return !$$1.isUndefined(sep) && $$1.isValue(value) && value != "" ? text + sep + value : text;
     }, "");
+  }
+
+  /**
+   * Get HTML for a single option
+   *
+   * @param {*} val - Value of the option
+   * @returns {string} HTML
+   */
+  function optionHtml(val) {
+    return ew.OPTION_HTML_TEMPLATE.replace(/\{value\}/g, val);
+  }
+
+  /**
+   * Get HTML for diplaying all options
+   *
+   * @param {string[]} options - Array of all options (HTML)
+   * @param {number} max - Maximum number of options to show
+   * @returns {string} HTML
+   */
+  function optionsHtml(options, max) {
+    if (options.length > (max || ew.MAX_OPTION_COUNT))
+      // More than max option count
+      return ew.language.phrase("CountSelected").replace("%s", options.length);else if (options.length)
+      // Some options
+      return options.reduce((previous, current) => previous + optionHtml(current), "");
+    return ew.language.phrase("PleaseSelect"); // No options
   }
 
   /**
@@ -9260,6 +9281,8 @@
     modalDialogShow,
     newOption,
     onError,
+    optionHtml,
+    optionsHtml,
     parseDate: parseDateTime,
     parseDateTime,
     parseJson,
@@ -9536,12 +9559,12 @@
 
     // Add custom add button
     if (addUrl) {
-      fullCalendarOptions.customButtons = Object.assign(fullCalendarOptions.customButtons || {}, {
+      fullCalendarOptions.customButtons = {
         add: {
           text: ew.language.phrase("AddEvent"),
           click: addEventDialogShow
         }
-      });
+      };
       fullCalendarOptions.headerToolbar.left += " add";
     }
 

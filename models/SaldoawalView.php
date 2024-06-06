@@ -58,14 +58,6 @@ class SaldoawalView extends Saldoawal
     public $MultiDeleteUrl;
     public $MultiUpdateUrl;
 
-    // Audit Trail
-    public $AuditTrailOnAdd = true;
-    public $AuditTrailOnEdit = true;
-    public $AuditTrailOnDelete = true;
-    public $AuditTrailOnView = false;
-    public $AuditTrailOnViewData = false;
-    public $AuditTrailOnSearch = false;
-
     // Page headings
     public $Heading = "";
     public $Subheading = "";
@@ -844,9 +836,6 @@ class SaldoawalView extends Saldoawal
 
         // Call Row Selected event
         $this->rowSelected($row);
-        if ($this->AuditTrailOnView) {
-            $this->writeAuditTrailOnView($row);
-        }
         $this->id->setDbValue($row['id']);
         $this->periode_id->setDbValue($row['periode_id']);
         $this->akun_id->setDbValue($row['akun_id']);
