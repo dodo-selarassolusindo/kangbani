@@ -4,6 +4,7 @@ C:\xampp\htdocs\kangbani\api\index.php
 C:\xampp\htdocs\kangbani\composer.json
 C:\xampp\htdocs\kangbani\controllers\AkunController.php
 C:\xampp\htdocs\kangbani\controllers\ApiController.php
+C:\xampp\htdocs\kangbani\controllers\AudittrailController.php
 C:\xampp\htdocs\kangbani\controllers\BerandaController.php
 C:\xampp\htdocs\kangbani\controllers\ControllerBase.php
 C:\xampp\htdocs\kangbani\controllers\GrupController.php
@@ -45,6 +46,9 @@ C:\xampp\htdocs\kangbani\models\AkunDelete.php
 C:\xampp\htdocs\kangbani\models\AkunEdit.php
 C:\xampp\htdocs\kangbani\models\AkunList.php
 C:\xampp\htdocs\kangbani\models\AkunView.php
+C:\xampp\htdocs\kangbani\models\Audittrail.php
+C:\xampp\htdocs\kangbani\models\AudittrailList.php
+C:\xampp\htdocs\kangbani\models\AudittrailView.php
 C:\xampp\htdocs\kangbani\models\Beranda.php
 C:\xampp\htdocs\kangbani\models\Grup.php
 C:\xampp\htdocs\kangbani\models\GrupAdd.php
@@ -222,6 +226,7 @@ C:\xampp\htdocs\kangbani\src\Email.php
 C:\xampp\htdocs\kangbani\src\EmailTwoFactorAuthentication.php
 C:\xampp\htdocs\kangbani\src\EntityDescriptor.php
 C:\xampp\htdocs\kangbani\src\Entity\Akun.php
+C:\xampp\htdocs\kangbani\src\Entity\Audittrail.php
 C:\xampp\htdocs\kangbani\src\Entity\Grup.php
 C:\xampp\htdocs\kangbani\src\Entity\Gudang.php
 C:\xampp\htdocs\kangbani\src\Entity\Jurnal.php
@@ -335,6 +340,8 @@ C:\xampp\htdocs\kangbani\views\AkunDelete.php
 C:\xampp\htdocs\kangbani\views\AkunEdit.php
 C:\xampp\htdocs\kangbani\views\AkunList.php
 C:\xampp\htdocs\kangbani\views\AkunView.php
+C:\xampp\htdocs\kangbani\views\AudittrailList.php
+C:\xampp\htdocs\kangbani\views\AudittrailView.php
 C:\xampp\htdocs\kangbani\views\Beranda.php
 C:\xampp\htdocs\kangbani\views\Error.php
 C:\xampp\htdocs\kangbani\views\GrupAdd.php

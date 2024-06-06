@@ -15,7 +15,7 @@ use Closure;
 /**
  * Page class
  */
-class JurnalList extends Jurnal
+class AudittrailList extends Audittrail
 {
     use MessagesTrait;
 
@@ -26,7 +26,7 @@ class JurnalList extends Jurnal
     public $ProjectID = PROJECT_ID;
 
     // Page object name
-    public $PageObjName = "JurnalList";
+    public $PageObjName = "AudittrailList";
 
     // View file path
     public $View = null;
@@ -38,13 +38,13 @@ class JurnalList extends Jurnal
     public $RenderingView = false;
 
     // Grid form hidden field names
-    public $FormName = "fjurnallist";
+    public $FormName = "faudittraillist";
     public $FormActionName = "";
     public $FormBlankRowName = "";
     public $FormKeyCountName = "";
 
     // CSS class/style
-    public $CurrentPageName = "jurnallist";
+    public $CurrentPageName = "audittraillist";
 
     // Page URLs
     public $AddUrl;
@@ -153,13 +153,16 @@ class JurnalList extends Jurnal
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->Visible = false;
-        $this->tipejurnal_id->setVisibility();
-        $this->period_id->setVisibility();
-        $this->createon->Visible = false;
-        $this->keterangan->setVisibility();
-        $this->person_id->Visible = false;
-        $this->nomer->setVisibility();
+        $this->Id->setVisibility();
+        $this->DateTime->setVisibility();
+        $this->Script->setVisibility();
+        $this->User->setVisibility();
+        $this->_Action->setVisibility();
+        $this->_Table->setVisibility();
+        $this->Field->setVisibility();
+        $this->KeyValue->Visible = false;
+        $this->OldValue->Visible = false;
+        $this->NewValue->Visible = false;
     }
 
     // Constructor
@@ -170,8 +173,8 @@ class JurnalList extends Jurnal
         $this->FormActionName = Config("FORM_ROW_ACTION_NAME");
         $this->FormBlankRowName = Config("FORM_BLANK_ROW_NAME");
         $this->FormKeyCountName = Config("FORM_KEY_COUNT_NAME");
-        $this->TableVar = 'jurnal';
-        $this->TableName = 'jurnal';
+        $this->TableVar = 'audittrail';
+        $this->TableName = 'audittrail';
 
         // Table CSS class
         $this->TableClass = "table table-bordered table-hover table-sm ew-table";
@@ -191,26 +194,26 @@ class JurnalList extends Jurnal
         // Language object
         $Language = Container("app.language");
 
-        // Table object (jurnal)
-        if (!isset($GLOBALS["jurnal"]) || $GLOBALS["jurnal"]::class == PROJECT_NAMESPACE . "jurnal") {
-            $GLOBALS["jurnal"] = &$this;
+        // Table object (audittrail)
+        if (!isset($GLOBALS["audittrail"]) || $GLOBALS["audittrail"]::class == PROJECT_NAMESPACE . "audittrail") {
+            $GLOBALS["audittrail"] = &$this;
         }
 
         // Page URL
         $pageUrl = $this->pageUrl(false);
 
         // Initialize URLs
-        $this->AddUrl = "jurnaladd?" . Config("TABLE_SHOW_DETAIL") . "=";
+        $this->AddUrl = "audittrailadd";
         $this->InlineAddUrl = $pageUrl . "action=add";
         $this->GridAddUrl = $pageUrl . "action=gridadd";
         $this->GridEditUrl = $pageUrl . "action=gridedit";
         $this->MultiEditUrl = $pageUrl . "action=multiedit";
-        $this->MultiDeleteUrl = "jurnaldelete";
-        $this->MultiUpdateUrl = "jurnalupdate";
+        $this->MultiDeleteUrl = "audittraildelete";
+        $this->MultiUpdateUrl = "audittrailupdate";
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'jurnal');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'audittrail');
         }
 
         // Start timer
@@ -358,7 +361,7 @@ class JurnalList extends Jurnal
                 $result = ["url" => GetUrl($url), "modal" => "1"];  // Assume return to modal for simplicity
                 if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
                     $result["caption"] = $this->getModalCaption($pageName);
-                    $result["view"] = SameString($pageName, "jurnalview"); // If View page, no primary button
+                    $result["view"] = SameString($pageName, "audittrailview"); // If View page, no primary button
                 } else { // List page
                     $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
                     $this->clearFailureMessage();
@@ -449,7 +452,7 @@ class JurnalList extends Jurnal
     {
         $key = "";
         if (is_array($ar)) {
-            $key .= @$ar['id'];
+            $key .= @$ar['Id'];
         }
         return $key;
     }
@@ -462,10 +465,7 @@ class JurnalList extends Jurnal
     protected function hideFieldsForAddEdit()
     {
         if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
-        }
-        if ($this->isAddOrEdit()) {
-            $this->createon->Visible = false;
+            $this->Id->Visible = false;
         }
     }
 
@@ -700,13 +700,9 @@ class JurnalList extends Jurnal
         // Setup other options
         $this->setupOtherOptions();
 
-        // Set up lookup cache
-        $this->setupLookupOptions($this->tipejurnal_id);
-        $this->setupLookupOptions($this->period_id);
-
         // Update form name to avoid conflict
         if ($this->IsModal) {
-            $this->FormName = "fjurnalgrid";
+            $this->FormName = "faudittrailgrid";
         }
 
         // Set up page action
@@ -1038,13 +1034,16 @@ class JurnalList extends Jurnal
         // Initialize
         $filterList = "";
         $savedFilterList = "";
-        $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
-        $filterList = Concat($filterList, $this->tipejurnal_id->AdvancedSearch->toJson(), ","); // Field tipejurnal_id
-        $filterList = Concat($filterList, $this->period_id->AdvancedSearch->toJson(), ","); // Field period_id
-        $filterList = Concat($filterList, $this->createon->AdvancedSearch->toJson(), ","); // Field createon
-        $filterList = Concat($filterList, $this->keterangan->AdvancedSearch->toJson(), ","); // Field keterangan
-        $filterList = Concat($filterList, $this->person_id->AdvancedSearch->toJson(), ","); // Field person_id
-        $filterList = Concat($filterList, $this->nomer->AdvancedSearch->toJson(), ","); // Field nomer
+        $filterList = Concat($filterList, $this->Id->AdvancedSearch->toJson(), ","); // Field Id
+        $filterList = Concat($filterList, $this->DateTime->AdvancedSearch->toJson(), ","); // Field DateTime
+        $filterList = Concat($filterList, $this->Script->AdvancedSearch->toJson(), ","); // Field Script
+        $filterList = Concat($filterList, $this->User->AdvancedSearch->toJson(), ","); // Field User
+        $filterList = Concat($filterList, $this->_Action->AdvancedSearch->toJson(), ","); // Field Action
+        $filterList = Concat($filterList, $this->_Table->AdvancedSearch->toJson(), ","); // Field Table
+        $filterList = Concat($filterList, $this->Field->AdvancedSearch->toJson(), ","); // Field Field
+        $filterList = Concat($filterList, $this->KeyValue->AdvancedSearch->toJson(), ","); // Field KeyValue
+        $filterList = Concat($filterList, $this->OldValue->AdvancedSearch->toJson(), ","); // Field OldValue
+        $filterList = Concat($filterList, $this->NewValue->AdvancedSearch->toJson(), ","); // Field NewValue
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -1065,7 +1064,7 @@ class JurnalList extends Jurnal
     {
         if (Post("ajax") == "savefilters") { // Save filter request (Ajax)
             $filters = Post("filters");
-            Profile()->setSearchFilters("fjurnalsrch", $filters);
+            Profile()->setSearchFilters("faudittrailsrch", $filters);
             WriteJson([["success" => true]]); // Success
             return true;
         } elseif (Post("cmd") == "resetfilter") {
@@ -1084,61 +1083,85 @@ class JurnalList extends Jurnal
         $filter = json_decode(Post("filter"), true);
         $this->Command = "search";
 
-        // Field id
-        $this->id->AdvancedSearch->SearchValue = @$filter["x_id"];
-        $this->id->AdvancedSearch->SearchOperator = @$filter["z_id"];
-        $this->id->AdvancedSearch->SearchCondition = @$filter["v_id"];
-        $this->id->AdvancedSearch->SearchValue2 = @$filter["y_id"];
-        $this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
-        $this->id->AdvancedSearch->save();
+        // Field Id
+        $this->Id->AdvancedSearch->SearchValue = @$filter["x_Id"];
+        $this->Id->AdvancedSearch->SearchOperator = @$filter["z_Id"];
+        $this->Id->AdvancedSearch->SearchCondition = @$filter["v_Id"];
+        $this->Id->AdvancedSearch->SearchValue2 = @$filter["y_Id"];
+        $this->Id->AdvancedSearch->SearchOperator2 = @$filter["w_Id"];
+        $this->Id->AdvancedSearch->save();
 
-        // Field tipejurnal_id
-        $this->tipejurnal_id->AdvancedSearch->SearchValue = @$filter["x_tipejurnal_id"];
-        $this->tipejurnal_id->AdvancedSearch->SearchOperator = @$filter["z_tipejurnal_id"];
-        $this->tipejurnal_id->AdvancedSearch->SearchCondition = @$filter["v_tipejurnal_id"];
-        $this->tipejurnal_id->AdvancedSearch->SearchValue2 = @$filter["y_tipejurnal_id"];
-        $this->tipejurnal_id->AdvancedSearch->SearchOperator2 = @$filter["w_tipejurnal_id"];
-        $this->tipejurnal_id->AdvancedSearch->save();
+        // Field DateTime
+        $this->DateTime->AdvancedSearch->SearchValue = @$filter["x_DateTime"];
+        $this->DateTime->AdvancedSearch->SearchOperator = @$filter["z_DateTime"];
+        $this->DateTime->AdvancedSearch->SearchCondition = @$filter["v_DateTime"];
+        $this->DateTime->AdvancedSearch->SearchValue2 = @$filter["y_DateTime"];
+        $this->DateTime->AdvancedSearch->SearchOperator2 = @$filter["w_DateTime"];
+        $this->DateTime->AdvancedSearch->save();
 
-        // Field period_id
-        $this->period_id->AdvancedSearch->SearchValue = @$filter["x_period_id"];
-        $this->period_id->AdvancedSearch->SearchOperator = @$filter["z_period_id"];
-        $this->period_id->AdvancedSearch->SearchCondition = @$filter["v_period_id"];
-        $this->period_id->AdvancedSearch->SearchValue2 = @$filter["y_period_id"];
-        $this->period_id->AdvancedSearch->SearchOperator2 = @$filter["w_period_id"];
-        $this->period_id->AdvancedSearch->save();
+        // Field Script
+        $this->Script->AdvancedSearch->SearchValue = @$filter["x_Script"];
+        $this->Script->AdvancedSearch->SearchOperator = @$filter["z_Script"];
+        $this->Script->AdvancedSearch->SearchCondition = @$filter["v_Script"];
+        $this->Script->AdvancedSearch->SearchValue2 = @$filter["y_Script"];
+        $this->Script->AdvancedSearch->SearchOperator2 = @$filter["w_Script"];
+        $this->Script->AdvancedSearch->save();
 
-        // Field createon
-        $this->createon->AdvancedSearch->SearchValue = @$filter["x_createon"];
-        $this->createon->AdvancedSearch->SearchOperator = @$filter["z_createon"];
-        $this->createon->AdvancedSearch->SearchCondition = @$filter["v_createon"];
-        $this->createon->AdvancedSearch->SearchValue2 = @$filter["y_createon"];
-        $this->createon->AdvancedSearch->SearchOperator2 = @$filter["w_createon"];
-        $this->createon->AdvancedSearch->save();
+        // Field User
+        $this->User->AdvancedSearch->SearchValue = @$filter["x_User"];
+        $this->User->AdvancedSearch->SearchOperator = @$filter["z_User"];
+        $this->User->AdvancedSearch->SearchCondition = @$filter["v_User"];
+        $this->User->AdvancedSearch->SearchValue2 = @$filter["y_User"];
+        $this->User->AdvancedSearch->SearchOperator2 = @$filter["w_User"];
+        $this->User->AdvancedSearch->save();
 
-        // Field keterangan
-        $this->keterangan->AdvancedSearch->SearchValue = @$filter["x_keterangan"];
-        $this->keterangan->AdvancedSearch->SearchOperator = @$filter["z_keterangan"];
-        $this->keterangan->AdvancedSearch->SearchCondition = @$filter["v_keterangan"];
-        $this->keterangan->AdvancedSearch->SearchValue2 = @$filter["y_keterangan"];
-        $this->keterangan->AdvancedSearch->SearchOperator2 = @$filter["w_keterangan"];
-        $this->keterangan->AdvancedSearch->save();
+        // Field Action
+        $this->_Action->AdvancedSearch->SearchValue = @$filter["x__Action"];
+        $this->_Action->AdvancedSearch->SearchOperator = @$filter["z__Action"];
+        $this->_Action->AdvancedSearch->SearchCondition = @$filter["v__Action"];
+        $this->_Action->AdvancedSearch->SearchValue2 = @$filter["y__Action"];
+        $this->_Action->AdvancedSearch->SearchOperator2 = @$filter["w__Action"];
+        $this->_Action->AdvancedSearch->save();
 
-        // Field person_id
-        $this->person_id->AdvancedSearch->SearchValue = @$filter["x_person_id"];
-        $this->person_id->AdvancedSearch->SearchOperator = @$filter["z_person_id"];
-        $this->person_id->AdvancedSearch->SearchCondition = @$filter["v_person_id"];
-        $this->person_id->AdvancedSearch->SearchValue2 = @$filter["y_person_id"];
-        $this->person_id->AdvancedSearch->SearchOperator2 = @$filter["w_person_id"];
-        $this->person_id->AdvancedSearch->save();
+        // Field Table
+        $this->_Table->AdvancedSearch->SearchValue = @$filter["x__Table"];
+        $this->_Table->AdvancedSearch->SearchOperator = @$filter["z__Table"];
+        $this->_Table->AdvancedSearch->SearchCondition = @$filter["v__Table"];
+        $this->_Table->AdvancedSearch->SearchValue2 = @$filter["y__Table"];
+        $this->_Table->AdvancedSearch->SearchOperator2 = @$filter["w__Table"];
+        $this->_Table->AdvancedSearch->save();
 
-        // Field nomer
-        $this->nomer->AdvancedSearch->SearchValue = @$filter["x_nomer"];
-        $this->nomer->AdvancedSearch->SearchOperator = @$filter["z_nomer"];
-        $this->nomer->AdvancedSearch->SearchCondition = @$filter["v_nomer"];
-        $this->nomer->AdvancedSearch->SearchValue2 = @$filter["y_nomer"];
-        $this->nomer->AdvancedSearch->SearchOperator2 = @$filter["w_nomer"];
-        $this->nomer->AdvancedSearch->save();
+        // Field Field
+        $this->Field->AdvancedSearch->SearchValue = @$filter["x_Field"];
+        $this->Field->AdvancedSearch->SearchOperator = @$filter["z_Field"];
+        $this->Field->AdvancedSearch->SearchCondition = @$filter["v_Field"];
+        $this->Field->AdvancedSearch->SearchValue2 = @$filter["y_Field"];
+        $this->Field->AdvancedSearch->SearchOperator2 = @$filter["w_Field"];
+        $this->Field->AdvancedSearch->save();
+
+        // Field KeyValue
+        $this->KeyValue->AdvancedSearch->SearchValue = @$filter["x_KeyValue"];
+        $this->KeyValue->AdvancedSearch->SearchOperator = @$filter["z_KeyValue"];
+        $this->KeyValue->AdvancedSearch->SearchCondition = @$filter["v_KeyValue"];
+        $this->KeyValue->AdvancedSearch->SearchValue2 = @$filter["y_KeyValue"];
+        $this->KeyValue->AdvancedSearch->SearchOperator2 = @$filter["w_KeyValue"];
+        $this->KeyValue->AdvancedSearch->save();
+
+        // Field OldValue
+        $this->OldValue->AdvancedSearch->SearchValue = @$filter["x_OldValue"];
+        $this->OldValue->AdvancedSearch->SearchOperator = @$filter["z_OldValue"];
+        $this->OldValue->AdvancedSearch->SearchCondition = @$filter["v_OldValue"];
+        $this->OldValue->AdvancedSearch->SearchValue2 = @$filter["y_OldValue"];
+        $this->OldValue->AdvancedSearch->SearchOperator2 = @$filter["w_OldValue"];
+        $this->OldValue->AdvancedSearch->save();
+
+        // Field NewValue
+        $this->NewValue->AdvancedSearch->SearchValue = @$filter["x_NewValue"];
+        $this->NewValue->AdvancedSearch->SearchOperator = @$filter["z_NewValue"];
+        $this->NewValue->AdvancedSearch->SearchCondition = @$filter["v_NewValue"];
+        $this->NewValue->AdvancedSearch->SearchValue2 = @$filter["y_NewValue"];
+        $this->NewValue->AdvancedSearch->SearchOperator2 = @$filter["w_NewValue"];
+        $this->NewValue->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1175,8 +1198,14 @@ class JurnalList extends Jurnal
 
         // Fields to search
         $searchFlds = [];
-        $searchFlds[] = &$this->keterangan;
-        $searchFlds[] = &$this->nomer;
+        $searchFlds[] = &$this->Script;
+        $searchFlds[] = &$this->User;
+        $searchFlds[] = &$this->_Action;
+        $searchFlds[] = &$this->_Table;
+        $searchFlds[] = &$this->Field;
+        $searchFlds[] = &$this->KeyValue;
+        $searchFlds[] = &$this->OldValue;
+        $searchFlds[] = &$this->NewValue;
         $searchKeyword = $default ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
         $searchType = $default ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
 
@@ -1255,10 +1284,13 @@ class JurnalList extends Jurnal
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->tipejurnal_id); // tipejurnal_id
-            $this->updateSort($this->period_id); // period_id
-            $this->updateSort($this->keterangan); // keterangan
-            $this->updateSort($this->nomer); // nomer
+            $this->updateSort($this->Id); // Id
+            $this->updateSort($this->DateTime); // DateTime
+            $this->updateSort($this->Script); // Script
+            $this->updateSort($this->User); // User
+            $this->updateSort($this->_Action); // Action
+            $this->updateSort($this->_Table); // Table
+            $this->updateSort($this->Field); // Field
             $this->setStartRecordNumber(1); // Reset start position
         }
 
@@ -1283,13 +1315,16 @@ class JurnalList extends Jurnal
             if ($this->Command == "resetsort") {
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
-                $this->id->setSort("");
-                $this->tipejurnal_id->setSort("");
-                $this->period_id->setSort("");
-                $this->createon->setSort("");
-                $this->keterangan->setSort("");
-                $this->person_id->setSort("");
-                $this->nomer->setSort("");
+                $this->Id->setSort("");
+                $this->DateTime->setSort("");
+                $this->Script->setSort("");
+                $this->User->setSort("");
+                $this->_Action->setSort("");
+                $this->_Table->setSort("");
+                $this->Field->setSort("");
+                $this->KeyValue->setSort("");
+                $this->OldValue->setSort("");
+                $this->NewValue->setSort("");
             }
 
             // Reset start position
@@ -1314,46 +1349,6 @@ class JurnalList extends Jurnal
         $item->CssClass = "text-nowrap";
         $item->Visible = true;
         $item->OnLeft = true;
-
-        // "edit"
-        $item = &$this->ListOptions->add("edit");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = true;
-        $item->OnLeft = true;
-
-        // "copy"
-        $item = &$this->ListOptions->add("copy");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = true;
-        $item->OnLeft = true;
-
-        // "delete"
-        $item = &$this->ListOptions->add("delete");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = true;
-        $item->OnLeft = true;
-
-        // "detail_jurnald"
-        $item = &$this->ListOptions->add("detail_jurnald");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = true;
-        $item->OnLeft = true;
-        $item->ShowInButtonGroup = false;
-
-        // Multiple details
-        if ($this->ShowMultipleDetails) {
-            $item = &$this->ListOptions->add("details");
-            $item->CssClass = "text-nowrap";
-            $item->Visible = $this->ShowMultipleDetails && $this->ListOptions->detailVisible();
-            $item->OnLeft = true;
-            $item->ShowInButtonGroup = false;
-            $this->ListOptions->hideDetailItems();
-        }
-
-        // Set up detail pages
-        $pages = new SubPages();
-        $pages->add("jurnald");
-        $this->DetailPages = $pages;
 
         // List actions
         $item = &$this->ListOptions->add("listactions");
@@ -1430,51 +1425,9 @@ class JurnalList extends Jurnal
             $viewcaption = HtmlTitle($Language->phrase("ViewLink"));
             if (true) {
                 if ($this->ModalView && !IsMobile()) {
-                    $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-table=\"jurnal\" data-caption=\"" . $viewcaption . "\" data-ew-action=\"modal\" data-action=\"view\" data-ajax=\"" . ($this->UseAjaxActions ? "true" : "false") . "\" data-url=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\" data-btn=\"null\">" . $Language->phrase("ViewLink") . "</a>";
+                    $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-table=\"audittrail\" data-caption=\"" . $viewcaption . "\" data-ew-action=\"modal\" data-action=\"view\" data-ajax=\"" . ($this->UseAjaxActions ? "true" : "false") . "\" data-url=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\" data-btn=\"null\">" . $Language->phrase("ViewLink") . "</a>";
                 } else {
                     $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\">" . $Language->phrase("ViewLink") . "</a>";
-                }
-            } else {
-                $opt->Body = "";
-            }
-
-            // "edit"
-            $opt = $this->ListOptions["edit"];
-            $editcaption = HtmlTitle($Language->phrase("EditLink"));
-            if (true) {
-                if ($this->ModalEdit && !IsMobile()) {
-                    $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . $editcaption . "\" data-table=\"jurnal\" data-caption=\"" . $editcaption . "\" data-ew-action=\"modal\" data-action=\"edit\" data-ajax=\"" . ($this->UseAjaxActions ? "true" : "false") . "\" data-url=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\" data-btn=\"SaveBtn\">" . $Language->phrase("EditLink") . "</a>";
-                } else {
-                    $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . $editcaption . "\" data-caption=\"" . $editcaption . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("EditLink") . "</a>";
-                }
-            } else {
-                $opt->Body = "";
-            }
-
-            // "copy"
-            $opt = $this->ListOptions["copy"];
-            $copycaption = HtmlTitle($Language->phrase("CopyLink"));
-            if (true) {
-                if ($this->ModalAdd && !IsMobile()) {
-                    $opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-table=\"jurnal\" data-caption=\"" . $copycaption . "\" data-ew-action=\"modal\" data-action=\"add\" data-ajax=\"" . ($this->UseAjaxActions ? "true" : "false") . "\" data-url=\"" . HtmlEncode(GetUrl($this->CopyUrl)) . "\" data-btn=\"AddBtn\">" . $Language->phrase("CopyLink") . "</a>";
-                } else {
-                    $opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode(GetUrl($this->CopyUrl)) . "\">" . $Language->phrase("CopyLink") . "</a>";
-                }
-            } else {
-                $opt->Body = "";
-            }
-
-            // "delete"
-            $opt = $this->ListOptions["delete"];
-            if (true) {
-                $deleteCaption = $Language->phrase("DeleteLink");
-                $deleteTitle = HtmlTitle($deleteCaption);
-                if ($this->UseAjaxActions) {
-                    $opt->Body = "<a class=\"ew-row-link ew-delete\" data-ew-action=\"inline\" data-action=\"delete\" title=\"" . $deleteTitle . "\" data-caption=\"" . $deleteTitle . "\" data-key= \"" . HtmlEncode($this->getKey(true)) . "\" data-url=\"" . HtmlEncode(GetUrl($this->DeleteUrl)) . "\">" . $deleteCaption . "</a>";
-                } else {
-                    $opt->Body = "<a class=\"ew-row-link ew-delete\"" .
-                        ($this->InlineDelete ? " data-ew-action=\"inline-delete\"" : "") .
-                        " title=\"" . $deleteTitle . "\" data-caption=\"" . $deleteTitle . "\" href=\"" . HtmlEncode(GetUrl($this->DeleteUrl)) . "\">" . $deleteCaption . "</a>";
                 }
             } else {
                 $opt->Body = "";
@@ -1497,12 +1450,12 @@ class JurnalList extends Jurnal
                         $icon = ($listAction->Icon != "") ? "<i class=\"" . HtmlEncode(str_replace(" ew-icon", "", $listAction->Icon)) . "\" data-caption=\"" . $title . "\"></i> " : "";
                         $link = $disabled
                             ? "<li><div class=\"alert alert-light\">" . $icon . " " . $caption . "</div></li>"
-                            : "<li><button type=\"button\" class=\"dropdown-item ew-action ew-list-action\" data-caption=\"" . $title . "\" data-ew-action=\"submit\" form=\"fjurnallist\" data-key=\"" . $this->keyToJson(true) . "\"" . $listAction->toDataAttributes() . ">" . $icon . " " . $caption . "</button></li>";
+                            : "<li><button type=\"button\" class=\"dropdown-item ew-action ew-list-action\" data-caption=\"" . $title . "\" data-ew-action=\"submit\" form=\"faudittraillist\" data-key=\"" . $this->keyToJson(true) . "\"" . $listAction->toDataAttributes() . ">" . $icon . " " . $caption . "</button></li>";
                         $links[] = $link;
                         if ($body == "") { // Setup first button
                             $body = $disabled
                             ? "<div class=\"alert alert-light\">" . $icon . " " . $caption . "</div>"
-                            : "<button type=\"button\" class=\"btn btn-default ew-action ew-list-action\" title=\"" . $title . "\" data-caption=\"" . $title . "\" data-ew-action=\"submit\" form=\"fjurnallist\" data-key=\"" . $this->keyToJson(true) . "\"" . $listAction->toDataAttributes() . ">" . $icon . " " . $caption . "</button>";
+                            : "<button type=\"button\" class=\"btn btn-default ew-action ew-list-action\" title=\"" . $title . "\" data-caption=\"" . $title . "\" data-ew-action=\"submit\" form=\"faudittraillist\" data-key=\"" . $this->keyToJson(true) . "\"" . $listAction->toDataAttributes() . ">" . $icon . " " . $caption . "</button>";
                         }
                     }
                 }
@@ -1520,81 +1473,10 @@ class JurnalList extends Jurnal
                 $opt->Body = $body;
             }
         }
-        $detailViewTblVar = "";
-        $detailCopyTblVar = "";
-        $detailEditTblVar = "";
-
-        // "detail_jurnald"
-        $opt = $this->ListOptions["detail_jurnald"];
-        if (true) {
-            $body = $Language->phrase("DetailLink") . $Language->tablePhrase("jurnald", "TblCaption");
-            $body = "<a class=\"btn btn-default ew-row-link ew-detail" . ($this->ListOptions->UseDropDownButton ? " dropdown-toggle" : "") . "\" data-action=\"list\" href=\"" . HtmlEncode("jurnaldlist?" . Config("TABLE_SHOW_MASTER") . "=jurnal&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "") . "\">" . $body . "</a>";
-            $links = "";
-            $detailPage = Container("JurnaldGrid");
-            if ($detailPage->DetailView) {
-                $caption = $Language->phrase("MasterDetailViewLink", null);
-                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=jurnald");
-                $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode($url) . "\">" . $caption . "</a></li>";
-                if ($detailViewTblVar != "") {
-                    $detailViewTblVar .= ",";
-                }
-                $detailViewTblVar .= "jurnald";
-            }
-            if ($detailPage->DetailEdit) {
-                $caption = $Language->phrase("MasterDetailEditLink", null);
-                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=jurnald");
-                $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode($url) . "\">" . $caption . "</a></li>";
-                if ($detailEditTblVar != "") {
-                    $detailEditTblVar .= ",";
-                }
-                $detailEditTblVar .= "jurnald";
-            }
-            if ($detailPage->DetailAdd) {
-                $caption = $Language->phrase("MasterDetailCopyLink", null);
-                $url = $this->getCopyUrl(Config("TABLE_SHOW_DETAIL") . "=jurnald");
-                $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-copy\" data-action=\"add\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode($url) . "\">" . $caption . "</a></li>";
-                if ($detailCopyTblVar != "") {
-                    $detailCopyTblVar .= ",";
-                }
-                $detailCopyTblVar .= "jurnald";
-            }
-            if ($links != "") {
-                $body .= "<button type=\"button\" class=\"dropdown-toggle btn btn-default ew-detail\" data-bs-toggle=\"dropdown\"></button>";
-                $body .= "<ul class=\"dropdown-menu\">" . $links . "</ul>";
-            } else {
-                $body = preg_replace('/\b\s+dropdown-toggle\b/', "", $body);
-            }
-            $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">" . $body . "</div>";
-            $opt->Body = $body;
-            if ($this->ShowMultipleDetails) {
-                $opt->Visible = false;
-            }
-        }
-        if ($this->ShowMultipleDetails) {
-            $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">";
-            $links = "";
-            if ($detailViewTblVar != "") {
-                $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlEncode($Language->phrase("MasterDetailViewLink", true)) . "\" href=\"" . HtmlEncode($this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=" . $detailViewTblVar)) . "\">" . $Language->phrase("MasterDetailViewLink", null) . "</a></li>";
-            }
-            if ($detailEditTblVar != "") {
-                $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlEncode($Language->phrase("MasterDetailEditLink", true)) . "\" href=\"" . HtmlEncode($this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=" . $detailEditTblVar)) . "\">" . $Language->phrase("MasterDetailEditLink", null) . "</a></li>";
-            }
-            if ($detailCopyTblVar != "") {
-                $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-copy\" data-action=\"add\" data-caption=\"" . HtmlEncode($Language->phrase("MasterDetailCopyLink", true)) . "\" href=\"" . HtmlEncode($this->getCopyUrl(Config("TABLE_SHOW_DETAIL") . "=" . $detailCopyTblVar)) . "\">" . $Language->phrase("MasterDetailCopyLink", null) . "</a></li>";
-            }
-            if ($links != "") {
-                $body .= "<button type=\"button\" class=\"dropdown-toggle btn btn-default ew-master-detail\" title=\"" . HtmlEncode($Language->phrase("MultipleMasterDetails", true)) . "\" data-bs-toggle=\"dropdown\">" . $Language->phrase("MultipleMasterDetails") . "</button>";
-                $body .= "<ul class=\"dropdown-menu ew-dropdown-menu\">" . $links . "</ul>";
-            }
-            $body .= "</div>";
-            // Multiple details
-            $opt = $this->ListOptions["details"];
-            $opt->Body = $body;
-        }
 
         // "checkbox"
         $opt = $this->ListOptions["checkbox"];
-        $opt->Body = "<div class=\"form-check\"><input type=\"checkbox\" id=\"key_m_" . $this->RowCount . "\" name=\"key_m[]\" class=\"form-check-input ew-multi-select\" value=\"" . HtmlEncode($this->id->CurrentValue) . "\" data-ew-action=\"select-key\"></div>";
+        $opt->Body = "<div class=\"form-check\"><input type=\"checkbox\" id=\"key_m_" . $this->RowCount . "\" name=\"key_m[]\" class=\"form-check-input ew-multi-select\" value=\"" . HtmlEncode($this->Id->CurrentValue) . "\" data-ew-action=\"select-key\"></div>";
         $this->renderListOptionsExt();
 
         // Call ListOptions_Rendered event
@@ -1613,48 +1495,6 @@ class JurnalList extends Jurnal
     {
         global $Language, $Security;
         $options = &$this->OtherOptions;
-        $option = $options["addedit"];
-
-        // Add
-        $item = &$option->add("add");
-        $addcaption = HtmlTitle($Language->phrase("AddLink"));
-        if ($this->ModalAdd && !IsMobile()) {
-            $item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-table=\"jurnal\" data-caption=\"" . $addcaption . "\" data-ew-action=\"modal\" data-action=\"add\" data-ajax=\"" . ($this->UseAjaxActions ? "true" : "false") . "\" data-url=\"" . HtmlEncode(GetUrl($this->AddUrl)) . "\" data-btn=\"AddBtn\">" . $Language->phrase("AddLink") . "</a>";
-        } else {
-            $item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . HtmlEncode(GetUrl($this->AddUrl)) . "\">" . $Language->phrase("AddLink") . "</a>";
-        }
-        $item->Visible = $this->AddUrl != "";
-        $option = $options["detail"];
-        $detailTableLink = "";
-        $item = &$option->add("detailadd_jurnald");
-        $url = $this->getAddUrl(Config("TABLE_SHOW_DETAIL") . "=jurnald");
-        $detailPage = Container("JurnaldGrid");
-        $caption = $Language->phrase("Add") . "&nbsp;" . $this->tableCaption() . "/" . $detailPage->tableCaption();
-        $item->Body = "<a class=\"ew-detail-add-group ew-detail-add\" title=\"" . HtmlTitle($caption) . "\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode(GetUrl($url)) . "\">" . $caption . "</a>";
-        $item->Visible = ($detailPage->DetailAdd);
-        if ($item->Visible) {
-            if ($detailTableLink != "") {
-                $detailTableLink .= ",";
-            }
-            $detailTableLink .= "jurnald";
-        }
-
-        // Add multiple details
-        if ($this->ShowMultipleDetails) {
-            $item = &$option->add("detailsadd");
-            $url = $this->getAddUrl(Config("TABLE_SHOW_DETAIL") . "=" . $detailTableLink);
-            $caption = $Language->phrase("AddMasterDetailLink");
-            $item->Body = "<a class=\"ew-detail-add-group ew-detail-add\" title=\"" . HtmlTitle($caption) . "\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode(GetUrl($url)) . "\">" . $caption . "</a>";
-            $item->Visible = $detailTableLink != "";
-            // Hide single master/detail items
-            $ar = explode(",", $detailTableLink);
-            $cnt = count($ar);
-            for ($i = 0; $i < $cnt; $i++) {
-                if ($item = $option["detailadd_" . $ar[$i]]) {
-                    $item->Visible = false;
-                }
-            }
-        }
         $option = $options["action"];
 
         // Show column list for column visibility
@@ -1663,10 +1503,13 @@ class JurnalList extends Jurnal
             $item = &$option->addGroupOption();
             $item->Body = "";
             $item->Visible = $this->UseColumnVisibility;
-            $this->createColumnOption($option, "tipejurnal_id");
-            $this->createColumnOption($option, "period_id");
-            $this->createColumnOption($option, "keterangan");
-            $this->createColumnOption($option, "nomer");
+            $this->createColumnOption($option, "Id");
+            $this->createColumnOption($option, "DateTime");
+            $this->createColumnOption($option, "Script");
+            $this->createColumnOption($option, "User");
+            $this->createColumnOption($option, "Action");
+            $this->createColumnOption($option, "Table");
+            $this->createColumnOption($option, "Field");
         }
 
         // Set up custom actions
@@ -1691,10 +1534,10 @@ class JurnalList extends Jurnal
 
         // Filter button
         $item = &$this->FilterOptions->add("savecurrentfilter");
-        $item->Body = "<a class=\"ew-save-filter\" data-form=\"fjurnalsrch\" data-ew-action=\"none\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
+        $item->Body = "<a class=\"ew-save-filter\" data-form=\"faudittrailsrch\" data-ew-action=\"none\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
         $item->Visible = true;
         $item = &$this->FilterOptions->add("deletefilter");
-        $item->Body = "<a class=\"ew-delete-filter\" data-form=\"fjurnalsrch\" data-ew-action=\"none\">" . $Language->phrase("DeleteFilter") . "</a>";
+        $item->Body = "<a class=\"ew-delete-filter\" data-form=\"faudittrailsrch\" data-ew-action=\"none\">" . $Language->phrase("DeleteFilter") . "</a>";
         $item->Visible = true;
         $this->FilterOptions->UseDropDownButton = true;
         $this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton;
@@ -1754,7 +1597,7 @@ class JurnalList extends Jurnal
                 $item = &$option->add("custom_" . $listAction->Action);
                 $caption = $listAction->Caption;
                 $icon = ($listAction->Icon != "") ? '<i class="' . HtmlEncode($listAction->Icon) . '" data-caption="' . HtmlEncode($caption) . '"></i>' . $caption : $caption;
-                $item->Body = '<button type="button" class="btn btn-default ew-action ew-list-action" title="' . HtmlEncode($caption) . '" data-caption="' . HtmlEncode($caption) . '" data-ew-action="submit" form="fjurnallist"' . $listAction->toDataAttributes() . '>' . $icon . '</button>';
+                $item->Body = '<button type="button" class="btn btn-default ew-action ew-list-action" title="' . HtmlEncode($caption) . '" data-caption="' . HtmlEncode($caption) . '" data-ew-action="submit" form="faudittraillist"' . $listAction->toDataAttributes() . '>' . $icon . '</button>';
                 $item->Visible = $listAction->Allowed;
             }
         }
@@ -1925,7 +1768,7 @@ class JurnalList extends Jurnal
 
                 // Set row properties
                 $this->resetAttributes();
-                $this->RowAttrs->merge(["data-rowindex" => $this->RowIndex, "id" => "r0_jurnal", "data-rowtype" => RowType::ADD]);
+                $this->RowAttrs->merge(["data-rowindex" => $this->RowIndex, "id" => "r0_audittrail", "data-rowtype" => RowType::ADD]);
                 $this->RowAttrs->appendClass("ew-template");
                 // Render row
                 $this->RowType = RowType::ADD;
@@ -1986,7 +1829,7 @@ class JurnalList extends Jurnal
         $this->RowAttrs->merge([
             "data-rowindex" => $this->RowCount,
             "data-key" => $this->getKey(true),
-            "id" => "r" . $this->RowCount . "_jurnal",
+            "id" => "r" . $this->RowCount . "_audittrail",
             "data-rowtype" => $this->RowType,
             "data-inline" => ($this->isAdd() || $this->isCopy() || $this->isEdit()) ? "true" : "false", // Inline-Add/Copy/Edit
             "class" => ($this->RowCount % 2 != 1) ? "ew-table-alt-row" : "",
@@ -2105,26 +1948,32 @@ class JurnalList extends Jurnal
 
         // Call Row Selected event
         $this->rowSelected($row);
-        $this->id->setDbValue($row['id']);
-        $this->tipejurnal_id->setDbValue($row['tipejurnal_id']);
-        $this->period_id->setDbValue($row['period_id']);
-        $this->createon->setDbValue($row['createon']);
-        $this->keterangan->setDbValue($row['keterangan']);
-        $this->person_id->setDbValue($row['person_id']);
-        $this->nomer->setDbValue($row['nomer']);
+        $this->Id->setDbValue($row['Id']);
+        $this->DateTime->setDbValue($row['DateTime']);
+        $this->Script->setDbValue($row['Script']);
+        $this->User->setDbValue($row['User']);
+        $this->_Action->setDbValue($row['Action']);
+        $this->_Table->setDbValue($row['Table']);
+        $this->Field->setDbValue($row['Field']);
+        $this->KeyValue->setDbValue($row['KeyValue']);
+        $this->OldValue->setDbValue($row['OldValue']);
+        $this->NewValue->setDbValue($row['NewValue']);
     }
 
     // Return a row with default values
     protected function newRow()
     {
         $row = [];
-        $row['id'] = $this->id->DefaultValue;
-        $row['tipejurnal_id'] = $this->tipejurnal_id->DefaultValue;
-        $row['period_id'] = $this->period_id->DefaultValue;
-        $row['createon'] = $this->createon->DefaultValue;
-        $row['keterangan'] = $this->keterangan->DefaultValue;
-        $row['person_id'] = $this->person_id->DefaultValue;
-        $row['nomer'] = $this->nomer->DefaultValue;
+        $row['Id'] = $this->Id->DefaultValue;
+        $row['DateTime'] = $this->DateTime->DefaultValue;
+        $row['Script'] = $this->Script->DefaultValue;
+        $row['User'] = $this->User->DefaultValue;
+        $row['Action'] = $this->_Action->DefaultValue;
+        $row['Table'] = $this->_Table->DefaultValue;
+        $row['Field'] = $this->Field->DefaultValue;
+        $row['KeyValue'] = $this->KeyValue->DefaultValue;
+        $row['OldValue'] = $this->OldValue->DefaultValue;
+        $row['NewValue'] = $this->NewValue->DefaultValue;
         return $row;
     }
 
@@ -2165,100 +2014,77 @@ class JurnalList extends Jurnal
 
         // Common render codes for all row types
 
-        // id
+        // Id
 
-        // tipejurnal_id
+        // DateTime
 
-        // period_id
+        // Script
 
-        // createon
+        // User
 
-        // keterangan
+        // Action
 
-        // person_id
+        // Table
 
-        // nomer
+        // Field
+
+        // KeyValue
+
+        // OldValue
+
+        // NewValue
 
         // View row
         if ($this->RowType == RowType::VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
+            // Id
+            $this->Id->ViewValue = $this->Id->CurrentValue;
 
-            // tipejurnal_id
-            $curVal = strval($this->tipejurnal_id->CurrentValue);
-            if ($curVal != "") {
-                $this->tipejurnal_id->ViewValue = $this->tipejurnal_id->lookupCacheOption($curVal);
-                if ($this->tipejurnal_id->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->tipejurnal_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->tipejurnal_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
-                    $sqlWrk = $this->tipejurnal_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCache($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->tipejurnal_id->Lookup->renderViewRow($rswrk[0]);
-                        $this->tipejurnal_id->ViewValue = $this->tipejurnal_id->displayValue($arwrk);
-                    } else {
-                        $this->tipejurnal_id->ViewValue = FormatNumber($this->tipejurnal_id->CurrentValue, $this->tipejurnal_id->formatPattern());
-                    }
-                }
-            } else {
-                $this->tipejurnal_id->ViewValue = null;
-            }
+            // DateTime
+            $this->DateTime->ViewValue = $this->DateTime->CurrentValue;
+            $this->DateTime->ViewValue = FormatDateTime($this->DateTime->ViewValue, $this->DateTime->formatPattern());
 
-            // period_id
-            $curVal = strval($this->period_id->CurrentValue);
-            if ($curVal != "") {
-                $this->period_id->ViewValue = $this->period_id->lookupCacheOption($curVal);
-                if ($this->period_id->ViewValue === null) { // Lookup from database
-                    $filterWrk = SearchFilter($this->period_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->period_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
-                    $sqlWrk = $this->period_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $conn = Conn();
-                    $config = $conn->getConfiguration();
-                    $config->setResultCache($this->Cache);
-                    $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->period_id->Lookup->renderViewRow($rswrk[0]);
-                        $this->period_id->ViewValue = $this->period_id->displayValue($arwrk);
-                    } else {
-                        $this->period_id->ViewValue = FormatNumber($this->period_id->CurrentValue, $this->period_id->formatPattern());
-                    }
-                }
-            } else {
-                $this->period_id->ViewValue = null;
-            }
+            // Script
+            $this->Script->ViewValue = $this->Script->CurrentValue;
 
-            // createon
-            $this->createon->ViewValue = $this->createon->CurrentValue;
-            $this->createon->ViewValue = FormatDateTime($this->createon->ViewValue, $this->createon->formatPattern());
+            // User
+            $this->User->ViewValue = $this->User->CurrentValue;
 
-            // keterangan
-            $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
+            // Action
+            $this->_Action->ViewValue = $this->_Action->CurrentValue;
 
-            // person_id
-            $this->person_id->ViewValue = $this->person_id->CurrentValue;
-            $this->person_id->ViewValue = FormatNumber($this->person_id->ViewValue, $this->person_id->formatPattern());
+            // Table
+            $this->_Table->ViewValue = $this->_Table->CurrentValue;
 
-            // nomer
-            $this->nomer->ViewValue = $this->nomer->CurrentValue;
+            // Field
+            $this->Field->ViewValue = $this->Field->CurrentValue;
 
-            // tipejurnal_id
-            $this->tipejurnal_id->HrefValue = "";
-            $this->tipejurnal_id->TooltipValue = "";
+            // Id
+            $this->Id->HrefValue = "";
+            $this->Id->TooltipValue = "";
 
-            // period_id
-            $this->period_id->HrefValue = "";
-            $this->period_id->TooltipValue = "";
+            // DateTime
+            $this->DateTime->HrefValue = "";
+            $this->DateTime->TooltipValue = "";
 
-            // keterangan
-            $this->keterangan->HrefValue = "";
-            $this->keterangan->TooltipValue = "";
+            // Script
+            $this->Script->HrefValue = "";
+            $this->Script->TooltipValue = "";
 
-            // nomer
-            $this->nomer->HrefValue = "";
-            $this->nomer->TooltipValue = "";
+            // User
+            $this->User->HrefValue = "";
+            $this->User->TooltipValue = "";
+
+            // Action
+            $this->_Action->HrefValue = "";
+            $this->_Action->TooltipValue = "";
+
+            // Table
+            $this->_Table->HrefValue = "";
+            $this->_Table->TooltipValue = "";
+
+            // Field
+            $this->Field->HrefValue = "";
+            $this->Field->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -2277,7 +2103,7 @@ class JurnalList extends Jurnal
         // Search button
         $item = &$this->SearchOptions->add("searchtoggle");
         $searchToggleClass = ($this->SearchWhere != "") ? " active" : " active";
-        $item->Body = "<a class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" role=\"button\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-ew-action=\"search-toggle\" data-form=\"fjurnalsrch\" aria-pressed=\"" . ($searchToggleClass == " active" ? "true" : "false") . "\">" . $Language->phrase("SearchLink") . "</a>";
+        $item->Body = "<a class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" role=\"button\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-ew-action=\"search-toggle\" data-form=\"faudittrailsrch\" aria-pressed=\"" . ($searchToggleClass == " active" ? "true" : "false") . "\">" . $Language->phrase("SearchLink") . "</a>";
         $item->Visible = true;
 
         // Show all button
@@ -2342,10 +2168,6 @@ class JurnalList extends Jurnal
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_tipejurnal_id":
-                    break;
-                case "x_period_id":
-                    break;
                 default:
                     $lookupFilter = "";
                     break;

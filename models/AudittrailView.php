@@ -15,18 +15,18 @@ use Closure;
 /**
  * Page class
  */
-class PeriodeEdit extends Periode
+class AudittrailView extends Audittrail
 {
     use MessagesTrait;
 
     // Page ID
-    public $PageID = "edit";
+    public $PageID = "view";
 
     // Project ID
     public $ProjectID = PROJECT_ID;
 
     // Page object name
-    public $PageObjName = "PeriodeEdit";
+    public $PageObjName = "AudittrailView";
 
     // View file path
     public $View = null;
@@ -38,7 +38,25 @@ class PeriodeEdit extends Periode
     public $RenderingView = false;
 
     // CSS class/style
-    public $CurrentPageName = "periodeedit";
+    public $CurrentPageName = "audittrailview";
+
+    // Page URLs
+    public $AddUrl;
+    public $EditUrl;
+    public $DeleteUrl;
+    public $ViewUrl;
+    public $CopyUrl;
+    public $ListUrl;
+
+    // Update URLs
+    public $InlineAddUrl;
+    public $InlineCopyUrl;
+    public $InlineEditUrl;
+    public $GridAddUrl;
+    public $GridEditUrl;
+    public $MultiEditUrl;
+    public $MultiDeleteUrl;
+    public $MultiUpdateUrl;
 
     // Audit Trail
     public $AuditTrailOnAdd = true;
@@ -129,11 +147,16 @@ class PeriodeEdit extends Periode
     // Set field visibility
     public function setVisibility()
     {
-        $this->id->Visible = false;
-        $this->start->setVisibility();
-        $this->end->setVisibility();
-        $this->isaktif->setVisibility();
-        $this->user_id->Visible = false;
+        $this->Id->setVisibility();
+        $this->DateTime->setVisibility();
+        $this->Script->setVisibility();
+        $this->User->setVisibility();
+        $this->_Action->setVisibility();
+        $this->_Table->setVisibility();
+        $this->Field->setVisibility();
+        $this->KeyValue->setVisibility();
+        $this->OldValue->setVisibility();
+        $this->NewValue->setVisibility();
     }
 
     // Constructor
@@ -141,11 +164,11 @@ class PeriodeEdit extends Periode
     {
         parent::__construct();
         global $Language, $DashboardReport, $DebugTimer;
-        $this->TableVar = 'periode';
-        $this->TableName = 'periode';
+        $this->TableVar = 'audittrail';
+        $this->TableName = 'audittrail';
 
         // Table CSS class
-        $this->TableClass = "table table-striped table-bordered table-hover table-sm ew-desktop-table ew-edit-table";
+        $this->TableClass = "table table-striped table-bordered table-hover table-sm ew-view-table";
 
         // Initialize
         $GLOBALS["Page"] = &$this;
@@ -153,14 +176,19 @@ class PeriodeEdit extends Periode
         // Language object
         $Language = Container("app.language");
 
-        // Table object (periode)
-        if (!isset($GLOBALS["periode"]) || $GLOBALS["periode"]::class == PROJECT_NAMESPACE . "periode") {
-            $GLOBALS["periode"] = &$this;
+        // Table object (audittrail)
+        if (!isset($GLOBALS["audittrail"]) || $GLOBALS["audittrail"]::class == PROJECT_NAMESPACE . "audittrail") {
+            $GLOBALS["audittrail"] = &$this;
+        }
+
+        // Set up record key
+        if (($keyValue = Get("Id") ?? Route("Id")) !== null) {
+            $this->RecKey["Id"] = $keyValue;
         }
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'periode');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'audittrail');
         }
 
         // Start timer
@@ -171,6 +199,17 @@ class PeriodeEdit extends Periode
 
         // Open connection
         $GLOBALS["Conn"] ??= $this->getConnection();
+
+        // Export options
+        $this->ExportOptions = new ListOptions(TagClassName: "ew-export-option");
+
+        // Other options
+        $this->OtherOptions = new ListOptionsArray();
+
+        // Detail tables
+        $this->OtherOptions["detail"] = new ListOptions(TagClassName: "ew-detail-option");
+        // Actions
+        $this->OtherOptions["action"] = new ListOptions(TagClassName: "ew-action-option");
     }
 
     // Get content from stream
@@ -264,21 +303,12 @@ class PeriodeEdit extends Periode
             if ($this->IsModal) { // Show as modal
                 $pageName = GetPageName($url);
                 $result = ["url" => GetUrl($url), "modal" => "1"];  // Assume return to modal for simplicity
-                if (
-                    SameString($pageName, GetPageName($this->getListUrl())) ||
-                    SameString($pageName, GetPageName($this->getViewUrl())) ||
-                    SameString($pageName, GetPageName(CurrentMasterTable()?->getViewUrl() ?? ""))
-                ) { // List / View / Master View page
-                    if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
-                        $result["caption"] = $this->getModalCaption($pageName);
-                        $result["view"] = SameString($pageName, "periodeview"); // If View page, no primary button
-                    } else { // List page
-                        $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
-                        $this->clearFailureMessage();
-                    }
-                } else { // Other pages (add messages and then clear messages)
-                    $result = array_merge($this->getMessages(), ["modal" => "1"]);
-                    $this->clearMessages();
+                if (!SameString($pageName, GetPageName($this->getListUrl()))) { // Not List page
+                    $result["caption"] = $this->getModalCaption($pageName);
+                    $result["view"] = SameString($pageName, "audittrailview"); // If View page, no primary button
+                } else { // List page
+                    $result["error"] = $this->getFailureMessage(); // List page should not be shown as modal => error
+                    $this->clearFailureMessage();
                 }
                 WriteJson($result);
             } else {
@@ -363,7 +393,7 @@ class PeriodeEdit extends Periode
     {
         $key = "";
         if (is_array($ar)) {
-            $key .= @$ar['id'];
+            $key .= @$ar['Id'];
         }
         return $key;
     }
@@ -376,7 +406,7 @@ class PeriodeEdit extends Periode
     protected function hideFieldsForAddEdit()
     {
         if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
+            $this->Id->Visible = false;
         }
     }
 
@@ -452,20 +482,17 @@ class PeriodeEdit extends Periode
         }
         return $lookup->toJson($this, $response); // Use settings from current page
     }
-
-    // Properties
-    public $FormClassName = "ew-form ew-edit-form overlay-wrapper";
-    public $IsModal = false;
-    public $IsMobileOrModal = false;
+    public $ExportOptions; // Export options
+    public $OtherOptions; // Other options
+    public $DisplayRecords = 1;
     public $DbMasterFilter;
     public $DbDetailFilter;
-    public $HashValue; // Hash Value
-    public $DisplayRecords = 1;
     public $StartRecord;
     public $StopRecord;
     public $TotalRecords = 0;
     public $RecordRange = 10;
-    public $RecordCount;
+    public $RecKey = [];
+    public $IsModal = false;
 
     /**
      * Page run
@@ -490,9 +517,6 @@ class PeriodeEdit extends Periode
         if (IsLoggedIn()) {
             Profile()->setUserName(CurrentUserName())->loadFromStorage();
         }
-
-        // Create form object
-        $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
         $this->setVisibility();
 
@@ -518,86 +542,49 @@ class PeriodeEdit extends Periode
             $this->InlineDelete = true;
         }
 
-        // Set up lookup cache
-        $this->setupLookupOptions($this->isaktif);
-
         // Check modal
         if ($this->IsModal) {
             $SkipHeaderFooter = true;
         }
-        $this->IsMobileOrModal = IsMobile() || $this->IsModal;
 
-        // Load record by position
-        $loadByPosition = false;
-        $loaded = false;
-        $postBack = false;
+        // Load current record
+        $loadCurrentRecord = false;
+        $returnUrl = "";
+        $matchRecord = false;
+        if (Get(Config("TABLE_START_REC")) !== null || Get(Config("TABLE_PAGE_NUMBER")) !== null) {
+            $loadCurrentRecord = true;
+        }
+        if (($keyValue = Get("Id") ?? Route("Id")) !== null) {
+            $this->Id->setQueryStringValue($keyValue);
+            $this->RecKey["Id"] = $this->Id->QueryStringValue;
+        } elseif (Post("Id") !== null) {
+            $this->Id->setFormValue(Post("Id"));
+            $this->RecKey["Id"] = $this->Id->FormValue;
+        } elseif (IsApi() && ($keyValue = Key(0) ?? Route(2)) !== null) {
+            $this->Id->setQueryStringValue($keyValue);
+            $this->RecKey["Id"] = $this->Id->QueryStringValue;
+        } elseif (!$loadCurrentRecord) {
+            $returnUrl = "audittraillist"; // Return to list
+        }
 
-        // Set up current action and primary key
-        if (IsApi()) {
-            // Load key values
-            $loaded = true;
-            if (($keyValue = Get("id") ?? Key(0) ?? Route(2)) !== null) {
-                $this->id->setQueryStringValue($keyValue);
-                $this->id->setOldValue($this->id->QueryStringValue);
-            } elseif (Post("id") !== null) {
-                $this->id->setFormValue(Post("id"));
-                $this->id->setOldValue($this->id->FormValue);
-            } else {
-                $loaded = false; // Unable to load key
-            }
-
-            // Load record
-            if ($loaded) {
-                $loaded = $this->loadRow();
-            }
-            if (!$loaded) {
-                $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
-                $this->terminate();
-                return;
-            }
-            $this->CurrentAction = "update"; // Update record directly
-            $this->OldKey = $this->getKey(true); // Get from CurrentValue
-            $postBack = true;
-        } else {
-            if (Post("action", "") !== "") {
-                $this->CurrentAction = Post("action"); // Get action code
-                if (!$this->isShow()) { // Not reload record, handle as postback
-                    $postBack = true;
-                }
-
-                // Get key from Form
-                $this->setKey(Post($this->OldKeyName), $this->isShow());
-            } else {
-                $this->CurrentAction = "show"; // Default action is display
-
-                // Load key from QueryString
-                $loadByQuery = false;
-                if (($keyValue = Get("id") ?? Route("id")) !== null) {
-                    $this->id->setQueryStringValue($keyValue);
-                    $loadByQuery = true;
-                } else {
-                    $this->id->CurrentValue = null;
-                }
-                if (!$loadByQuery || Get(Config("TABLE_START_REC")) !== null || Get(Config("TABLE_PAGE_NUMBER")) !== null) {
-                    $loadByPosition = true;
-                }
-            }
-
-            // Load result set
-            if ($this->isShow()) {
-                if (!$this->IsModal) { // Normal edit page
+        // Get action
+        $this->CurrentAction = "show"; // Display
+        switch ($this->CurrentAction) {
+            case "show": // Get a record to display
+                if (!$this->IsModal && !IsApi()) { // Normal view page
                     $this->StartRecord = 1; // Initialize start position
                     $this->Recordset = $this->loadRecordset(); // Load records
                     if ($this->TotalRecords <= 0) { // No record found
                         if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "") {
                             $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
                         }
-                        $this->terminate("periodelist"); // Return to list page
+                        $this->terminate("audittraillist"); // Return to list page
                         return;
-                    } elseif ($loadByPosition) { // Load record by position
+                    } elseif ($loadCurrentRecord) { // Load current record position
                         $this->setupStartRecord(); // Set up start record position
                         // Point to current record
                         if ($this->StartRecord <= $this->TotalRecords) {
+                            $matchRecord = true;
                             $this->fetch($this->StartRecord);
                             // Redirect to correct record
                             $this->loadRowValues($this->CurrentRow);
@@ -606,122 +593,71 @@ class PeriodeEdit extends Periode
                             return;
                         }
                     } else { // Match key values
-                        if ($this->id->CurrentValue != null) {
-                            while ($this->fetch()) {
-                                if (SameString($this->id->CurrentValue, $this->CurrentRow['id'])) {
-                                    $this->setStartRecordNumber($this->StartRecord); // Save record position
-                                    $loaded = true;
-                                    break;
-                                } else {
-                                    $this->StartRecord++;
-                                }
+                        while ($this->fetch()) {
+                            if (SameString($this->Id->CurrentValue, $this->CurrentRow['Id'])) {
+                                $this->setStartRecordNumber($this->StartRecord); // Save record position
+                                $matchRecord = true;
+                                break;
+                            } else {
+                                $this->StartRecord++;
                             }
                         }
                     }
-
-                    // Load current row values
-                    if ($loaded) {
-                        $this->loadRowValues($this->CurrentRow);
-                    }
-                } else {
-                    // Load current record
-                    $loaded = $this->loadRow();
-                } // End modal checking
-                $this->OldKey = $loaded ? $this->getKey(true) : ""; // Get from CurrentValue
-            }
-        }
-
-        // Process form if post back
-        if ($postBack) {
-            $this->loadFormValues(); // Get form values
-        }
-
-        // Validate form if post back
-        if ($postBack) {
-            if (!$this->validateForm()) {
-                $this->EventCancelled = true; // Event cancelled
-                $this->restoreFormValues();
-                if (IsApi()) {
-                    $this->terminate();
-                    return;
-                } else {
-                    $this->CurrentAction = ""; // Form error, reset action
-                }
-            }
-        }
-
-        // Perform current action
-        switch ($this->CurrentAction) {
-            case "show": // Get a record to display
-                if (!$this->IsModal) { // Normal edit page
-                    if (!$loaded) {
+                    if (!$matchRecord) {
                         if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "") {
                             $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
                         }
-                        $this->terminate("periodelist"); // Return to list page
-                        return;
+                        $returnUrl = "audittraillist"; // No matching record, return to list
                     } else {
+                        $this->loadRowValues($this->CurrentRow); // Load row values
                     }
-                } else { // Modal edit page
-                    if (!$loaded) { // Load record based on key
-                        if ($this->getFailureMessage() == "") {
-                            $this->setFailureMessage($Language->phrase("NoRecord")); // No record found
+                } else {
+                    // Load record based on key
+                    if (IsApi()) {
+                        $filter = $this->getRecordFilter();
+                        $this->CurrentFilter = $filter;
+                        $sql = $this->getCurrentSql();
+                        $conn = $this->getConnection();
+                        $res = ($this->Recordset = ExecuteQuery($sql, $conn));
+                    } else {
+                        $res = $this->loadRow();
+                    }
+                    if (!$res) { // Load record based on key
+                        if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "") {
+                            $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
                         }
-                        $this->terminate("periodelist"); // No matching record, return to list
-                        return;
+                        $returnUrl = "audittraillist"; // No matching record, return to list
                     }
                 } // End modal checking
                 break;
-            case "update": // Update
-                $returnUrl = $this->getReturnUrl();
-                if (GetPageName($returnUrl) == "periodelist") {
-                    $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
-                }
-                $this->SendEmail = true; // Send email on update success
-                if ($this->editRow()) { // Update record based on key
-                    if ($this->getSuccessMessage() == "") {
-                        $this->setSuccessMessage($Language->phrase("UpdateSuccess")); // Update success
-                    }
-
-                    // Handle UseAjaxActions with return page
-                    if ($this->IsModal && $this->UseAjaxActions) {
-                        $this->IsModal = false;
-                        if (GetPageName($returnUrl) != "periodelist") {
-                            Container("app.flash")->addMessage("Return-Url", $returnUrl); // Save return URL
-                            $returnUrl = "periodelist"; // Return list page content
-                        }
-                    }
-                    if (IsJsonResponse()) {
-                        $this->terminate(true);
-                        return;
-                    } else {
-                        $this->terminate($returnUrl); // Return to caller
-                        return;
-                    }
-                } elseif (IsApi()) { // API request, return
-                    $this->terminate();
-                    return;
-                } elseif ($this->IsModal && $this->UseAjaxActions) { // Return JSON error message
-                    WriteJson(["success" => false, "validation" => $this->getValidationErrors(), "error" => $this->getFailureMessage()]);
-                    $this->clearFailureMessage();
-                    $this->terminate();
-                    return;
-                } elseif ($this->getFailureMessage() == $Language->phrase("NoRecord")) {
-                    $this->terminate($returnUrl); // Return to caller
-                    return;
-                } else {
-                    $this->EventCancelled = true; // Event cancelled
-                    $this->restoreFormValues(); // Restore form values if update failed
-                }
+        }
+        if ($returnUrl != "") {
+            $this->terminate($returnUrl);
+            return;
         }
 
         // Set up Breadcrumb
-        $this->setupBreadcrumb();
+        if (!$this->isExport()) {
+            $this->setupBreadcrumb();
+        }
 
-        // Render the record
-        $this->RowType = RowType::EDIT; // Render as Edit
+        // Render row
+        $this->RowType = RowType::VIEW;
         $this->resetAttributes();
         $this->renderRow();
+
+        // Normal return
+        if (IsApi()) {
+            if (!$this->isExport()) {
+                $row = $this->getRecordsFromRecordset($this->Recordset, true); // Get current record only
+                $this->Recordset?->free();
+                WriteJson(["success" => true, "action" => Config("API_VIEW_ACTION"), $this->TableVar => $row]);
+                $this->terminate(true);
+            }
+            return;
+        }
+
+        // Set up pager
         if (!$this->IsModal) { // Normal view page
             $this->Pager = new PrevNextPager($this, $this->StartRecord, $this->DisplayRecords, $this->TotalRecords, "", $this->RecordRange, $this->AutoHidePager, false, false);
             $this->Pager->PageNumberName = Config("TABLE_PAGE_NUMBER");
@@ -748,68 +684,31 @@ class PeriodeEdit extends Periode
         }
     }
 
-    // Get upload files
-    protected function getUploadFiles()
+    // Set up other options
+    protected function setupOtherOptions()
     {
-        global $CurrentForm, $Language;
-    }
+        global $Language, $Security;
 
-    // Load form values
-    protected function loadFormValues()
-    {
-        // Load from form
-        global $CurrentForm;
-        $validate = !Config("SERVER_VALIDATE");
-
-        // Check field name 'start' first before field var 'x_start'
-        $val = $CurrentForm->hasValue("start") ? $CurrentForm->getValue("start") : $CurrentForm->getValue("x_start");
-        if (!$this->start->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->start->Visible = false; // Disable update for API request
-            } else {
-                $this->start->setFormValue($val, true, $validate);
-            }
-            $this->start->CurrentValue = UnFormatDateTime($this->start->CurrentValue, $this->start->formatPattern());
+        // Disable Add/Edit/Copy/Delete for Modal and UseAjaxActions
+        /*
+        if ($this->IsModal && $this->UseAjaxActions) {
+            $this->AddUrl = "";
+            $this->EditUrl = "";
+            $this->CopyUrl = "";
+            $this->DeleteUrl = "";
         }
+        */
+        $options = &$this->OtherOptions;
+        $option = $options["action"];
 
-        // Check field name 'end' first before field var 'x_end'
-        $val = $CurrentForm->hasValue("end") ? $CurrentForm->getValue("end") : $CurrentForm->getValue("x_end");
-        if (!$this->end->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->end->Visible = false; // Disable update for API request
-            } else {
-                $this->end->setFormValue($val, true, $validate);
-            }
-            $this->end->CurrentValue = UnFormatDateTime($this->end->CurrentValue, $this->end->formatPattern());
-        }
-
-        // Check field name 'isaktif' first before field var 'x_isaktif'
-        $val = $CurrentForm->hasValue("isaktif") ? $CurrentForm->getValue("isaktif") : $CurrentForm->getValue("x_isaktif");
-        if (!$this->isaktif->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->isaktif->Visible = false; // Disable update for API request
-            } else {
-                $this->isaktif->setFormValue($val);
-            }
-        }
-
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            $this->id->setFormValue($val);
-        }
-    }
-
-    // Restore form values
-    public function restoreFormValues()
-    {
-        global $CurrentForm;
-        $this->id->CurrentValue = $this->id->FormValue;
-        $this->start->CurrentValue = $this->start->FormValue;
-        $this->start->CurrentValue = UnFormatDateTime($this->start->CurrentValue, $this->start->formatPattern());
-        $this->end->CurrentValue = $this->end->FormValue;
-        $this->end->CurrentValue = UnFormatDateTime($this->end->CurrentValue, $this->end->formatPattern());
-        $this->isaktif->CurrentValue = $this->isaktif->FormValue;
+        // Set up action default
+        $option = $options["action"];
+        $option->DropDownButtonPhrase = $Language->phrase("ButtonActions");
+        $option->UseDropDownButton = !IsJsonResponse() && false;
+        $option->UseButtonGroup = true;
+        $item = &$option->addGroupOption();
+        $item->Body = "";
+        $item->Visible = false;
     }
 
     /**
@@ -905,42 +804,36 @@ class PeriodeEdit extends Periode
 
         // Call Row Selected event
         $this->rowSelected($row);
-        $this->id->setDbValue($row['id']);
-        $this->start->setDbValue($row['start']);
-        $this->end->setDbValue($row['end']);
-        $this->isaktif->setDbValue($row['isaktif']);
-        $this->user_id->setDbValue($row['user_id']);
+        if ($this->AuditTrailOnView) {
+            $this->writeAuditTrailOnView($row);
+        }
+        $this->Id->setDbValue($row['Id']);
+        $this->DateTime->setDbValue($row['DateTime']);
+        $this->Script->setDbValue($row['Script']);
+        $this->User->setDbValue($row['User']);
+        $this->_Action->setDbValue($row['Action']);
+        $this->_Table->setDbValue($row['Table']);
+        $this->Field->setDbValue($row['Field']);
+        $this->KeyValue->setDbValue($row['KeyValue']);
+        $this->OldValue->setDbValue($row['OldValue']);
+        $this->NewValue->setDbValue($row['NewValue']);
     }
 
     // Return a row with default values
     protected function newRow()
     {
         $row = [];
-        $row['id'] = $this->id->DefaultValue;
-        $row['start'] = $this->start->DefaultValue;
-        $row['end'] = $this->end->DefaultValue;
-        $row['isaktif'] = $this->isaktif->DefaultValue;
-        $row['user_id'] = $this->user_id->DefaultValue;
+        $row['Id'] = $this->Id->DefaultValue;
+        $row['DateTime'] = $this->DateTime->DefaultValue;
+        $row['Script'] = $this->Script->DefaultValue;
+        $row['User'] = $this->User->DefaultValue;
+        $row['Action'] = $this->_Action->DefaultValue;
+        $row['Table'] = $this->_Table->DefaultValue;
+        $row['Field'] = $this->Field->DefaultValue;
+        $row['KeyValue'] = $this->KeyValue->DefaultValue;
+        $row['OldValue'] = $this->OldValue->DefaultValue;
+        $row['NewValue'] = $this->NewValue->DefaultValue;
         return $row;
-    }
-
-    // Load old record
-    protected function loadOldRecord()
-    {
-        // Load old record
-        if ($this->OldKey != "") {
-            $this->setKey($this->OldKey);
-            $this->CurrentFilter = $this->getRecordFilter();
-            $sql = $this->getCurrentSql();
-            $conn = $this->getConnection();
-            $rs = ExecuteQuery($sql, $conn);
-            if ($row = $rs->fetch()) {
-                $this->loadRowValues($row); // Load row values
-                return $row;
-            }
-        }
-        $this->loadRowValues(); // Load default row values
-        return null;
     }
 
     // Render row values based on field settings
@@ -949,240 +842,115 @@ class PeriodeEdit extends Periode
         global $Security, $Language, $CurrentLanguage;
 
         // Initialize URLs
+        $this->AddUrl = $this->getAddUrl();
+        $this->EditUrl = $this->getEditUrl();
+        $this->CopyUrl = $this->getCopyUrl();
+        $this->DeleteUrl = $this->getDeleteUrl();
+        $this->ListUrl = $this->getListUrl();
+        $this->setupOtherOptions();
 
         // Call Row_Rendering event
         $this->rowRendering();
 
         // Common render codes for all row types
 
-        // id
-        $this->id->RowCssClass = "row";
+        // Id
 
-        // start
-        $this->start->RowCssClass = "row";
+        // DateTime
 
-        // end
-        $this->end->RowCssClass = "row";
+        // Script
 
-        // isaktif
-        $this->isaktif->RowCssClass = "row";
+        // User
 
-        // user_id
-        $this->user_id->RowCssClass = "row";
+        // Action
+
+        // Table
+
+        // Field
+
+        // KeyValue
+
+        // OldValue
+
+        // NewValue
 
         // View row
         if ($this->RowType == RowType::VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
+            // Id
+            $this->Id->ViewValue = $this->Id->CurrentValue;
 
-            // start
-            $this->start->ViewValue = $this->start->CurrentValue;
-            $this->start->ViewValue = FormatDateTime($this->start->ViewValue, $this->start->formatPattern());
+            // DateTime
+            $this->DateTime->ViewValue = $this->DateTime->CurrentValue;
+            $this->DateTime->ViewValue = FormatDateTime($this->DateTime->ViewValue, $this->DateTime->formatPattern());
 
-            // end
-            $this->end->ViewValue = $this->end->CurrentValue;
-            $this->end->ViewValue = FormatDateTime($this->end->ViewValue, $this->end->formatPattern());
+            // Script
+            $this->Script->ViewValue = $this->Script->CurrentValue;
 
-            // isaktif
-            if (ConvertToBool($this->isaktif->CurrentValue)) {
-                $this->isaktif->ViewValue = $this->isaktif->tagCaption(1) != "" ? $this->isaktif->tagCaption(1) : "Aktif";
-            } else {
-                $this->isaktif->ViewValue = $this->isaktif->tagCaption(2) != "" ? $this->isaktif->tagCaption(2) : "Non Aktif";
-            }
+            // User
+            $this->User->ViewValue = $this->User->CurrentValue;
 
-            // user_id
-            $this->user_id->ViewValue = $this->user_id->CurrentValue;
-            $this->user_id->ViewValue = FormatNumber($this->user_id->ViewValue, $this->user_id->formatPattern());
+            // Action
+            $this->_Action->ViewValue = $this->_Action->CurrentValue;
 
-            // start
-            $this->start->HrefValue = "";
+            // Table
+            $this->_Table->ViewValue = $this->_Table->CurrentValue;
 
-            // end
-            $this->end->HrefValue = "";
+            // Field
+            $this->Field->ViewValue = $this->Field->CurrentValue;
 
-            // isaktif
-            $this->isaktif->HrefValue = "";
-        } elseif ($this->RowType == RowType::EDIT) {
-            // start
-            $this->start->setupEditAttributes();
-            $this->start->EditValue = HtmlEncode(FormatDateTime($this->start->CurrentValue, $this->start->formatPattern()));
-            $this->start->PlaceHolder = RemoveHtml($this->start->caption());
+            // KeyValue
+            $this->KeyValue->ViewValue = $this->KeyValue->CurrentValue;
 
-            // end
-            $this->end->setupEditAttributes();
-            $this->end->EditValue = HtmlEncode(FormatDateTime($this->end->CurrentValue, $this->end->formatPattern()));
-            $this->end->PlaceHolder = RemoveHtml($this->end->caption());
+            // OldValue
+            $this->OldValue->ViewValue = $this->OldValue->CurrentValue;
 
-            // isaktif
-            $this->isaktif->EditValue = $this->isaktif->options(false);
-            $this->isaktif->PlaceHolder = RemoveHtml($this->isaktif->caption());
+            // NewValue
+            $this->NewValue->ViewValue = $this->NewValue->CurrentValue;
 
-            // Edit refer script
+            // Id
+            $this->Id->HrefValue = "";
+            $this->Id->TooltipValue = "";
 
-            // start
-            $this->start->HrefValue = "";
+            // DateTime
+            $this->DateTime->HrefValue = "";
+            $this->DateTime->TooltipValue = "";
 
-            // end
-            $this->end->HrefValue = "";
+            // Script
+            $this->Script->HrefValue = "";
+            $this->Script->TooltipValue = "";
 
-            // isaktif
-            $this->isaktif->HrefValue = "";
-        }
-        if ($this->RowType == RowType::ADD || $this->RowType == RowType::EDIT || $this->RowType == RowType::SEARCH) { // Add/Edit/Search row
-            $this->setupFieldTitles();
+            // User
+            $this->User->HrefValue = "";
+            $this->User->TooltipValue = "";
+
+            // Action
+            $this->_Action->HrefValue = "";
+            $this->_Action->TooltipValue = "";
+
+            // Table
+            $this->_Table->HrefValue = "";
+            $this->_Table->TooltipValue = "";
+
+            // Field
+            $this->Field->HrefValue = "";
+            $this->Field->TooltipValue = "";
+
+            // KeyValue
+            $this->KeyValue->HrefValue = "";
+            $this->KeyValue->TooltipValue = "";
+
+            // OldValue
+            $this->OldValue->HrefValue = "";
+            $this->OldValue->TooltipValue = "";
+
+            // NewValue
+            $this->NewValue->HrefValue = "";
+            $this->NewValue->TooltipValue = "";
         }
 
         // Call Row Rendered event
         if ($this->RowType != RowType::AGGREGATEINIT) {
             $this->rowRendered();
-        }
-    }
-
-    // Validate form
-    protected function validateForm()
-    {
-        global $Language, $Security;
-
-        // Check if validation required
-        if (!Config("SERVER_VALIDATE")) {
-            return true;
-        }
-        $validateForm = true;
-            if ($this->start->Visible && $this->start->Required) {
-                if (!$this->start->IsDetailKey && EmptyValue($this->start->FormValue)) {
-                    $this->start->addErrorMessage(str_replace("%s", $this->start->caption(), $this->start->RequiredErrorMessage));
-                }
-            }
-            if (!CheckDate($this->start->FormValue, $this->start->formatPattern())) {
-                $this->start->addErrorMessage($this->start->getErrorMessage(false));
-            }
-            if ($this->end->Visible && $this->end->Required) {
-                if (!$this->end->IsDetailKey && EmptyValue($this->end->FormValue)) {
-                    $this->end->addErrorMessage(str_replace("%s", $this->end->caption(), $this->end->RequiredErrorMessage));
-                }
-            }
-            if (!CheckDate($this->end->FormValue, $this->end->formatPattern())) {
-                $this->end->addErrorMessage($this->end->getErrorMessage(false));
-            }
-            if ($this->isaktif->Visible && $this->isaktif->Required) {
-                if ($this->isaktif->FormValue == "") {
-                    $this->isaktif->addErrorMessage(str_replace("%s", $this->isaktif->caption(), $this->isaktif->RequiredErrorMessage));
-                }
-            }
-
-        // Return validate result
-        $validateForm = $validateForm && !$this->hasInvalidFields();
-
-        // Call Form_CustomValidate event
-        $formCustomError = "";
-        $validateForm = $validateForm && $this->formCustomValidate($formCustomError);
-        if ($formCustomError != "") {
-            $this->setFailureMessage($formCustomError);
-        }
-        return $validateForm;
-    }
-
-    // Update record based on key values
-    protected function editRow()
-    {
-        global $Security, $Language;
-        $oldKeyFilter = $this->getRecordFilter();
-        $filter = $this->applyUserIDFilters($oldKeyFilter);
-        $conn = $this->getConnection();
-
-        // Load old row
-        $this->CurrentFilter = $filter;
-        $sql = $this->getCurrentSql();
-        $rsold = $conn->fetchAssociative($sql);
-        if (!$rsold) {
-            $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
-            return false; // Update Failed
-        } else {
-            // Load old values
-            $this->loadDbValues($rsold);
-        }
-
-        // Get new row
-        $rsnew = $this->getEditRow($rsold);
-
-        // Update current values
-        $this->setCurrentValues($rsnew);
-
-        // Call Row Updating event
-        $updateRow = $this->rowUpdating($rsold, $rsnew);
-        if ($updateRow) {
-            if (count($rsnew) > 0) {
-                $this->CurrentFilter = $filter; // Set up current filter
-                $editRow = $this->update($rsnew, "", $rsold);
-                if (!$editRow && !EmptyValue($this->DbErrorMessage)) { // Show database error
-                    $this->setFailureMessage($this->DbErrorMessage);
-                }
-            } else {
-                $editRow = true; // No field to update
-            }
-            if ($editRow) {
-            }
-        } else {
-            if ($this->getSuccessMessage() != "" || $this->getFailureMessage() != "") {
-                // Use the message, do nothing
-            } elseif ($this->CancelMessage != "") {
-                $this->setFailureMessage($this->CancelMessage);
-                $this->CancelMessage = "";
-            } else {
-                $this->setFailureMessage($Language->phrase("UpdateCancelled"));
-            }
-            $editRow = false;
-        }
-
-        // Call Row_Updated event
-        if ($editRow) {
-            $this->rowUpdated($rsold, $rsnew);
-        }
-
-        // Write JSON response
-        if (IsJsonResponse() && $editRow) {
-            $row = $this->getRecordsFromRecordset([$rsnew], true);
-            $table = $this->TableVar;
-            WriteJson(["success" => true, "action" => Config("API_EDIT_ACTION"), $table => $row]);
-        }
-        return $editRow;
-    }
-
-    /**
-     * Get edit row
-     *
-     * @return array
-     */
-    protected function getEditRow($rsold)
-    {
-        global $Security;
-        $rsnew = [];
-
-        // start
-        $this->start->setDbValueDef($rsnew, UnFormatDateTime($this->start->CurrentValue, $this->start->formatPattern()), $this->start->ReadOnly);
-
-        // end
-        $this->end->setDbValueDef($rsnew, UnFormatDateTime($this->end->CurrentValue, $this->end->formatPattern()), $this->end->ReadOnly);
-
-        // isaktif
-        $this->isaktif->setDbValueDef($rsnew, strval($this->isaktif->CurrentValue) == "1" ? "1" : "0", $this->isaktif->ReadOnly);
-        return $rsnew;
-    }
-
-    /**
-     * Restore edit form from row
-     * @param array $row Row
-     */
-    protected function restoreEditFormFromRow($row)
-    {
-        if (isset($row['start'])) { // start
-            $this->start->CurrentValue = $row['start'];
-        }
-        if (isset($row['end'])) { // end
-            $this->end->CurrentValue = $row['end'];
-        }
-        if (isset($row['isaktif'])) { // isaktif
-            $this->isaktif->CurrentValue = $row['isaktif'];
         }
     }
 
@@ -1192,9 +960,9 @@ class PeriodeEdit extends Periode
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("periodelist"), "", $this->TableVar, true);
-        $pageId = "edit";
-        $Breadcrumb->add("edit", $pageId, $url);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("audittraillist"), "", $this->TableVar, true);
+        $pageId = "view";
+        $Breadcrumb->add("view", $pageId, $url);
     }
 
     // Setup lookup options
@@ -1210,8 +978,6 @@ class PeriodeEdit extends Periode
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_isaktif":
-                    break;
                 default:
                     $lookupFilter = "";
                     break;
@@ -1337,10 +1103,27 @@ class PeriodeEdit extends Periode
         //$content = "<div style=\"break-after:page;\"></div>"; // Modify page break content
     }
 
-    // Form Custom Validate event
-    public function formCustomValidate(&$customError)
+    // Page Exporting event
+    // $doc = export object
+    public function pageExporting(&$doc)
     {
-        // Return error message in $customError
-        return true;
+        //$doc->Text = "my header"; // Export header
+        //return false; // Return false to skip default export and use Row_Export event
+        return true; // Return true to use default export and skip Row_Export event
+    }
+
+    // Row Export event
+    // $doc = export document object
+    public function rowExport($doc, $rs)
+    {
+        //$doc->Text .= "my content"; // Build HTML with field value: $rs["MyField"] or $this->MyField->ViewValue
+    }
+
+    // Page Exported event
+    // $doc = export document object
+    public function pageExported($doc)
+    {
+        //$doc->Text .= "my footer"; // Export footer
+        //Log($doc->Text);
     }
 }

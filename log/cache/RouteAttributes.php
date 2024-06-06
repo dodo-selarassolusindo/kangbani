@@ -51,6 +51,8 @@
         clone $p['PHPMaker2024\\prj_accounting\\Attributes\\Map'],
         clone $p['PHPMaker2024\\prj_accounting\\Attributes\\Map'],
         clone $p['PHPMaker2024\\prj_accounting\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_accounting\\Attributes\\Map'],
+        clone $p['PHPMaker2024\\prj_accounting\\Attributes\\Map'],
         clone ($p['PHPMaker2024\\prj_accounting\\Attributes\\Get'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('PHPMaker2024\\prj_accounting\\Attributes\\Get')),
         clone $p['PHPMaker2024\\prj_accounting\\Attributes\\Get'],
         clone $p['PHPMaker2024\\prj_accounting\\Attributes\\Map'],
@@ -118,6 +120,16 @@
     [
         'PHPMaker2024\\prj_accounting\\Attributes\\Map' => [
             'methods' => [
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
+                [
+                    'GET',
+                    'POST',
+                    'OPTIONS',
+                ],
                 [
                     'GET',
                     'POST',
@@ -686,6 +698,8 @@
                 '/akunview[/{id}]',
                 '/akunedit[/{id}]',
                 '/akundelete[/{id}]',
+                '/audittraillist[/{Id}]',
+                '/audittrailview[/{Id}]',
                 '/beranda[/{params:.*}]',
                 '/gruplist[/{id}]',
                 '/grupadd[/{id}]',
@@ -801,6 +815,8 @@
                 'PHPMaker2024\\prj_accounting\\AkunController:view',
                 'PHPMaker2024\\prj_accounting\\AkunController:edit',
                 'PHPMaker2024\\prj_accounting\\AkunController:delete',
+                'PHPMaker2024\\prj_accounting\\AudittrailController:list',
+                'PHPMaker2024\\prj_accounting\\AudittrailController:view',
                 'PHPMaker2024\\prj_accounting\\BerandaController:custom',
                 'PHPMaker2024\\prj_accounting\\GrupController:list',
                 'PHPMaker2024\\prj_accounting\\GrupController:add',
@@ -911,6 +927,12 @@
                 'PHPMaker2024\\prj_accounting\\TypeController:delete',
             ],
             'middleware' => [
+                [
+                    'PHPMaker2024\\prj_accounting\\PermissionMiddleware',
+                ],
+                [
+                    'PHPMaker2024\\prj_accounting\\PermissionMiddleware',
+                ],
                 [
                     'PHPMaker2024\\prj_accounting\\PermissionMiddleware',
                 ],
@@ -1255,6 +1277,8 @@
                 'view.akun',
                 'edit.akun',
                 'delete.akun',
+                'list.audittrail',
+                'view.audittrail',
                 'custom.beranda',
                 'list.grup',
                 'add.grup',
@@ -1365,6 +1389,8 @@
                 'delete.type',
             ],
             'options' => [
+                [],
+                [],
                 [],
                 [],
                 [],
@@ -1595,6 +1621,8 @@
         $o[110],
         $o[111],
         $o[112],
+        $o[113],
+        $o[114],
     ],
     []
 );

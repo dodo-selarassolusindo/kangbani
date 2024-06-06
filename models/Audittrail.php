@@ -13,9 +13,9 @@ use Slim\App;
 use Closure;
 
 /**
- * Table class for konversi
+ * Table class for audittrail
  */
-class Konversi extends DbTable
+class Audittrail extends DbTable
 {
     protected $SqlFrom = "";
     protected $SqlSelect = null;
@@ -54,12 +54,16 @@ class Konversi extends DbTable
     public $ModalMultiEdit = false;
 
     // Fields
-    public $id;
-    public $satuan_id;
-    public $nilai;
-    public $satuan_id2;
-    public $operasi;
-    public $id_FK;
+    public $Id;
+    public $DateTime;
+    public $Script;
+    public $User;
+    public $_Action;
+    public $_Table;
+    public $Field;
+    public $KeyValue;
+    public $OldValue;
+    public $NewValue;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -72,14 +76,14 @@ class Konversi extends DbTable
 
         // Language object
         $Language = Container("app.language");
-        $this->TableVar = "konversi";
-        $this->TableName = 'konversi';
+        $this->TableVar = "audittrail";
+        $this->TableName = 'audittrail';
         $this->TableType = "TABLE";
         $this->ImportUseTransaction = $this->supportsTransaction() && Config("IMPORT_USE_TRANSACTION");
         $this->UseTransaction = $this->supportsTransaction() && Config("USE_TRANSACTION");
 
         // Update Table
-        $this->UpdateTable = "konversi";
+        $this->UpdateTable = "audittrail";
         $this->Dbid = 'DB';
         $this->ExportAll = true;
         $this->ExportPageBreakCount = 0; // Page break per every n record (PDF only)
@@ -103,166 +107,238 @@ class Konversi extends DbTable
         $this->GridAddRowCount = 5;
         $this->AllowAddDeleteRow = true; // Allow add/delete row
         $this->UseAjaxActions = $this->UseAjaxActions || Config("USE_AJAX_ACTIONS");
+        $this->UseColumnVisibility = true;
         $this->UserIDAllowSecurity = Config("DEFAULT_USER_ID_ALLOW_SECURITY"); // Default User ID allowed permissions
         $this->BasicSearch = new BasicSearch($this);
 
-        // id
-        $this->id = new DbField(
+        // Id
+        $this->Id = new DbField(
             $this, // Table
-            'x_id', // Variable name
-            'id', // Name
-            '`id`', // Expression
-            '`id`', // Basic search expression
+            'x_Id', // Variable name
+            'Id', // Name
+            '`Id`', // Expression
+            '`Id`', // Basic search expression
             3, // Type
             11, // Size
             -1, // Date/Time format
             false, // Is upload field
-            '`id`', // Virtual expression
+            '`Id`', // Virtual expression
             false, // Is virtual
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
             'NO' // Edit Tag
         );
-        $this->id->InputTextType = "text";
-        $this->id->Raw = true;
-        $this->id->IsAutoIncrement = true; // Autoincrement field
-        $this->id->IsPrimaryKey = true; // Primary key field
-        $this->id->Nullable = false; // NOT NULL field
-        $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->id->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
-        $this->Fields['id'] = &$this->id;
+        $this->Id->InputTextType = "text";
+        $this->Id->Raw = true;
+        $this->Id->IsAutoIncrement = true; // Autoincrement field
+        $this->Id->IsPrimaryKey = true; // Primary key field
+        $this->Id->Nullable = false; // NOT NULL field
+        $this->Id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->Id->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
+        $this->Fields['Id'] = &$this->Id;
 
-        // satuan_id
-        $this->satuan_id = new DbField(
+        // DateTime
+        $this->DateTime = new DbField(
             $this, // Table
-            'x_satuan_id', // Variable name
-            'satuan_id', // Name
-            '`satuan_id`', // Expression
-            '`satuan_id`', // Basic search expression
-            3, // Type
-            11, // Size
-            -1, // Date/Time format
+            'x_DateTime', // Variable name
+            'DateTime', // Name
+            '`DateTime`', // Expression
+            CastDateFieldForLike("`DateTime`", 7, "DB"), // Basic search expression
+            135, // Type
+            19, // Size
+            7, // Date/Time format
             false, // Is upload field
-            '`satuan_id`', // Virtual expression
-            false, // Is virtual
-            false, // Force selection
-            false, // Is Virtual search
-            'FORMATTED TEXT', // View Tag
-            'SELECT' // Edit Tag
-        );
-        $this->satuan_id->InputTextType = "text";
-        $this->satuan_id->Raw = true;
-        $this->satuan_id->setSelectMultiple(false); // Select one
-        $this->satuan_id->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->satuan_id->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        $this->satuan_id->Lookup = new Lookup($this->satuan_id, 'satuan', false, 'id', ["kode","nama","unitdasar",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(`kode`, ''),'" . ValueSeparator(1, $this->satuan_id) . "',COALESCE(`nama`,''),'" . ValueSeparator(2, $this->satuan_id) . "',COALESCE(`unitdasar`,''))");
-        $this->satuan_id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->satuan_id->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
-        $this->Fields['satuan_id'] = &$this->satuan_id;
-
-        // nilai
-        $this->nilai = new DbField(
-            $this, // Table
-            'x_nilai', // Variable name
-            'nilai', // Name
-            '`nilai`', // Expression
-            '`nilai`', // Basic search expression
-            5, // Type
-            15, // Size
-            -1, // Date/Time format
-            false, // Is upload field
-            '`nilai`', // Virtual expression
+            '`DateTime`', // Virtual expression
             false, // Is virtual
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
             'TEXT' // Edit Tag
         );
-        $this->nilai->InputTextType = "text";
-        $this->nilai->Raw = true;
-        $this->nilai->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
-        $this->nilai->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
-        $this->Fields['nilai'] = &$this->nilai;
+        $this->DateTime->InputTextType = "text";
+        $this->DateTime->Raw = true;
+        $this->DateTime->Nullable = false; // NOT NULL field
+        $this->DateTime->Required = true; // Required field
+        $this->DateTime->DefaultErrorMessage = str_replace("%s", DateFormat(7), $Language->phrase("IncorrectDate"));
+        $this->DateTime->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
+        $this->Fields['DateTime'] = &$this->DateTime;
 
-        // satuan_id2
-        $this->satuan_id2 = new DbField(
+        // Script
+        $this->Script = new DbField(
             $this, // Table
-            'x_satuan_id2', // Variable name
-            'satuan_id2', // Name
-            '`satuan_id2`', // Expression
-            '`satuan_id2`', // Basic search expression
-            3, // Type
-            11, // Size
+            'x_Script', // Variable name
+            'Script', // Name
+            '`Script`', // Expression
+            '`Script`', // Basic search expression
+            200, // Type
+            255, // Size
             -1, // Date/Time format
             false, // Is upload field
-            '`satuan_id2`', // Virtual expression
-            false, // Is virtual
-            false, // Force selection
-            false, // Is Virtual search
-            'FORMATTED TEXT', // View Tag
-            'SELECT' // Edit Tag
-        );
-        $this->satuan_id2->InputTextType = "text";
-        $this->satuan_id2->Raw = true;
-        $this->satuan_id2->setSelectMultiple(false); // Select one
-        $this->satuan_id2->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->satuan_id2->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        $this->satuan_id2->Lookup = new Lookup($this->satuan_id2, 'satuan', false, 'id', ["kode","nama","unitdasar",""], '', '', [], [], [], [], [], [], false, '', '', "CONCAT(COALESCE(`kode`, ''),'" . ValueSeparator(1, $this->satuan_id2) . "',COALESCE(`nama`,''),'" . ValueSeparator(2, $this->satuan_id2) . "',COALESCE(`unitdasar`,''))");
-        $this->satuan_id2->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->satuan_id2->SearchOperators = ["=", "<>", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
-        $this->Fields['satuan_id2'] = &$this->satuan_id2;
-
-        // operasi
-        $this->operasi = new DbField(
-            $this, // Table
-            'x_operasi', // Variable name
-            'operasi', // Name
-            '`operasi`', // Expression
-            '`operasi`', // Basic search expression
-            3, // Type
-            11, // Size
-            -1, // Date/Time format
-            false, // Is upload field
-            '`operasi`', // Virtual expression
+            '`Script`', // Virtual expression
             false, // Is virtual
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
             'TEXT' // Edit Tag
         );
-        $this->operasi->InputTextType = "text";
-        $this->operasi->Raw = true;
-        $this->operasi->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->operasi->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN", "IS NULL", "IS NOT NULL"];
-        $this->Fields['operasi'] = &$this->operasi;
+        $this->Script->InputTextType = "text";
+        $this->Script->SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY", "IS NULL", "IS NOT NULL"];
+        $this->Fields['Script'] = &$this->Script;
 
-        // id_FK
-        $this->id_FK = new DbField(
+        // User
+        $this->User = new DbField(
             $this, // Table
-            'x_id_FK', // Variable name
-            'id_FK', // Name
-            '`id_FK`', // Expression
-            '`id_FK`', // Basic search expression
-            3, // Type
-            11, // Size
+            'x_User', // Variable name
+            'User', // Name
+            '`User`', // Expression
+            '`User`', // Basic search expression
+            200, // Type
+            255, // Size
             -1, // Date/Time format
             false, // Is upload field
-            '`id_FK`', // Virtual expression
+            '`User`', // Virtual expression
             false, // Is virtual
             false, // Force selection
             false, // Is Virtual search
             'FORMATTED TEXT', // View Tag
             'TEXT' // Edit Tag
         );
-        $this->id_FK->addMethod("getDefault", fn() => 0);
-        $this->id_FK->InputTextType = "text";
-        $this->id_FK->Raw = true;
-        $this->id_FK->Nullable = false; // NOT NULL field
-        $this->id_FK->Required = true; // Required field
-        $this->id_FK->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->id_FK->SearchOperators = ["=", "<>", "IN", "NOT IN", "<", "<=", ">", ">=", "BETWEEN", "NOT BETWEEN"];
-        $this->Fields['id_FK'] = &$this->id_FK;
+        $this->User->InputTextType = "text";
+        $this->User->SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY", "IS NULL", "IS NOT NULL"];
+        $this->Fields['User'] = &$this->User;
+
+        // Action
+        $this->_Action = new DbField(
+            $this, // Table
+            'x__Action', // Variable name
+            'Action', // Name
+            '`Action`', // Expression
+            '`Action`', // Basic search expression
+            200, // Type
+            255, // Size
+            -1, // Date/Time format
+            false, // Is upload field
+            '`Action`', // Virtual expression
+            false, // Is virtual
+            false, // Force selection
+            false, // Is Virtual search
+            'FORMATTED TEXT', // View Tag
+            'TEXT' // Edit Tag
+        );
+        $this->_Action->InputTextType = "text";
+        $this->_Action->SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY", "IS NULL", "IS NOT NULL"];
+        $this->Fields['Action'] = &$this->_Action;
+
+        // Table
+        $this->_Table = new DbField(
+            $this, // Table
+            'x__Table', // Variable name
+            'Table', // Name
+            '`Table`', // Expression
+            '`Table`', // Basic search expression
+            200, // Type
+            255, // Size
+            -1, // Date/Time format
+            false, // Is upload field
+            '`Table`', // Virtual expression
+            false, // Is virtual
+            false, // Force selection
+            false, // Is Virtual search
+            'FORMATTED TEXT', // View Tag
+            'TEXT' // Edit Tag
+        );
+        $this->_Table->InputTextType = "text";
+        $this->_Table->SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY", "IS NULL", "IS NOT NULL"];
+        $this->Fields['Table'] = &$this->_Table;
+
+        // Field
+        $this->Field = new DbField(
+            $this, // Table
+            'x_Field', // Variable name
+            'Field', // Name
+            '`Field`', // Expression
+            '`Field`', // Basic search expression
+            200, // Type
+            255, // Size
+            -1, // Date/Time format
+            false, // Is upload field
+            '`Field`', // Virtual expression
+            false, // Is virtual
+            false, // Force selection
+            false, // Is Virtual search
+            'FORMATTED TEXT', // View Tag
+            'TEXT' // Edit Tag
+        );
+        $this->Field->InputTextType = "text";
+        $this->Field->SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY", "IS NULL", "IS NOT NULL"];
+        $this->Fields['Field'] = &$this->Field;
+
+        // KeyValue
+        $this->KeyValue = new DbField(
+            $this, // Table
+            'x_KeyValue', // Variable name
+            'KeyValue', // Name
+            '`KeyValue`', // Expression
+            '`KeyValue`', // Basic search expression
+            201, // Type
+            2147483647, // Size
+            -1, // Date/Time format
+            false, // Is upload field
+            '`KeyValue`', // Virtual expression
+            false, // Is virtual
+            false, // Force selection
+            false, // Is Virtual search
+            'FORMATTED TEXT', // View Tag
+            'TEXTAREA' // Edit Tag
+        );
+        $this->KeyValue->InputTextType = "text";
+        $this->KeyValue->SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY", "IS NULL", "IS NOT NULL"];
+        $this->Fields['KeyValue'] = &$this->KeyValue;
+
+        // OldValue
+        $this->OldValue = new DbField(
+            $this, // Table
+            'x_OldValue', // Variable name
+            'OldValue', // Name
+            '`OldValue`', // Expression
+            '`OldValue`', // Basic search expression
+            201, // Type
+            2147483647, // Size
+            -1, // Date/Time format
+            false, // Is upload field
+            '`OldValue`', // Virtual expression
+            false, // Is virtual
+            false, // Force selection
+            false, // Is Virtual search
+            'FORMATTED TEXT', // View Tag
+            'TEXTAREA' // Edit Tag
+        );
+        $this->OldValue->InputTextType = "text";
+        $this->OldValue->SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY", "IS NULL", "IS NOT NULL"];
+        $this->Fields['OldValue'] = &$this->OldValue;
+
+        // NewValue
+        $this->NewValue = new DbField(
+            $this, // Table
+            'x_NewValue', // Variable name
+            'NewValue', // Name
+            '`NewValue`', // Expression
+            '`NewValue`', // Basic search expression
+            201, // Type
+            2147483647, // Size
+            -1, // Date/Time format
+            false, // Is upload field
+            '`NewValue`', // Virtual expression
+            false, // Is virtual
+            false, // Force selection
+            false, // Is Virtual search
+            'FORMATTED TEXT', // View Tag
+            'TEXTAREA' // Edit Tag
+        );
+        $this->NewValue->InputTextType = "text";
+        $this->NewValue->SearchOperators = ["=", "<>", "IN", "NOT IN", "STARTS WITH", "NOT STARTS WITH", "LIKE", "NOT LIKE", "ENDS WITH", "NOT ENDS WITH", "IS EMPTY", "IS NOT EMPTY", "IS NULL", "IS NOT NULL"];
+        $this->Fields['NewValue'] = &$this->NewValue;
 
         // Add Doctrine Cache
         $this->Cache = new \Symfony\Component\Cache\Adapter\ArrayAdapter();
@@ -331,7 +407,7 @@ class Konversi extends DbTable
     // Get FROM clause
     public function getSqlFrom()
     {
-        return ($this->SqlFrom != "") ? $this->SqlFrom : "konversi";
+        return ($this->SqlFrom != "") ? $this->SqlFrom : "audittrail";
     }
 
     // Get FROM clause (for backward compatibility)
@@ -674,8 +750,8 @@ class Konversi extends DbTable
             $this->DbErrorMessage = $e->getMessage();
         }
         if ($result) {
-            $this->id->setDbValue($conn->lastInsertId());
-            $rs['id'] = $this->id->DbValue;
+            $this->Id->setDbValue($conn->lastInsertId());
+            $rs['Id'] = $this->Id->DbValue;
             if ($this->AuditTrailOnAdd) {
                 $this->writeAuditTrailOnAdd($rs);
             }
@@ -731,13 +807,13 @@ class Konversi extends DbTable
 
         // Return auto increment field
         if ($success) {
-            if (!isset($rs['id']) && !EmptyValue($this->id->CurrentValue)) {
-                $rs['id'] = $this->id->CurrentValue;
+            if (!isset($rs['Id']) && !EmptyValue($this->Id->CurrentValue)) {
+                $rs['Id'] = $this->Id->CurrentValue;
             }
         }
         if ($success && $this->AuditTrailOnEdit && $rsold) {
             $rsaudit = $rs;
-            $fldname = 'id';
+            $fldname = 'Id';
             if (!array_key_exists($fldname, $rsaudit)) {
                 $rsaudit[$fldname] = $rsold[$fldname];
             }
@@ -762,8 +838,8 @@ class Konversi extends DbTable
             $where = $this->arrayToFilter($where);
         }
         if ($rs) {
-            if (array_key_exists('id', $rs)) {
-                AddFilter($where, QuotedName('id', $this->Dbid) . '=' . QuotedValue($rs['id'], $this->id->DataType, $this->Dbid));
+            if (array_key_exists('Id', $rs)) {
+                AddFilter($where, QuotedName('Id', $this->Dbid) . '=' . QuotedValue($rs['Id'], $this->Id->DataType, $this->Dbid));
             }
         }
         $filter = $curfilter ? $this->CurrentFilter : "";
@@ -796,12 +872,16 @@ class Konversi extends DbTable
         if (!is_array($row)) {
             return;
         }
-        $this->id->DbValue = $row['id'];
-        $this->satuan_id->DbValue = $row['satuan_id'];
-        $this->nilai->DbValue = $row['nilai'];
-        $this->satuan_id2->DbValue = $row['satuan_id2'];
-        $this->operasi->DbValue = $row['operasi'];
-        $this->id_FK->DbValue = $row['id_FK'];
+        $this->Id->DbValue = $row['Id'];
+        $this->DateTime->DbValue = $row['DateTime'];
+        $this->Script->DbValue = $row['Script'];
+        $this->User->DbValue = $row['User'];
+        $this->_Action->DbValue = $row['Action'];
+        $this->_Table->DbValue = $row['Table'];
+        $this->Field->DbValue = $row['Field'];
+        $this->KeyValue->DbValue = $row['KeyValue'];
+        $this->OldValue->DbValue = $row['OldValue'];
+        $this->NewValue->DbValue = $row['NewValue'];
     }
 
     // Delete uploaded files
@@ -813,14 +893,14 @@ class Konversi extends DbTable
     // Record filter WHERE clause
     protected function sqlKeyFilter()
     {
-        return "`id` = @id@";
+        return "`Id` = @Id@";
     }
 
     // Get Key
     public function getKey($current = false, $keySeparator = null)
     {
         $keys = [];
-        $val = $current ? $this->id->CurrentValue : $this->id->OldValue;
+        $val = $current ? $this->Id->CurrentValue : $this->Id->OldValue;
         if (EmptyValue($val)) {
             return "";
         } else {
@@ -838,9 +918,9 @@ class Konversi extends DbTable
         $keys = explode($keySeparator, $this->OldKey);
         if (count($keys) == 1) {
             if ($current) {
-                $this->id->CurrentValue = $keys[0];
+                $this->Id->CurrentValue = $keys[0];
             } else {
-                $this->id->OldValue = $keys[0];
+                $this->Id->OldValue = $keys[0];
             }
         }
     }
@@ -850,9 +930,9 @@ class Konversi extends DbTable
     {
         $keyFilter = $this->sqlKeyFilter();
         if (is_array($row)) {
-            $val = array_key_exists('id', $row) ? $row['id'] : null;
+            $val = array_key_exists('Id', $row) ? $row['Id'] : null;
         } else {
-            $val = !EmptyValue($this->id->OldValue) && !$current ? $this->id->OldValue : $this->id->CurrentValue;
+            $val = !EmptyValue($this->Id->OldValue) && !$current ? $this->Id->OldValue : $this->Id->CurrentValue;
         }
         if (!is_numeric($val)) {
             return "0=1"; // Invalid key
@@ -860,7 +940,7 @@ class Konversi extends DbTable
         if ($val === null) {
             return "0=1"; // Invalid key
         } else {
-            $keyFilter = str_replace("@id@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
+            $keyFilter = str_replace("@Id@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
         }
         return $keyFilter;
     }
@@ -875,7 +955,7 @@ class Konversi extends DbTable
         if ($referUrl != "" && $referPageName != CurrentPageName() && $referPageName != "login") { // Referer not same page or login page
             $_SESSION[$name] = $referUrl; // Save to Session
         }
-        return $_SESSION[$name] ?? GetUrl("konversilist");
+        return $_SESSION[$name] ?? GetUrl("audittraillist");
     }
 
     // Set return page URL
@@ -889,9 +969,9 @@ class Konversi extends DbTable
     {
         global $Language;
         return match ($pageName) {
-            "konversiview" => $Language->phrase("View"),
-            "konversiedit" => $Language->phrase("Edit"),
-            "konversiadd" => $Language->phrase("Add"),
+            "audittrailview" => $Language->phrase("View"),
+            "audittrailedit" => $Language->phrase("Edit"),
+            "audittrailadd" => $Language->phrase("Add"),
             default => ""
         };
     }
@@ -899,18 +979,18 @@ class Konversi extends DbTable
     // Default route URL
     public function getDefaultRouteUrl()
     {
-        return "konversilist";
+        return "audittraillist";
     }
 
     // API page name
     public function getApiPageName($action)
     {
         return match (strtolower($action)) {
-            Config("API_VIEW_ACTION") => "KonversiView",
-            Config("API_ADD_ACTION") => "KonversiAdd",
-            Config("API_EDIT_ACTION") => "KonversiEdit",
-            Config("API_DELETE_ACTION") => "KonversiDelete",
-            Config("API_LIST_ACTION") => "KonversiList",
+            Config("API_VIEW_ACTION") => "AudittrailView",
+            Config("API_ADD_ACTION") => "AudittrailAdd",
+            Config("API_EDIT_ACTION") => "AudittrailEdit",
+            Config("API_DELETE_ACTION") => "AudittrailDelete",
+            Config("API_LIST_ACTION") => "AudittrailList",
             default => ""
         };
     }
@@ -930,16 +1010,16 @@ class Konversi extends DbTable
     // List URL
     public function getListUrl()
     {
-        return "konversilist";
+        return "audittraillist";
     }
 
     // View URL
     public function getViewUrl($parm = "")
     {
         if ($parm != "") {
-            $url = $this->keyUrl("konversiview", $parm);
+            $url = $this->keyUrl("audittrailview", $parm);
         } else {
-            $url = $this->keyUrl("konversiview", Config("TABLE_SHOW_DETAIL") . "=");
+            $url = $this->keyUrl("audittrailview", Config("TABLE_SHOW_DETAIL") . "=");
         }
         return $this->addMasterUrl($url);
     }
@@ -948,9 +1028,9 @@ class Konversi extends DbTable
     public function getAddUrl($parm = "")
     {
         if ($parm != "") {
-            $url = "konversiadd?" . $parm;
+            $url = "audittrailadd?" . $parm;
         } else {
-            $url = "konversiadd";
+            $url = "audittrailadd";
         }
         return $this->addMasterUrl($url);
     }
@@ -958,28 +1038,28 @@ class Konversi extends DbTable
     // Edit URL
     public function getEditUrl($parm = "")
     {
-        $url = $this->keyUrl("konversiedit", $parm);
+        $url = $this->keyUrl("audittrailedit", $parm);
         return $this->addMasterUrl($url);
     }
 
     // Inline edit URL
     public function getInlineEditUrl()
     {
-        $url = $this->keyUrl("konversilist", "action=edit");
+        $url = $this->keyUrl("audittraillist", "action=edit");
         return $this->addMasterUrl($url);
     }
 
     // Copy URL
     public function getCopyUrl($parm = "")
     {
-        $url = $this->keyUrl("konversiadd", $parm);
+        $url = $this->keyUrl("audittrailadd", $parm);
         return $this->addMasterUrl($url);
     }
 
     // Inline copy URL
     public function getInlineCopyUrl()
     {
-        $url = $this->keyUrl("konversilist", "action=copy");
+        $url = $this->keyUrl("audittraillist", "action=copy");
         return $this->addMasterUrl($url);
     }
 
@@ -989,7 +1069,7 @@ class Konversi extends DbTable
         if ($this->UseAjaxActions && ConvertToBool(Param("infinitescroll")) && CurrentPageID() == "list") {
             return $this->keyUrl(GetApiUrl(Config("API_DELETE_ACTION") . "/" . $this->TableVar));
         } else {
-            return $this->keyUrl("konversidelete", $parm);
+            return $this->keyUrl("audittraildelete", $parm);
         }
     }
 
@@ -1002,7 +1082,7 @@ class Konversi extends DbTable
     public function keyToJson($htmlEncode = false)
     {
         $json = "";
-        $json .= "\"id\":" . VarToJson($this->id->CurrentValue, "number");
+        $json .= "\"Id\":" . VarToJson($this->Id->CurrentValue, "number");
         $json = "{" . $json . "}";
         if ($htmlEncode) {
             $json = HtmlEncode($json);
@@ -1013,8 +1093,8 @@ class Konversi extends DbTable
     // Add key value to URL
     public function keyUrl($url, $parm = "")
     {
-        if ($this->id->CurrentValue !== null) {
-            $url .= "/" . $this->encodeKeyValue($this->id->CurrentValue);
+        if ($this->Id->CurrentValue !== null) {
+            $url .= "/" . $this->encodeKeyValue($this->Id->CurrentValue);
         } else {
             return "javascript:ew.alert(ew.language.phrase('InvalidRecord'));";
         }
@@ -1090,7 +1170,7 @@ class Konversi extends DbTable
                     ? array_map(fn ($i) => Route($i + 3), range(0, 0))  // Export API
                     : array_map(fn ($i) => Route($i + 2), range(0, 0))) // Other API
                 : []; // Non-API
-            if (($keyValue = Param("id") ?? Route("id")) !== null) {
+            if (($keyValue = Param("Id") ?? Route("Id")) !== null) {
                 $arKeys[] = $keyValue;
             } elseif ($isApi && (($keyValue = Key(0) ?? $keyValues[0] ?? null) !== null)) {
                 $arKeys[] = $keyValue;
@@ -1134,9 +1214,9 @@ class Konversi extends DbTable
                 $keyFilter .= " OR ";
             }
             if ($setCurrent) {
-                $this->id->CurrentValue = $key;
+                $this->Id->CurrentValue = $key;
             } else {
-                $this->id->OldValue = $key;
+                $this->Id->OldValue = $key;
             }
             $keyFilter .= "(" . $this->getRecordFilter() . ")";
         }
@@ -1161,19 +1241,23 @@ class Konversi extends DbTable
         } else {
             return;
         }
-        $this->id->setDbValue($row['id']);
-        $this->satuan_id->setDbValue($row['satuan_id']);
-        $this->nilai->setDbValue($row['nilai']);
-        $this->satuan_id2->setDbValue($row['satuan_id2']);
-        $this->operasi->setDbValue($row['operasi']);
-        $this->id_FK->setDbValue($row['id_FK']);
+        $this->Id->setDbValue($row['Id']);
+        $this->DateTime->setDbValue($row['DateTime']);
+        $this->Script->setDbValue($row['Script']);
+        $this->User->setDbValue($row['User']);
+        $this->_Action->setDbValue($row['Action']);
+        $this->_Table->setDbValue($row['Table']);
+        $this->Field->setDbValue($row['Field']);
+        $this->KeyValue->setDbValue($row['KeyValue']);
+        $this->OldValue->setDbValue($row['OldValue']);
+        $this->NewValue->setDbValue($row['NewValue']);
     }
 
     // Render list content
     public function renderListContent($filter)
     {
         global $Response;
-        $listPage = "KonversiList";
+        $listPage = "AudittrailList";
         $listClass = PROJECT_NAMESPACE . $listPage;
         $page = new $listClass();
         $page->loadRecordsetFromFilter($filter);
@@ -1197,102 +1281,96 @@ class Konversi extends DbTable
 
         // Common render codes
 
-        // id
+        // Id
 
-        // satuan_id
+        // DateTime
 
-        // nilai
+        // Script
 
-        // satuan_id2
+        // User
 
-        // operasi
+        // Action
 
-        // id_FK
+        // Table
 
-        // id
-        $this->id->ViewValue = $this->id->CurrentValue;
+        // Field
 
-        // satuan_id
-        $curVal = strval($this->satuan_id->CurrentValue);
-        if ($curVal != "") {
-            $this->satuan_id->ViewValue = $this->satuan_id->lookupCacheOption($curVal);
-            if ($this->satuan_id->ViewValue === null) { // Lookup from database
-                $filterWrk = SearchFilter($this->satuan_id->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->satuan_id->Lookup->getTable()->Fields["id"]->searchDataType(), "");
-                $sqlWrk = $this->satuan_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                $conn = Conn();
-                $config = $conn->getConfiguration();
-                $config->setResultCache($this->Cache);
-                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->satuan_id->Lookup->renderViewRow($rswrk[0]);
-                    $this->satuan_id->ViewValue = $this->satuan_id->displayValue($arwrk);
-                } else {
-                    $this->satuan_id->ViewValue = FormatNumber($this->satuan_id->CurrentValue, $this->satuan_id->formatPattern());
-                }
-            }
-        } else {
-            $this->satuan_id->ViewValue = null;
-        }
+        // KeyValue
 
-        // nilai
-        $this->nilai->ViewValue = $this->nilai->CurrentValue;
-        $this->nilai->ViewValue = FormatNumber($this->nilai->ViewValue, $this->nilai->formatPattern());
+        // OldValue
 
-        // satuan_id2
-        $curVal = strval($this->satuan_id2->CurrentValue);
-        if ($curVal != "") {
-            $this->satuan_id2->ViewValue = $this->satuan_id2->lookupCacheOption($curVal);
-            if ($this->satuan_id2->ViewValue === null) { // Lookup from database
-                $filterWrk = SearchFilter($this->satuan_id2->Lookup->getTable()->Fields["id"]->searchExpression(), "=", $curVal, $this->satuan_id2->Lookup->getTable()->Fields["id"]->searchDataType(), "");
-                $sqlWrk = $this->satuan_id2->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                $conn = Conn();
-                $config = $conn->getConfiguration();
-                $config->setResultCache($this->Cache);
-                $rswrk = $conn->executeCacheQuery($sqlWrk, [], [], $this->CacheProfile)->fetchAll();
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->satuan_id2->Lookup->renderViewRow($rswrk[0]);
-                    $this->satuan_id2->ViewValue = $this->satuan_id2->displayValue($arwrk);
-                } else {
-                    $this->satuan_id2->ViewValue = FormatNumber($this->satuan_id2->CurrentValue, $this->satuan_id2->formatPattern());
-                }
-            }
-        } else {
-            $this->satuan_id2->ViewValue = null;
-        }
+        // NewValue
 
-        // operasi
-        $this->operasi->ViewValue = $this->operasi->CurrentValue;
-        $this->operasi->ViewValue = FormatNumber($this->operasi->ViewValue, $this->operasi->formatPattern());
+        // Id
+        $this->Id->ViewValue = $this->Id->CurrentValue;
 
-        // id_FK
-        $this->id_FK->ViewValue = $this->id_FK->CurrentValue;
-        $this->id_FK->ViewValue = FormatNumber($this->id_FK->ViewValue, $this->id_FK->formatPattern());
+        // DateTime
+        $this->DateTime->ViewValue = $this->DateTime->CurrentValue;
+        $this->DateTime->ViewValue = FormatDateTime($this->DateTime->ViewValue, $this->DateTime->formatPattern());
 
-        // id
-        $this->id->HrefValue = "";
-        $this->id->TooltipValue = "";
+        // Script
+        $this->Script->ViewValue = $this->Script->CurrentValue;
 
-        // satuan_id
-        $this->satuan_id->HrefValue = "";
-        $this->satuan_id->TooltipValue = "";
+        // User
+        $this->User->ViewValue = $this->User->CurrentValue;
 
-        // nilai
-        $this->nilai->HrefValue = "";
-        $this->nilai->TooltipValue = "";
+        // Action
+        $this->_Action->ViewValue = $this->_Action->CurrentValue;
 
-        // satuan_id2
-        $this->satuan_id2->HrefValue = "";
-        $this->satuan_id2->TooltipValue = "";
+        // Table
+        $this->_Table->ViewValue = $this->_Table->CurrentValue;
 
-        // operasi
-        $this->operasi->HrefValue = "";
-        $this->operasi->TooltipValue = "";
+        // Field
+        $this->Field->ViewValue = $this->Field->CurrentValue;
 
-        // id_FK
-        $this->id_FK->HrefValue = "";
-        $this->id_FK->TooltipValue = "";
+        // KeyValue
+        $this->KeyValue->ViewValue = $this->KeyValue->CurrentValue;
+
+        // OldValue
+        $this->OldValue->ViewValue = $this->OldValue->CurrentValue;
+
+        // NewValue
+        $this->NewValue->ViewValue = $this->NewValue->CurrentValue;
+
+        // Id
+        $this->Id->HrefValue = "";
+        $this->Id->TooltipValue = "";
+
+        // DateTime
+        $this->DateTime->HrefValue = "";
+        $this->DateTime->TooltipValue = "";
+
+        // Script
+        $this->Script->HrefValue = "";
+        $this->Script->TooltipValue = "";
+
+        // User
+        $this->User->HrefValue = "";
+        $this->User->TooltipValue = "";
+
+        // Action
+        $this->_Action->HrefValue = "";
+        $this->_Action->TooltipValue = "";
+
+        // Table
+        $this->_Table->HrefValue = "";
+        $this->_Table->TooltipValue = "";
+
+        // Field
+        $this->Field->HrefValue = "";
+        $this->Field->TooltipValue = "";
+
+        // KeyValue
+        $this->KeyValue->HrefValue = "";
+        $this->KeyValue->TooltipValue = "";
+
+        // OldValue
+        $this->OldValue->HrefValue = "";
+        $this->OldValue->TooltipValue = "";
+
+        // NewValue
+        $this->NewValue->HrefValue = "";
+        $this->NewValue->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1309,41 +1387,69 @@ class Konversi extends DbTable
         // Call Row Rendering event
         $this->rowRendering();
 
-        // id
-        $this->id->setupEditAttributes();
-        $this->id->EditValue = $this->id->CurrentValue;
+        // Id
+        $this->Id->setupEditAttributes();
+        $this->Id->EditValue = $this->Id->CurrentValue;
 
-        // satuan_id
-        $this->satuan_id->setupEditAttributes();
-        $this->satuan_id->PlaceHolder = RemoveHtml($this->satuan_id->caption());
+        // DateTime
+        $this->DateTime->setupEditAttributes();
+        $this->DateTime->EditValue = FormatDateTime($this->DateTime->CurrentValue, $this->DateTime->formatPattern());
+        $this->DateTime->PlaceHolder = RemoveHtml($this->DateTime->caption());
 
-        // nilai
-        $this->nilai->setupEditAttributes();
-        $this->nilai->EditValue = $this->nilai->CurrentValue;
-        $this->nilai->PlaceHolder = RemoveHtml($this->nilai->caption());
-        if (strval($this->nilai->EditValue) != "" && is_numeric($this->nilai->EditValue)) {
-            $this->nilai->EditValue = FormatNumber($this->nilai->EditValue, null);
+        // Script
+        $this->Script->setupEditAttributes();
+        if (!$this->Script->Raw) {
+            $this->Script->CurrentValue = HtmlDecode($this->Script->CurrentValue);
         }
+        $this->Script->EditValue = $this->Script->CurrentValue;
+        $this->Script->PlaceHolder = RemoveHtml($this->Script->caption());
 
-        // satuan_id2
-        $this->satuan_id2->setupEditAttributes();
-        $this->satuan_id2->PlaceHolder = RemoveHtml($this->satuan_id2->caption());
-
-        // operasi
-        $this->operasi->setupEditAttributes();
-        $this->operasi->EditValue = $this->operasi->CurrentValue;
-        $this->operasi->PlaceHolder = RemoveHtml($this->operasi->caption());
-        if (strval($this->operasi->EditValue) != "" && is_numeric($this->operasi->EditValue)) {
-            $this->operasi->EditValue = FormatNumber($this->operasi->EditValue, null);
+        // User
+        $this->User->setupEditAttributes();
+        if (!$this->User->Raw) {
+            $this->User->CurrentValue = HtmlDecode($this->User->CurrentValue);
         }
+        $this->User->EditValue = $this->User->CurrentValue;
+        $this->User->PlaceHolder = RemoveHtml($this->User->caption());
 
-        // id_FK
-        $this->id_FK->setupEditAttributes();
-        $this->id_FK->EditValue = $this->id_FK->CurrentValue;
-        $this->id_FK->PlaceHolder = RemoveHtml($this->id_FK->caption());
-        if (strval($this->id_FK->EditValue) != "" && is_numeric($this->id_FK->EditValue)) {
-            $this->id_FK->EditValue = FormatNumber($this->id_FK->EditValue, null);
+        // Action
+        $this->_Action->setupEditAttributes();
+        if (!$this->_Action->Raw) {
+            $this->_Action->CurrentValue = HtmlDecode($this->_Action->CurrentValue);
         }
+        $this->_Action->EditValue = $this->_Action->CurrentValue;
+        $this->_Action->PlaceHolder = RemoveHtml($this->_Action->caption());
+
+        // Table
+        $this->_Table->setupEditAttributes();
+        if (!$this->_Table->Raw) {
+            $this->_Table->CurrentValue = HtmlDecode($this->_Table->CurrentValue);
+        }
+        $this->_Table->EditValue = $this->_Table->CurrentValue;
+        $this->_Table->PlaceHolder = RemoveHtml($this->_Table->caption());
+
+        // Field
+        $this->Field->setupEditAttributes();
+        if (!$this->Field->Raw) {
+            $this->Field->CurrentValue = HtmlDecode($this->Field->CurrentValue);
+        }
+        $this->Field->EditValue = $this->Field->CurrentValue;
+        $this->Field->PlaceHolder = RemoveHtml($this->Field->caption());
+
+        // KeyValue
+        $this->KeyValue->setupEditAttributes();
+        $this->KeyValue->EditValue = $this->KeyValue->CurrentValue;
+        $this->KeyValue->PlaceHolder = RemoveHtml($this->KeyValue->caption());
+
+        // OldValue
+        $this->OldValue->setupEditAttributes();
+        $this->OldValue->EditValue = $this->OldValue->CurrentValue;
+        $this->OldValue->PlaceHolder = RemoveHtml($this->OldValue->caption());
+
+        // NewValue
+        $this->NewValue->setupEditAttributes();
+        $this->NewValue->EditValue = $this->NewValue->CurrentValue;
+        $this->NewValue->PlaceHolder = RemoveHtml($this->NewValue->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1373,17 +1479,24 @@ class Konversi extends DbTable
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->satuan_id);
-                    $doc->exportCaption($this->nilai);
-                    $doc->exportCaption($this->satuan_id2);
-                    $doc->exportCaption($this->operasi);
+                    $doc->exportCaption($this->Id);
+                    $doc->exportCaption($this->DateTime);
+                    $doc->exportCaption($this->Script);
+                    $doc->exportCaption($this->User);
+                    $doc->exportCaption($this->_Action);
+                    $doc->exportCaption($this->_Table);
+                    $doc->exportCaption($this->Field);
+                    $doc->exportCaption($this->KeyValue);
+                    $doc->exportCaption($this->OldValue);
+                    $doc->exportCaption($this->NewValue);
                 } else {
-                    $doc->exportCaption($this->id);
-                    $doc->exportCaption($this->satuan_id);
-                    $doc->exportCaption($this->nilai);
-                    $doc->exportCaption($this->satuan_id2);
-                    $doc->exportCaption($this->operasi);
-                    $doc->exportCaption($this->id_FK);
+                    $doc->exportCaption($this->Id);
+                    $doc->exportCaption($this->DateTime);
+                    $doc->exportCaption($this->Script);
+                    $doc->exportCaption($this->User);
+                    $doc->exportCaption($this->_Action);
+                    $doc->exportCaption($this->_Table);
+                    $doc->exportCaption($this->Field);
                 }
                 $doc->endExportRow();
             }
@@ -1410,17 +1523,24 @@ class Konversi extends DbTable
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->satuan_id);
-                        $doc->exportField($this->nilai);
-                        $doc->exportField($this->satuan_id2);
-                        $doc->exportField($this->operasi);
+                        $doc->exportField($this->Id);
+                        $doc->exportField($this->DateTime);
+                        $doc->exportField($this->Script);
+                        $doc->exportField($this->User);
+                        $doc->exportField($this->_Action);
+                        $doc->exportField($this->_Table);
+                        $doc->exportField($this->Field);
+                        $doc->exportField($this->KeyValue);
+                        $doc->exportField($this->OldValue);
+                        $doc->exportField($this->NewValue);
                     } else {
-                        $doc->exportField($this->id);
-                        $doc->exportField($this->satuan_id);
-                        $doc->exportField($this->nilai);
-                        $doc->exportField($this->satuan_id2);
-                        $doc->exportField($this->operasi);
-                        $doc->exportField($this->id_FK);
+                        $doc->exportField($this->Id);
+                        $doc->exportField($this->DateTime);
+                        $doc->exportField($this->Script);
+                        $doc->exportField($this->User);
+                        $doc->exportField($this->_Action);
+                        $doc->exportField($this->_Table);
+                        $doc->exportField($this->Field);
                     }
                     $doc->endExportRow($rowCnt);
                 }
@@ -1448,7 +1568,7 @@ class Konversi extends DbTable
     // Write audit trail start/end for grid update
     public function writeAuditTrailDummy($typ)
     {
-        WriteAuditLog(CurrentUserIdentifier(), $typ, 'konversi');
+        WriteAuditLog(CurrentUserIdentifier(), $typ, 'audittrail');
     }
 
     // Write audit trail (add page)
@@ -1464,7 +1584,7 @@ class Konversi extends DbTable
         if ($key != "") {
             $key .= Config("COMPOSITE_KEY_SEPARATOR");
         }
-        $key .= $rs['id'];
+        $key .= $rs['Id'];
 
         // Write audit trail
         $usr = CurrentUserIdentifier();
@@ -1479,7 +1599,7 @@ class Konversi extends DbTable
                 } else {
                     $newvalue = $rs[$fldname];
                 }
-                WriteAuditLog($usr, "A", 'konversi', $fldname, $key, "", $newvalue);
+                WriteAuditLog($usr, "A", 'audittrail', $fldname, $key, "", $newvalue);
             }
         }
     }
@@ -1497,7 +1617,7 @@ class Konversi extends DbTable
         if ($key != "") {
             $key .= Config("COMPOSITE_KEY_SEPARATOR");
         }
-        $key .= $rsold['id'];
+        $key .= $rsold['Id'];
 
         // Write audit trail
         $usr = CurrentUserIdentifier();
@@ -1522,7 +1642,7 @@ class Konversi extends DbTable
                         $oldvalue = $rsold[$fldname];
                         $newvalue = $rsnew[$fldname];
                     }
-                    WriteAuditLog($usr, "U", 'konversi', $fldname, $key, $oldvalue, $newvalue);
+                    WriteAuditLog($usr, "U", 'audittrail', $fldname, $key, $oldvalue, $newvalue);
                 }
             }
         }
@@ -1541,7 +1661,7 @@ class Konversi extends DbTable
         if ($key != "") {
             $key .= Config("COMPOSITE_KEY_SEPARATOR");
         }
-        $key .= $rs['id'];
+        $key .= $rs['Id'];
 
         // Write audit trail
         $usr = CurrentUserIdentifier();
@@ -1556,7 +1676,7 @@ class Konversi extends DbTable
                 } else {
                     $oldvalue = $rs[$fldname];
                 }
-                WriteAuditLog($usr, "D", 'konversi', $fldname, $key, $oldvalue);
+                WriteAuditLog($usr, "D", 'audittrail', $fldname, $key, $oldvalue);
             }
         }
     }
